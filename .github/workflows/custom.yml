@@ -1,0 +1,27 @@
+name: Covalub
+on:
+  push:
+    branches:
+      - main
+jobs:
+  FTP-Deploy-Action:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v3 
+        with:
+          fetch-depth: 2
+      - name: Autonotify/Woocommerce/Covalub
+        uses: SamKirkland/FTP-Deploy-Action@4.3.3
+        with:
+          server: ${{ secrets.FTP_SERVER_MYSOUREI}}
+          username: ${{ secrets.FTP_USERNAME_COVALUB }}
+          password: ${{ secrets.FTP_PASSWORD }}
+      - name: Autonotify/Woocommerce/OriginalSaoPaulo
+        uses: SamKirkland/FTP-Deploy-Action@4.3.3
+        with:
+          server: ${{ secrets.FTP_SERVER_STAGING}}
+          username: ${{ secrets.FTP_USERNAME_STAGING }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          
