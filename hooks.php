@@ -1,7 +1,14 @@
 <?php
 if (!defined('WHMCS')) { die('Access denied'); }
 
+add_hook('ClientAreaFooterOutput', 1, function($vars) {
+    return cepvalidator_script();
+});
+
 add_hook('AdminAreaFooterOutput', 1, function($vars) {
+    return cepvalidator_script();
+});
+function cepvalidator_script() {
     return <<<HTML
 <script>
 (function(){
@@ -48,4 +55,4 @@ add_hook('AdminAreaFooterOutput', 1, function($vars) {
 })();
 </script>
 HTML;
-});
+}
