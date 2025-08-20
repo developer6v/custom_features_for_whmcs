@@ -22,7 +22,7 @@ function custom_features_for_whmcs_deactivate() {
 }
 
 function custom_features_for_whmcs_output() {
-    return config();
+    echo config();
 }
 
 
