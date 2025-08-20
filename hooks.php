@@ -9,21 +9,41 @@ add_hook('AdminAreaFooterOutput', 1, function($vars) {
   function btns(){return jQuery('button[type="submit"],input[type="submit"]');}
   function onlyDigits(s){return (s||'').replace(/\\D/g,'');}
   function setDisabled(dis){btns().prop('disabled',dis);}
-  function validateCep(emitAlert){
+  function showMsg(msg){
+    var \$cep=byName('postcode');
+    var id="cep-validator-msg";
+    var \$msg=jQuery("#"+id);
+    if(!\$msg.length){
+      \$msg=jQuery('<span id="'+id+'" style="color:red;font-size:12px;display:block;margin-top:4px;"></span>');
+      \$cep.after(\$msg);
+    }
+    \$msg.text(msg||'');
+  }
+  function validateCep(){
     var \$cep=byName('postcode');
     if(!\$cep.length){return;}
-    var raw=\$cep.val();
-    var cep=onlyDigits(raw);
-    if(cep.length!==8){setDisabled(true);return;}
+    var cep=onlyDigits(\$cep.val());
+    if(cep.length!==8){
+      setDisabled(true);
+      showMsg('CEP inválido');
+      return;
+    }
     jQuery.getJSON('https://viacep.com.br/ws/'+cep+'/json/').done(function(d){
-      if(d && d.erro){setDisabled(true); if(emitAlert){alert('CEP inválido');}}
-      else {setDisabled(false);}
-    }).fail(function(){setDisabled(true); if(emitAlert){alert('CEP inválido');}});
+      if(d && d.erro){
+        setDisabled(true);
+        showMsg('CEP inválido');
+      } else {
+        setDisabled(false);
+        showMsg('');
+      }
+    }).fail(function(){
+      setDisabled(true);
+      showMsg('CEP inválido');
+    });
   }
   jQuery(function(){
-    validateCep(false);
-    jQuery(document).on('change blur','input[name="postcode"]',function(){validateCep(true);});
-    jQuery(document).on('input','input[name="postcode"]',function(){validateCep(false);});
+    validateCep();
+    jQuery(document).on('change blur input','input[name="postcode"]',function(){validateCep();});
   });
 })();
 </script>
