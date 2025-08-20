@@ -3,65 +3,65 @@
 
 function config() {
     $layout = '
-       <div class="manus-config-container">
-        <header class="manus-config-header">
-            <h1 class="manus-config-title">Configurações do Sistema</h1>
+    <div class="container">
+        <header>
+            <h1>Configurações do Sistema</h1>
         </header>
 
-        <div class="manus-tabs-wrapper">
+        <div class="tabs-container">
             <!-- Navegação das abas -->
-            <div class="manus-tabs-navigation">
-                <button class="manus-tab-btn manus-tab-active" data-tab="cpf-cnpj">CPF/CNPJ</button>
-                <button class="manus-tab-btn" data-tab="erro-129">Erro registro 129</button>
+            <div class="tabs-nav">
+                <button class="tab-button active" data-tab="cpf-cnpj">CPF/CNPJ</button>
+                <button class="tab-button" data-tab="erro-129">Erro registro 129</button>
             </div>
 
             <!-- Conteúdo das abas -->
-            <div class="manus-tabs-content-area">
+            <div class="tabs-content">
                 <!-- Aba CPF/CNPJ -->
-                <div id="cpf-cnpj" class="manus-tab-panel manus-tab-active">
-                    <div class="manus-config-section">
-                        <h2 class="manus-section-title">Configurações CPF/CNPJ</h2>
-                        <div class="manus-form-group">
-                            <p class="manus-description">
+                <div id="cpf-cnpj" class="tab-content active">
+                    <div class="config-section">
+                        <h2>Configurações CPF/CNPJ</h2>
+                        <div class="form-group">
+                            <p class="description">
                                 Utilize esta opção para atualizar clientes que possuem o campo CPF/CNPJ desconfigurado no sistema.
                             </p>
-                            <button id="btn-atualizar-cpf" class="manus-btn manus-btn-primary">
+                            <button id="btn-atualizar-cpf" class="btn btn-primary">
                                 Atualizar clientes com campo CPF/CNPJ desconfigurados
                             </button>
-                            <div id="status-cpf" class="manus-status-msg"></div>
+                            <div id="status-cpf" class="status-message"></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Aba Erro registro 129 -->
-                <div id="erro-129" class="manus-tab-panel">
-                    <div class="manus-config-section">
-                        <h2 class="manus-section-title">Configurações Erro registro 129</h2>
+                <div id="erro-129" class="tab-content">
+                    <div class="config-section">
+                        <h2>Configurações Erro registro 129</h2>
                         
-                        <div class="manus-form-group">
-                            <label for="tentativas-registro" class="manus-form-label">Quantidade de tentativas de registro até marcar para cancelado:</label>
-                            <input type="number" id="tentativas-registro" name="tentativas-registro" min="1" max="10" value="3" class="manus-form-input">
+                        <div class="form-group">
+                            <label for="tentativas-registro">Quantidade de tentativas de registro até marcar para cancelado:</label>
+                            <input type="number" id="tentativas-registro" name="tentativas-registro" min="1" max="10" value="3">
                         </div>
 
-                        <div class="manus-form-group">
-                            <label class="manus-checkbox-wrapper">
-                                <input type="checkbox" id="abrir-ticket" name="abrir-ticket" class="manus-checkbox-input">
-                                <span class="manus-checkbox-mark"></span>
+                        <div class="form-group">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="abrir-ticket" name="abrir-ticket">
+                                <span class="checkmark"></span>
                                 Abrir ticket após tentativas?
                             </label>
                         </div>
 
-                        <div class="manus-form-group">
-                            <label for="intervalo-tentativas" class="manus-form-label">Tempo de intervalo entre tentativas de registro (em minutos):</label>
-                            <input type="number" id="intervalo-tentativas" name="intervalo-tentativas" min="1" max="60" value="5" class="manus-form-input">
+                        <div class="form-group">
+                            <label for="intervalo-tentativas">Tempo de intervalo entre tentativas de registro (em minutos):</label>
+                            <input type="number" id="intervalo-tentativas" name="intervalo-tentativas" min="1" max="60" value="5">
                         </div>
 
-                        <div class="manus-form-actions">
-                            <button id="btn-salvar-erro129" class="manus-btn manus-btn-success">Salvar Configurações</button>
-                            <button id="btn-resetar-erro129" class="manus-btn manus-btn-secondary">Resetar para Padrão</button>
+                        <div class="form-actions">
+                            <button id="btn-salvar-erro129" class="btn btn-success">Salvar Configurações</button>
+                            <button id="btn-resetar-erro129" class="btn btn-secondary">Resetar para Padrão</button>
                         </div>
                         
-                        <div id="status-erro129" class="manus-status-msg"></div>
+                        <div id="status-erro129" class="status-message"></div>
                     </div>
                 </div>
             </div>
