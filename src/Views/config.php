@@ -3,9 +3,9 @@
 function config() {
     $layout = '
     <div class="cf_container">
-        <header>
+        <div class="header_cf">
             <h1>Configurações do Sistema</h1>
-        </header>
+        </div>
 
         <div class="cf_tabs-container">
             <!-- Navegação das abas -->
