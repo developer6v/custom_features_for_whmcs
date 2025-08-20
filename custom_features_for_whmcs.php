@@ -2,6 +2,7 @@
 
 include_once __DIR__ . '/hooks.php';
 include_once __DIR__ . '/src/Views/config.php';
+include_once __DIR__ . '/src/Config/assets.php';
 
 function custom_features_for_whmcs_config() { 
     return array(
@@ -22,6 +23,7 @@ function custom_features_for_whmcs_deactivate() {
 }
 
 function custom_features_for_whmcs_output() {
+    echo assets();
     echo config();
 }
 

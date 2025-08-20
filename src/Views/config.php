@@ -2,7 +2,7 @@
 
 
 function config() {
-    $layout = "<p>teste</p>";
+    $layout = "<h1>Configurações</h1>";
     return $layout;
 }
 
