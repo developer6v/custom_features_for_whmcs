@@ -13,7 +13,6 @@ function custom_features_for_whmcs_config() {
 }
 
 function custom_features_for_whmcs_activate() {
-    autonotify_activate();
     return array('status' => 'success', 'description' => 'Módulo ativado com sucesso!');
 }
 
