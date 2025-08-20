@@ -1,41 +1,38 @@
-/* Reset e configurações básicas */
-* {
+/* Reset e configurações básicas para componente Manus */
+.manus-config-container * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body {
+.manus-config-container {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
     color: #333;
     line-height: 1.6;
-}
-
-.container {
     max-width: 900px;
     margin: 0 auto;
     padding: 20px;
-    min-height: 100vh;
 }
 
 /* Header */
-header {
+.manus-config-header {
     text-align: center;
     margin-bottom: 30px;
 }
 
-header h1 {
-    color: white;
-    font-size: 2.5rem;
-    font-weight: 300;
+.manus-config-title {
+    color: white !important;
+    font-size: 2.5rem !important;
+    font-weight: 300 !important;
     text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    margin-bottom: 10px;
+    margin-bottom: 10px !important;
+    margin-top: 0 !important;
 }
 
 /* Container das abas */
-.tabs-container {
+.manus-tabs-wrapper {
     background: white;
     border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
@@ -43,36 +40,37 @@ header h1 {
 }
 
 /* Navegação das abas */
-.tabs-nav {
+.manus-tabs-navigation {
     display: flex;
     background: #f8f9fa;
     border-bottom: 1px solid #e9ecef;
 }
 
-.tab-button {
+.manus-tab-btn {
     flex: 1;
-    padding: 15px 20px;
-    background: transparent;
-    border: none;
-    font-size: 1rem;
-    font-weight: 500;
-    color: #6c757d;
+    padding: 15px 20px !important;
+    background: transparent !important;
+    border: none !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    color: #6c757d !important;
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
+    font-family: inherit !important;
 }
 
-.tab-button:hover {
-    background: #e9ecef;
-    color: #495057;
+.manus-tab-btn:hover {
+    background: #e9ecef !important;
+    color: #495057 !important;
 }
 
-.tab-button.active {
-    color: #007bff;
-    background: white;
+.manus-tab-btn.manus-tab-active {
+    color: #007bff !important;
+    background: white !important;
 }
 
-.tab-button.active::after {
+.manus-tab-btn.manus-tab-active::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -83,264 +81,270 @@ header h1 {
 }
 
 /* Conteúdo das abas */
-.tabs-content {
+.manus-tabs-content-area {
     padding: 0;
 }
 
-.tab-content {
+.manus-tab-panel {
     display: none;
     padding: 30px;
-    animation: fadeIn 0.3s ease-in-out;
+    animation: manus-fadeIn 0.3s ease-in-out;
 }
 
-.tab-content.active {
+.manus-tab-panel.manus-tab-active {
     display: block;
 }
 
-@keyframes fadeIn {
+@keyframes manus-fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
 /* Seções de configuração */
-.config-section h2 {
-    color: #2c3e50;
-    font-size: 1.8rem;
-    margin-bottom: 20px;
-    font-weight: 400;
+.manus-config-section .manus-section-title {
+    color: #2c3e50 !important;
+    font-size: 1.8rem !important;
+    margin-bottom: 20px !important;
+    margin-top: 0 !important;
+    font-weight: 400 !important;
     border-bottom: 2px solid #e9ecef;
     padding-bottom: 10px;
 }
 
 /* Grupos de formulário */
-.form-group {
+.manus-form-group {
     margin-bottom: 25px;
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #495057;
-    font-size: 0.95rem;
+.manus-form-label {
+    display: block !important;
+    margin-bottom: 8px !important;
+    font-weight: 500 !important;
+    color: #495057 !important;
+    font-size: 0.95rem !important;
 }
 
-.form-group input[type="number"] {
-    width: 100%;
-    max-width: 200px;
-    padding: 12px 15px;
-    border: 2px solid #e9ecef;
-    border-radius: 6px;
-    font-size: 1rem;
-    transition: border-color 0.3s ease;
+.manus-form-input {
+    width: 100% !important;
+    max-width: 200px !important;
+    padding: 12px 15px !important;
+    border: 2px solid #e9ecef !important;
+    border-radius: 6px !important;
+    font-size: 1rem !important;
+    transition: border-color 0.3s ease !important;
+    background: white !important;
+    color: #495057 !important;
+    font-family: inherit !important;
 }
 
-.form-group input[type="number"]:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+.manus-form-input:focus {
+    outline: none !important;
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.1) !important;
 }
 
 /* Checkbox customizado */
-.checkbox-container {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    font-size: 1rem;
-    user-select: none;
+.manus-checkbox-wrapper {
+    display: flex !important;
+    align-items: center !important;
+    cursor: pointer !important;
+    font-size: 1rem !important;
+    user-select: none !important;
+    margin-bottom: 0 !important;
 }
 
-.checkbox-container input[type="checkbox"] {
-    display: none;
+.manus-checkbox-input {
+    display: none !important;
 }
 
-.checkmark {
-    width: 20px;
-    height: 20px;
-    background: #fff;
-    border: 2px solid #e9ecef;
-    border-radius: 4px;
-    margin-right: 12px;
-    position: relative;
-    transition: all 0.3s ease;
+.manus-checkbox-mark {
+    width: 20px !important;
+    height: 20px !important;
+    background: #fff !important;
+    border: 2px solid #e9ecef !important;
+    border-radius: 4px !important;
+    margin-right: 12px !important;
+    position: relative !important;
+    transition: all 0.3s ease !important;
+    flex-shrink: 0 !important;
 }
 
-.checkbox-container:hover .checkmark {
-    border-color: #007bff;
+.manus-checkbox-wrapper:hover .manus-checkbox-mark {
+    border-color: #007bff !important;
 }
 
-.checkbox-container input[type="checkbox"]:checked + .checkmark {
-    background: #007bff;
-    border-color: #007bff;
+.manus-checkbox-input:checked + .manus-checkbox-mark {
+    background: #007bff !important;
+    border-color: #007bff !important;
 }
 
-.checkbox-container input[type="checkbox"]:checked + .checkmark::after {
-    content: '';
-    position: absolute;
-    left: 6px;
-    top: 2px;
-    width: 6px;
-    height: 10px;
-    border: solid white;
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
+.manus-checkbox-input:checked + .manus-checkbox-mark::after {
+    content: '' !important;
+    position: absolute !important;
+    left: 6px !important;
+    top: 2px !important;
+    width: 6px !important;
+    height: 10px !important;
+    border: solid white !important;
+    border-width: 0 2px 2px 0 !important;
+    transform: rotate(45deg) !important;
 }
 
 /* Botões */
-.btn {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: inline-block;
-    margin-right: 10px;
-    margin-bottom: 10px;
+.manus-btn {
+    padding: 12px 24px !important;
+    border: none !important;
+    border-radius: 6px !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    margin-right: 10px !important;
+    margin-bottom: 10px !important;
+    font-family: inherit !important;
 }
 
-.btn-primary {
-    background: #007bff;
-    color: white;
+.manus-btn-primary {
+    background: #007bff !important;
+    color: white !important;
 }
 
-.btn-primary:hover {
-    background: #0056b3;
+.manus-btn-primary:hover {
+    background: #0056b3 !important;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,123,255,0.3);
 }
 
-.btn-success {
-    background: #28a745;
-    color: white;
+.manus-btn-success {
+    background: #28a745 !important;
+    color: white !important;
 }
 
-.btn-success:hover {
-    background: #1e7e34;
+.manus-btn-success:hover {
+    background: #1e7e34 !important;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(40,167,69,0.3);
 }
 
-.btn-secondary {
-    background: #6c757d;
-    color: white;
+.manus-btn-secondary {
+    background: #6c757d !important;
+    color: white !important;
 }
 
-.btn-secondary:hover {
-    background: #545b62;
+.manus-btn-secondary:hover {
+    background: #545b62 !important;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(108,117,125,0.3);
 }
 
 /* Ações do formulário */
-.form-actions {
+.manus-form-actions {
     margin-top: 30px;
     padding-top: 20px;
     border-top: 1px solid #e9ecef;
 }
 
 /* Mensagens de status */
-.status-message {
-    margin-top: 15px;
-    padding: 12px 15px;
-    border-radius: 6px;
-    font-weight: 500;
-    display: none;
+.manus-status-msg {
+    margin-top: 15px !important;
+    padding: 12px 15px !important;
+    border-radius: 6px !important;
+    font-weight: 500 !important;
+    display: none !important;
 }
 
-.status-message.success {
-    background: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-    display: block;
+.manus-status-msg.success {
+    background: #d4edda !important;
+    color: #155724 !important;
+    border: 1px solid #c3e6cb !important;
+    display: block !important;
 }
 
-.status-message.error {
-    background: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-    display: block;
+.manus-status-msg.error {
+    background: #f8d7da !important;
+    color: #721c24 !important;
+    border: 1px solid #f5c6cb !important;
+    display: block !important;
 }
 
-.status-message.info {
-    background: #d1ecf1;
-    color: #0c5460;
-    border: 1px solid #bee5eb;
-    display: block;
+.manus-status-msg.info {
+    background: #d1ecf1 !important;
+    color: #0c5460 !important;
+    border: 1px solid #bee5eb !important;
+    display: block !important;
 }
 
 /* Descrição */
-.description {
-    color: #6c757d;
-    font-size: 0.95rem;
-    margin-bottom: 20px;
-    line-height: 1.5;
+.manus-description {
+    color: #6c757d !important;
+    font-size: 0.95rem !important;
+    margin-bottom: 20px !important;
+    line-height: 1.5 !important;
 }
 
 /* Responsividade */
 @media (max-width: 768px) {
-    .container {
+    .manus-config-container {
         padding: 15px;
     }
     
-    header h1 {
-        font-size: 2rem;
+    .manus-config-title {
+        font-size: 2rem !important;
     }
     
-    .tab-content {
+    .manus-tab-panel {
         padding: 20px;
     }
     
-    .tabs-nav {
+    .manus-tabs-navigation {
         flex-direction: column;
     }
     
-    .tab-button {
-        text-align: left;
-        border-bottom: 1px solid #e9ecef;
+    .manus-tab-btn {
+        text-align: left !important;
+        border-bottom: 1px solid #e9ecef !important;
     }
     
-    .tab-button:last-child {
-        border-bottom: none;
+    .manus-tab-btn:last-child {
+        border-bottom: none !important;
     }
     
-    .tab-button.active::after {
-        height: 100%;
-        width: 3px;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: auto;
+    .manus-tab-btn.manus-tab-active::after {
+        height: 100% !important;
+        width: 3px !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: auto !important;
     }
     
-    .form-group input[type="number"] {
-        max-width: 100%;
+    .manus-form-input {
+        max-width: 100% !important;
     }
     
-    .btn {
-        width: 100%;
-        margin-right: 0;
-        margin-bottom: 10px;
+    .manus-btn {
+        width: 100% !important;
+        margin-right: 0 !important;
+        margin-bottom: 10px !important;
     }
 }
 
 @media (max-width: 480px) {
-    .container {
+    .manus-config-container {
         padding: 10px;
     }
     
-    header h1 {
-        font-size: 1.8rem;
+    .manus-config-title {
+        font-size: 1.8rem !important;
     }
     
-    .tab-content {
+    .manus-tab-panel {
         padding: 15px;
     }
     
-    .config-section h2 {
-        font-size: 1.5rem;
+    .manus-section-title {
+        font-size: 1.5rem !important;
     }
 }
-

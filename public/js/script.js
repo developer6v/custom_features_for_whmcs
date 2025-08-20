@@ -26,20 +26,20 @@ class ConfiguracaoApp {
 
     // Configuração do sistema de abas
     setupTabs() {
-        const tabButtons = document.querySelectorAll('.tab-button');
-        const tabContents = document.querySelectorAll('.tab-content');
+        const tabButtons = document.querySelectorAll('.manus-tab-btn');
+        const tabContents = document.querySelectorAll('.manus-tab-panel');
 
         tabButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const targetTab = button.getAttribute('data-tab');
                 
                 // Remove classe active de todos os botões e conteúdos
-                tabButtons.forEach(btn => btn.classList.remove('active'));
-                tabContents.forEach(content => content.classList.remove('active'));
+                tabButtons.forEach(btn => btn.classList.remove('manus-tab-active'));
+                tabContents.forEach(content => content.classList.remove('manus-tab-active'));
                 
                 // Adiciona classe active ao botão clicado e conteúdo correspondente
-                button.classList.add('active');
-                document.getElementById(targetTab).classList.add('active');
+                button.classList.add('manus-tab-active');
+                document.getElementById(targetTab).classList.add('manus-tab-active');
             });
         });
     }
@@ -198,7 +198,7 @@ class ConfiguracaoApp {
 
     // Função utilitária para mostrar mensagens de status
     showStatus(element, type, message) {
-        element.className = `status-message ${type}`;
+        element.className = `manus-status-msg ${type}`;
         element.textContent = message;
         element.style.display = 'block';
 
@@ -261,4 +261,3 @@ document.addEventListener('DOMContentLoaded', () => {
 // Exportar para uso global se necessário
 window.ConfiguracaoApp = ConfiguracaoApp;
 window.Utils = Utils;
-
