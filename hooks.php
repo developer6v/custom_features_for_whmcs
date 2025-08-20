@@ -15,3 +15,9 @@ add_hook('AdminAreaFooterOutput', 1, function($vars) {
 
 
 // CNPJ/CPF
+add_hook('ClientAreaFooterOutput', 1, function($vars) {
+    return cpfcnpj_script();
+});
+add_hook('AdminAreaFooterOutput', 1, function($vars) {
+    return cpfcnpj_script();
+});
