@@ -1,6 +1,6 @@
 <?php
-require_once(__DIR__ . 'src/Services/cepvalidator.php');
-require_once(__DIR__ . 'src/Services/cpfcnpj.php');
+require_once __DIR__ . '/src/Services/cepvalidator.php';
+require_once __DIR__ . '/src/Services/cpfcnpj.php';
 
 if (!defined('WHMCS')) { die('Access denied'); }
 
