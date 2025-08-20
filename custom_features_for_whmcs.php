@@ -1,6 +1,7 @@
 <?php
 
 include_once __DIR__ . '/hooks.php';
+include_once __DIR__ . '/src/Views/config.php';
 
 function custom_features_for_whmcs_config() { 
     return array(
@@ -18,6 +19,10 @@ function custom_features_for_whmcs_activate() {
 
 function custom_features_for_whmcs_deactivate() {
     return array('status' => 'success', 'description' => 'Módulo desativado com sucesso!');
+}
+
+function custom_features_for_whmcs_output() {
+    return config();
 }
 
 
