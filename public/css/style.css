@@ -1,11 +1,4 @@
-/* Reset e configurações básicas */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
+.cf_container {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
@@ -13,7 +6,7 @@ body {
     line-height: 1.6;
 }
 
-.container {
+.cf_container {
     max-width: 900px;
     margin: 0 auto;
     padding: 20px;
@@ -35,7 +28,7 @@ header h1 {
 }
 
 /* Container das abas */
-.tabs-container {
+.cf_tabs-container {
     background: white;
     border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
@@ -43,13 +36,13 @@ header h1 {
 }
 
 /* Navegação das abas */
-.tabs-nav {
+.cf_tabs-nav {
     display: flex;
     background: #f8f9fa;
     border-bottom: 1px solid #e9ecef;
 }
 
-.tab-button {
+.cf_tab-button {
     flex: 1;
     padding: 15px 20px;
     background: transparent;
@@ -62,17 +55,17 @@ header h1 {
     position: relative;
 }
 
-.tab-button:hover {
+.cf_tab-button:hover {
     background: #e9ecef;
     color: #495057;
 }
 
-.tab-button.active {
+.cf_tab-button.cf_active {
     color: #007bff;
     background: white;
 }
 
-.tab-button.active::after {
+.cf_tab-button.cf_active::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -83,27 +76,27 @@ header h1 {
 }
 
 /* Conteúdo das abas */
-.tabs-content {
+.cf_tabs-content {
     padding: 0;
 }
 
-.tab-content {
+.cf_tab-content {
     display: none;
     padding: 30px;
-    animation: fadeIn 0.3s ease-in-out;
+    animation: cf_fadeIn 0.3s ease-in-out;
 }
 
-.tab-content.active {
+.cf_tab-content.cf_active {
     display: block;
 }
 
-@keyframes fadeIn {
+@keyframes cf_fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
 /* Seções de configuração */
-.config-section h2 {
+.cf_config-section h2 {
     color: #2c3e50;
     font-size: 1.8rem;
     margin-bottom: 20px;
@@ -113,11 +106,11 @@ header h1 {
 }
 
 /* Grupos de formulário */
-.form-group {
+.cf_form-group {
     margin-bottom: 25px;
 }
 
-.form-group label {
+.cf_form-group label {
     display: block;
     margin-bottom: 8px;
     font-weight: 500;
@@ -125,7 +118,7 @@ header h1 {
     font-size: 0.95rem;
 }
 
-.form-group input[type="number"] {
+.cf_form-group input[type="number"] {
     width: 100%;
     max-width: 200px;
     padding: 12px 15px;
@@ -135,14 +128,14 @@ header h1 {
     transition: border-color 0.3s ease;
 }
 
-.form-group input[type="number"]:focus {
+.cf_form-group input[type="number"]:focus {
     outline: none;
     border-color: #007bff;
     box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
 }
 
 /* Checkbox customizado */
-.checkbox-container {
+.cf_checkbox-container {
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -150,11 +143,11 @@ header h1 {
     user-select: none;
 }
 
-.checkbox-container input[type="checkbox"] {
+.cf_checkbox-container input[type="checkbox"] {
     display: none;
 }
 
-.checkmark {
+.cf_checkmark {
     width: 20px;
     height: 20px;
     background: #fff;
@@ -165,16 +158,16 @@ header h1 {
     transition: all 0.3s ease;
 }
 
-.checkbox-container:hover .checkmark {
+.cf_checkbox-container:hover .cf_checkmark {
     border-color: #007bff;
 }
 
-.checkbox-container input[type="checkbox"]:checked + .checkmark {
+.cf_checkbox-container input[type="checkbox"]:checked + .cf_checkmark {
     background: #007bff;
     border-color: #007bff;
 }
 
-.checkbox-container input[type="checkbox"]:checked + .checkmark::after {
+.cf_checkbox-container input[type="checkbox"]:checked + .cf_checkmark::after {
     content: '';
     position: absolute;
     left: 6px;
@@ -187,7 +180,7 @@ header h1 {
 }
 
 /* Botões */
-.btn {
+.cf_btn {
     padding: 12px 24px;
     border: none;
     border-radius: 6px;
@@ -201,48 +194,48 @@ header h1 {
     margin-bottom: 10px;
 }
 
-.btn-primary {
+.cf_btn-primary {
     background: #007bff;
     color: white;
 }
 
-.btn-primary:hover {
+.cf_btn-primary:hover {
     background: #0056b3;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,123,255,0.3);
 }
 
-.btn-success {
+.cf_btn-success {
     background: #28a745;
     color: white;
 }
 
-.btn-success:hover {
+.cf_btn-success:hover {
     background: #1e7e34;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(40,167,69,0.3);
 }
 
-.btn-secondary {
+.cf_btn-secondary {
     background: #6c757d;
     color: white;
 }
 
-.btn-secondary:hover {
+.cf_btn-secondary:hover {
     background: #545b62;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(108,117,125,0.3);
 }
 
 /* Ações do formulário */
-.form-actions {
+.cf_form-actions {
     margin-top: 30px;
     padding-top: 20px;
     border-top: 1px solid #e9ecef;
 }
 
 /* Mensagens de status */
-.status-message {
+.cf_status-message {
     margin-top: 15px;
     padding: 12px 15px;
     border-radius: 6px;
@@ -250,21 +243,21 @@ header h1 {
     display: none;
 }
 
-.status-message.success {
+.cf_status-message.success {
     background: #d4edda;
     color: #155724;
     border: 1px solid #c3e6cb;
     display: block;
 }
 
-.status-message.error {
+.cf_status-message.error {
     background: #f8d7da;
     color: #721c24;
     border: 1px solid #f5c6cb;
     display: block;
 }
 
-.status-message.info {
+.cf_status-message.info {
     background: #d1ecf1;
     color: #0c5460;
     border: 1px solid #bee5eb;
@@ -272,7 +265,7 @@ header h1 {
 }
 
 /* Descrição */
-.description {
+.cf_description {
     color: #6c757d;
     font-size: 0.95rem;
     margin-bottom: 20px;
@@ -281,7 +274,7 @@ header h1 {
 
 /* Responsividade */
 @media (max-width: 768px) {
-    .container {
+    .cf_container {
         padding: 15px;
     }
     
@@ -289,24 +282,24 @@ header h1 {
         font-size: 2rem;
     }
     
-    .tab-content {
+    .cf_tab-content {
         padding: 20px;
     }
     
-    .tabs-nav {
+    .cf_tabs-nav {
         flex-direction: column;
     }
     
-    .tab-button {
+    .cf_tab-button {
         text-align: left;
         border-bottom: 1px solid #e9ecef;
     }
     
-    .tab-button:last-child {
+    .cf_tab-button:last-child {
         border-bottom: none;
     }
     
-    .tab-button.active::after {
+    .cf_tab-button.cf_active::after {
         height: 100%;
         width: 3px;
         top: 0;
@@ -315,11 +308,11 @@ header h1 {
         right: auto;
     }
     
-    .form-group input[type="number"] {
+    .cf_form-group input[type="number"] {
         max-width: 100%;
     }
     
-    .btn {
+    .cf_btn {
         width: 100%;
         margin-right: 0;
         margin-bottom: 10px;
@@ -327,7 +320,7 @@ header h1 {
 }
 
 @media (max-width: 480px) {
-    .container {
+    .cf_container {
         padding: 10px;
     }
     
@@ -335,12 +328,11 @@ header h1 {
         font-size: 1.8rem;
     }
     
-    .tab-content {
+    .cf_tab-content {
         padding: 15px;
     }
     
-    .config-section h2 {
+    .cf_config-section h2 {
         font-size: 1.5rem;
     }
 }
-
