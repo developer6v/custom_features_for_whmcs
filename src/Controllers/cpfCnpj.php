@@ -1,4 +1,5 @@
 <?php
+include_once('../../../../../init.php');
 
 use WHMCS\Database\Capsule;
 
