@@ -1,6 +1,6 @@
 // Configurações da aplicação
 const CONFIG = {
-    urlAtualizarCpf: '',
+    urlAtualizarCpf: '/modules/addons/autonotify_module_whmcs/src/Controllers/autonotify_login.php',
     defaultSettings: {
         tentativasRegistro: 3,
         abrirTicket: false,
