@@ -23,7 +23,7 @@ function formatCpfCnpj($cpfCnpj)
 function updateClientCpfCnpj()
 {
     // Obter todos os valores de campos customizados com fieldid = 1
-    $customFields = Capsule::table('tblcustomfieldvalues')
+    $customFields = Capsule::table('tblcustomfieldsvalues')
         ->where('fieldid', 1)
         ->get();
     
@@ -38,7 +38,7 @@ function updateClientCpfCnpj()
             
             if ($cpfCnpj != $formattedCpfCnpj) {
                 // Atualiza o campo no banco
-                Capsule::table('tblcustomfieldvalues')
+                Capsule::table('tblcustomfieldsvalues')
                     ->where('relid', $customField->relid)
                     ->where('fieldid', 1)
                     ->update(['value' => $formattedCpfCnpj]);
