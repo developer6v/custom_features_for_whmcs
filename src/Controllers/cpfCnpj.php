@@ -50,4 +50,4 @@ function updateClientCpfCnpj()
 }
 
 $updatedClients = updateClientCpfCnpj();
-echo $updatedClients;
+echo json_encode(['updatedCount' => $updatedClients]);

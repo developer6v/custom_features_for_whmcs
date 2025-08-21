@@ -95,7 +95,8 @@ class ConfiguracaoApp {
 
             if (response.ok) {
                 const result = await response.json();
-                this.showStatus(statusDiv, 'success', `Atualização concluída com sucesso! ${result.message || 'Clientes atualizados.'}`);
+                const updatedCount = result.updatedCount;
+                this.showStatus(statusDiv, 'success', 'Atualização concluída com sucesso! ' + updatedCount  +  ' clientes atualizados.');
             } else {
                 throw new Error(`Erro HTTP: ${response.status}`);
             }
