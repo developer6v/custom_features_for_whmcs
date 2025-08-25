@@ -124,7 +124,7 @@ class ConfiguracaoApp {
 
         // Enviando os dados para o backend via fetch
         try {
-            const response = await fetch(urlAtualizar129, {
+            const response = await fetch(CONFIG.urlAtualizar129, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
