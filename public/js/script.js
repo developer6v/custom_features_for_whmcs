@@ -1,11 +1,6 @@
 class ConfiguracaoApp {
-    
     constructor() {
-        this.init();
-    }
-
-    init() {
-        const CONFIG = {
+        this.CONFIG = {
             urlAtualizarCpf: '/modules/addons/custom_features_for_whmcs/src/Controllers/cpfCnpj.php',
             urlAtualizar129: '/modules/addons/custom_features_for_whmcs/src/Controllers/config-erro129.php',
             defaultSettings: {
@@ -14,12 +9,15 @@ class ConfiguracaoApp {
                 intervaloTentativas: 5
             }
         };
+        this.init();
+    }
+
+    init() {
         this.setupTabs();
         this.setupCpfCnpjTab();
         this.setupErro129Tab();
     }
 
-    
     // Configuração do sistema de abas
     setupTabs() {
         const tabButtons = document.querySelectorAll('.cf_tab-button');
@@ -75,7 +73,7 @@ class ConfiguracaoApp {
     }
 
     async atualizarCpfCnpj(statusDiv) {
-        if (!CONFIG.urlAtualizarCpf) {
+        if (!this.CONFIG.urlAtualizarCpf) {
             this.showStatus(statusDiv, 'error', 'URL de atualização não configurada. Configure a URL no arquivo script.js na variável CONFIG.urlAtualizarCpf');
             return;
         }
@@ -83,7 +81,7 @@ class ConfiguracaoApp {
         this.showStatus(statusDiv, 'info', 'Iniciando atualização de clientes...');
 
         try {
-            const response = await fetch(CONFIG.urlAtualizarCpf, {
+            const response = await fetch(this.CONFIG.urlAtualizarCpf, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -124,7 +122,7 @@ class ConfiguracaoApp {
 
         // Enviando os dados para o backend via fetch
         try {
-            const response = await fetch(CONFIG.urlAtualizar129, {
+            const response = await fetch(this.CONFIG.urlAtualizar129, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -149,9 +147,9 @@ class ConfiguracaoApp {
     }
 
     resetarConfiguracoes129(statusDiv) {
-        document.getElementById('tentativas-registro').value = CONFIG.defaultSettings.tentativasRegistro;
-        document.getElementById('abrir-ticket').checked = CONFIG.defaultSettings.abrirTicket;
-        document.getElementById('intervalo-tentativas').value = CONFIG.defaultSettings.intervaloTentativas;
+        document.getElementById('tentativas-registro').value = this.CONFIG.defaultSettings.tentativasRegistro;
+        document.getElementById('abrir-ticket').checked = this.CONFIG.defaultSettings.abrirTicket;
+        document.getElementById('intervalo-tentativas').value = this.CONFIG.defaultSettings.intervaloTentativas;
 
         localStorage.removeItem('config_erro129');
         this.showStatus(statusDiv, 'info', 'Configurações resetadas para os valores padrão.');
@@ -189,7 +187,7 @@ class ConfiguracaoApp {
     }
 
     static configurarUrlCpf(url) {
-        CONFIG.urlAtualizarCpf = url;
+        this.CONFIG.urlAtualizarCpf = url;
     }
 }
 
