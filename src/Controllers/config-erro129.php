@@ -7,9 +7,9 @@ use WHMCS\Database\Capsule;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Recupera os dados enviados via POST
-    $max_trials = isset($_POST['max_trials']) ? (int) $_POST['max_trials'] : null;
-    $interval_between_trials = isset($_POST['interval_between_trials']) ? (int) $_POST['interval_between_trials'] : null;
-    $openTicketAfterTrials = isset($_POST['openTicketAfterTrials']) ? (bool) $_POST['openTicketAfterTrials'] : null;
+    $max_trials = isset($_POST['tentativasRegistro']) ? (int) $_POST['tentativasRegistro'] : null;
+    $interval_between_trials = isset($_POST['intervaloTentativas']) ? (int) $_POST['intervaloTentativas'] : null;
+    $openTicketAfterTrials = isset($_POST['abrirTicket']) ? (bool) $_POST['abrirTicket'] : null;
 
     // Verifica se os dados necessários foram fornecidos
     if ($max_trials === null || $interval_between_trials === null || $openTicketAfterTrials === null) {
