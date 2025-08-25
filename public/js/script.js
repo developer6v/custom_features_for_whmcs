@@ -1,25 +1,25 @@
-// Configurações da aplicação
-const CONFIG = {
-    urlAtualizarCpf: '/modules/addons/custom_features_for_whmcs/src/Controllers/cpfCnpj.php',
-    defaultSettings: {
-        tentativasRegistro: 3,
-        abrirTicket: false,
-        intervaloTentativas: 5
-    }
-};
-
-// Classe principal da aplicação
 class ConfiguracaoApp {
+    
     constructor() {
         this.init();
     }
 
     init() {
+        const CONFIG = {
+            urlAtualizarCpf: '/modules/addons/custom_features_for_whmcs/src/Controllers/cpfCnpj.php',
+            urlAtualizar129: '/modules/addons/custom_features_for_whmcs/src/Controllers/config-erro129.php',
+            defaultSettings: {
+                tentativasRegistro: 3,
+                abrirTicket: false,
+                intervaloTentativas: 5
+            }
+        };
         this.setupTabs();
         this.setupCpfCnpjTab();
         this.setupErro129Tab();
     }
 
+    
     // Configuração do sistema de abas
     setupTabs() {
         const tabButtons = document.querySelectorAll('.cf_tab-button');
@@ -105,7 +105,7 @@ class ConfiguracaoApp {
         }
     }
 
-    salvarConfiguracoes129(statusDiv) {
+    async salvarConfiguracoes129(statusDiv) {
         const tentativas = document.getElementById('tentativas-registro').value;
         const abrirTicket = document.getElementById('abrir-ticket').checked;
         const intervalo = document.getElementById('intervalo-tentativas').value;
@@ -122,10 +122,30 @@ class ConfiguracaoApp {
             dataAtualizacao: new Date().toISOString()
         };
 
-        localStorage.setItem('config_erro129', JSON.stringify(configuracoes));
+        // Enviando os dados para o backend via fetch
+        try {
+            const response = await fetch(urlAtualizar129, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(configuracoes)
+            });
 
-        this.showStatus(statusDiv, 'success', 'Configurações salvas com sucesso!');
-        console.log('Configurações salvas:', configuracoes);
+            if (response.ok) {
+                const result = await response.json();
+                if (result.status === 'success') {
+                    this.showStatus(statusDiv, 'success', 'Configurações salvas e enviadas com sucesso!');
+                } else {
+                    this.showStatus(statusDiv, 'error', 'Erro ao salvar configurações no servidor.');
+                }
+            } else {
+                this.showStatus(statusDiv, 'error', 'Erro ao comunicar com o servidor.');
+            }
+        } catch (error) {
+            console.error('Erro ao salvar configurações:', error);
+            this.showStatus(statusDiv, 'error', `Erro ao enviar dados para o servidor: ${error.message}`);
+        }
     }
 
     resetarConfiguracoes129(statusDiv) {
@@ -155,7 +175,7 @@ class ConfiguracaoApp {
             input.style.boxShadow = '0 0 0 3px rgba(40,167,69,0.1)';
         }
     }
-    
+
     showStatus(element, type, message) {
         element.className = `cf_status-message ${type}`;
         element.textContent = message;
