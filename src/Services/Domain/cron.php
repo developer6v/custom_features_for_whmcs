@@ -45,6 +45,8 @@ function processDomains() {
 
     // Processar cada domínio
     foreach ($domains as $domain) {
+                    echo 'dominio encontra'; 
+
         // Verificar se já excedeu o intervalo de tentativas
         $last_try_time = strtotime($domain->updated_at); // Data da última tentativa
         $current_time = time(); // Hora atual
@@ -52,11 +54,14 @@ function processDomains() {
 
         // Se o intervalo entre tentativas for suficiente, tentar registrar
         if ($time_difference >= $interval_between_trials) {
+            echo 'diferença suficientre'; 
             // Verifica o número de tentativas
             if ($domain->trials < $max_trials) {
                 // Tentar registrar o domínio
                 $result = tryRegisterDomain($domain->domain_id, $domain->domain, $domain->client_id);
             } 
+        } else {
+            echo 'diferença insuficiente'; 
         }
     }
 }
