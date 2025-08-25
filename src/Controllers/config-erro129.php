@@ -6,10 +6,16 @@ use WHMCS\Database\Capsule;
 // Verifica se os dados foram enviados via POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Recupera os dados enviados via POST
-    $max_trials = isset($_POST['tentativasRegistro']) ? (int) $_POST['tentativasRegistro'] : null;
-    $interval_between_trials = isset($_POST['intervaloTentativas']) ? (int) $_POST['intervaloTentativas'] : null;
-    $openTicketAfterTrials = isset($_POST['abrirTicket']) ? (bool) $_POST['abrirTicket'] : null;
+    // Recebe os dados do POST
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    // Salva os dados recebidos para verificar
+    file_put_contents('post_data.txt', print_r($data, true));  // Salva os dados em um arquivo
+
+    // Verifica se os dados necessários estão presentes
+    $max_trials = isset($data['tentativasRegistro']) ? (int) $data['tentativasRegistro'] : null;
+    $interval_between_trials = isset($data['intervaloTentativas']) ? (int) $data['intervaloTentativas'] : null;
+    $openTicketAfterTrials = isset($data['abrirTicket']) ? (bool) $data['abrirTicket'] : null;
 
     // Verifica se os dados necessários foram fornecidos
     if ($max_trials === null || $interval_between_trials === null || $openTicketAfterTrials === null) {
