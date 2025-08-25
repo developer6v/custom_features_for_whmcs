@@ -67,7 +67,6 @@ function config() {
 
                         <div class="cf_form-actions">
                             <button id="btn-salvar-erro129" class="cf_btn cf_btn-success">Salvar Configurações</button>
-                            <button id="btn-resetar-erro129" class="cf_btn cf_btn-secondary">Resetar para Padrão</button>
                         </div>
                         
                         <div id="status-erro129" class="cf_status-message"></div>
