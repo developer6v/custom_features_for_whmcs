@@ -3,6 +3,7 @@
 include_once __DIR__ . '/hooks.php';
 include_once __DIR__ . '/src/Views/config.php';
 include_once __DIR__ . '/src/Config/assets.php';
+include_once __DIR__ . '/src/Config/database.php';
 
 function custom_features_for_whmcs_config() { 
     return array(
@@ -15,6 +16,7 @@ function custom_features_for_whmcs_config() {
 }
 
 function custom_features_for_whmcs_activate() {
+    cf_config_database();
     return array('status' => 'success', 'description' => 'Módulo ativado com sucesso!');
 }
 
