@@ -122,6 +122,7 @@ class ConfiguracaoApp {
 
         // Enviando os dados para o backend via fetch
         try {
+            console.log(configuracoes)
             const response = await fetch(this.CONFIG.urlAtualizar129, {
                 method: 'POST',
                 headers: {
