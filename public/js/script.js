@@ -18,7 +18,6 @@ class ConfiguracaoApp {
         this.setupTabs();
         this.setupCpfCnpjTab();
         this.setupErro129Tab();
-        this.loadSavedSettings();
     }
 
     // Configuração do sistema de abas
@@ -156,23 +155,7 @@ class ConfiguracaoApp {
             input.style.boxShadow = '0 0 0 3px rgba(40,167,69,0.1)';
         }
     }
-
-    loadSavedSettings() {
-        const savedConfig = localStorage.getItem('config_erro129');
-
-        if (savedConfig) {
-            try {
-                const config = JSON.parse(savedConfig);
-
-                document.getElementById('tentativas-registro').value = config.tentativasRegistro || CONFIG.defaultSettings.tentativasRegistro;
-                document.getElementById('abrir-ticket').checked = config.abrirTicket || CONFIG.defaultSettings.abrirTicket;
-                document.getElementById('intervalo-tentativas').value = config.intervaloTentativas || CONFIG.defaultSettings.intervaloTentativas;
-            } catch (error) {
-                console.error('Erro ao carregar configurações salvas:', error);
-            }
-        }
-    }
-
+    
     showStatus(element, type, message) {
         element.className = `cf_status-message ${type}`;
         element.textContent = message;

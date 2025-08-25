@@ -3,7 +3,7 @@
 use WHMCS\Database\Capsule;
 
 function cf_config_database () {
-    if (!Capsule::schema()->hasTable('sr_cf_config')) {
+    if (!::schema()->hasTable('sr_cf_config')) {
         Capsule::schema()->create('sr_cf_config', function ($table) {
             $table->increments('id'); 
             $table->integer('max_trials')->default(0); 

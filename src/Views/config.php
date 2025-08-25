@@ -1,6 +1,14 @@
-<?php
+use WHMCS\Database\Capsule;
 
 function config() {
+    // Recuperando os valores das configurações armazenadas no banco de dados
+    $config = Capsule::table('sr_cf_config')->first();
+
+    // Preencher os valores dos campos com os dados recuperados
+    $tentativasRegistro = $config->max_trials; // Quantidade de tentativas
+    $intervaloTentativas = $config->interval_between_trials; // Intervalo entre tentativas
+    $abrirTicket = $config->openTicketAfterTrials ? 'checked' : ''; // Checkbox para abrir ticket após tentativas
+
     $layout = '
     <div class="cf_container">
         <div class="header_cf">
@@ -39,12 +47,12 @@ function config() {
                         
                         <div class="cf_form-group">
                             <label for="tentativas-registro">Quantidade de tentativas de registro até marcar para cancelado:</label>
-                            <input type="number" id="tentativas-registro" name="tentativas-registro" min="1" max="10" value="3">
+                            <input type="number" id="tentativas-registro" name="tentativas-registro" min="1" max="10" value="' . $tentativasRegistro . '">
                         </div>
 
                         <div class="cf_form-group">
                             <label class="cf_checkbox-container">
-                                <input type="checkbox" id="abrir-ticket" name="abrir-ticket">
+                                <input type="checkbox" id="abrir-ticket" name="abrir-ticket" ' . $abrirTicket . '>
                                 <span class="cf_checkmark"></span>
                                 Abrir ticket após tentativas?
                             </label>
@@ -52,7 +60,7 @@ function config() {
 
                         <div class="cf_form-group">
                             <label for="intervalo-tentativas">Tempo de intervalo entre tentativas de registro (em minutos):</label>
-                            <input type="number" id="intervalo-tentativas" name="intervalo-tentativas" min="1" max="60" value="5">
+                            <input type="number" id="intervalo-tentativas" name="intervalo-tentativas" min="1" max="60" value="' . $intervaloTentativas . '">
                         </div>
 
                         <div class="cf_form-actions">
@@ -67,7 +75,6 @@ function config() {
         </div>
     </div>
     ';
+    
     return $layout;
 }
-
-?>
