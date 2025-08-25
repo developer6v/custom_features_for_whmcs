@@ -1,6 +1,6 @@
 <?php
 
-include_once('../../../../../init.php'); // Inclui a inicialização do WHMCS
+include_once('../../../../../../init.php'); // Inclui a inicialização do WHMCS
 
 use WHMCS\Database\Capsule;
 
