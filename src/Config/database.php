@@ -23,8 +23,11 @@ function cf_config_database () {
         Capsule::schema()->create('sr_cf_domain_error_129', function ($table) {
             $table->increments('id'); 
             $table->integer('domain_id'); 
+            $table->integer('trials'); 
+            $table->integer('status'); 
             $table->integer('client_id'); 
             $table->string('domain', 255);
+            $table->timestamps(); 
         });
     }
 }
