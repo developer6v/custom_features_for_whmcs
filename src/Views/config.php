@@ -1,3 +1,5 @@
+<?php
+
 use WHMCS\Database\Capsule;
 
 function config() {
