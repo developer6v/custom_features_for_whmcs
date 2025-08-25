@@ -22,10 +22,6 @@ function tryRegisterDomain($domain_id, $domain_name, $client_id) {
             ->where('domain_id', $domain_id)
             ->update(['status' => 1]);
     } else {
-                // Falha no registro
-        Capsule::table('sr_cf_domain_error_129')
-            ->where('domain_id', $domain_id)
-            ->increment('trials', 1); // Incrementa o valor de 'trials' em 1
 
         // Agora, atualiza o status para 0 (falha)
         Capsule::table('sr_cf_domain_error_129')
