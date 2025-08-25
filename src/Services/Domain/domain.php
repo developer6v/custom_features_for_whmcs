@@ -54,7 +54,6 @@ function domain_manager($vars) {
 
 
 
-use WHMCS\Database\Capsule;
 
 function openTicket($vars) {
     $client_id = $vars['params']['clientid'];
