@@ -11,6 +11,13 @@ function enderecos() {
     return el ? el.value : "";
   }
 
+  function setValue(id, value) {
+    var el = document.getElementById(id);
+    if (el) {
+      el.value = value;
+    }
+  }
+
   function autofillDomainAddress(){
     console.log("chamou o autofill domain");
 
@@ -25,16 +32,15 @@ function enderecos() {
     var state     = getValue("inputState");
     var postcode  = getValue("inputPostcode");
 
-
-    document.getElementById('inputDCFirstName').value = firstName;
-    document.getElementById('inputDCLastName').value = lastName;
-    document.getElementById('inputDCEmail').value = email;
-    document.getElementById('inputDCPhone').value = phone;
-    document.getElementById('inputDCAddress1').value = address1;
-    document.getElementById('inputDCAddress2').value = address2;
-    document.getElementById('inputDCCity').value = city;
-    document.getElementById('inputDCState').value = state;
-    document.getElementById('inputDCPostcode').value = postcode;
+    setValue("inputDCFirstName", firstName);
+    setValue("inputDCLastName", lastName);
+    setValue("inputDCEmail", email);
+    setValue("inputDCPhone", phone);
+    setValue("inputDCAddress1", address1);
+    setValue("inputDCAddress2", address2);
+    setValue("inputDCCity", city);
+    setValue("inputDCState", state);
+    setValue("inputDCPostcode", postcode);
   }
 
   jQuery(function(){
