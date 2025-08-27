@@ -4,7 +4,9 @@ function cepvalidator_script() {
     <script>
     (function(){
     function byName(n){return jQuery('input[name="'+n+'"]');}
-    function btns(){return jQuery('button[type="submit"],input[type="submit"]');}
+    function btns() {
+        return jQuery('button[type="submit"], input[type="submit"], button#checkout');
+    }
     function onlyDigits(s){return (s||'').replace(/\\D/g,'');}
     function setDisabled(dis){btns().prop('disabled',dis);}
     function showMsg(msg){
