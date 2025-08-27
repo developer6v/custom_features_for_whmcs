@@ -23,6 +23,7 @@ function enderecos() {
     var city      = getValue("inputCity");
     var state     = getValue("stateselect"); // pode vir de <select> sem problema
     var postcode  = getValue("inputPostcode");
+    var empresa  = getValue("inputCompanyName");
 
     setValue("inputDCFirstName", firstName);
     setValue("inputDCLastName", lastName);
@@ -33,6 +34,7 @@ function enderecos() {
     setValue("inputDCCity", city);
     setValue("inputDCState", state);
     setValue("inputDCPostcode", postcode);
+    setValue("inputDCCompanyName", empresa);
   }
 
   // jQuery ready
@@ -41,7 +43,7 @@ function enderecos() {
     autofillDomainAddress();
 
     // 2) Eventos que cobrem digitação, colagem e selects
-    var sel = '#inputFirstName, #inputLastName, #inputEmail, #inputPhone, #inputAddress1, #inputAddress2, #inputCity, #inputState, #inputPostcode';
+    var sel = '#inputCompanyName, #inputFirstName, #inputLastName, #inputEmail, #inputPhone, #inputAddress1, #inputAddress2, #inputCity, #inputState, #inputPostcode';
     jQuery(document).on('input change blur', sel, function(){
       autofillDomainAddress();
     });
