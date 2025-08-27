@@ -4,7 +4,6 @@ include_once('../../../../../../init.php'); // Inclui a inicialização do WHMCS
 
 use WHMCS\Database\Capsule;
 
-// Função para tentar registrar o domínio
 function tryRegisterDomain($domain_id, $domain_name, $client_id) {
     $params = [
         'action' => 'DomainRegister',
@@ -12,10 +11,7 @@ function tryRegisterDomain($domain_id, $domain_name, $client_id) {
         'clientid' => $client_id,
     ];
 
-    // Enviar comando para o WHMCS Registrar Domínio
     $result = localAPI('DomainRegister', $params);
-
-    // Verificar o retorno
     if ($result['result'] == 'success') {
         // Registro bem-sucedido
         Capsule::table('sr_cf_domain_error_129')

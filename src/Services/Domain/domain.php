@@ -65,20 +65,14 @@ function openTicket($vars) {
         'userid' => $client_id,
         'subject' => $subject,
         'message' => $message,
-        'priority' => 'High', // Prioridade do ticket
-        'status' => 'Open', // Status do ticket
-        'department' => 1, // ID do departamento
+        'priority' => 'High', 
+        'status' => 'Open', 
+        'department' => 1
     ];
-
-    // Chama a função localAPI para criar o ticket
     $result = localAPI('OpenTicket', $ticketParams);
-
-    // Verifica se o ticket foi criado com sucesso
     if ($result['result'] == 'success') {
-        // Aqui você pode adicionar mais lógicas, como enviar notificações ou logar
         logModuleCall('domain_manager', 'openTicket', $ticketParams, $result);
     } else {
-        // Caso haja algum erro, você pode fazer um log de erro ou tomar outra ação
         logModuleCall('domain_manager', 'openTicket_error', $ticketParams, $result);
     }
 }

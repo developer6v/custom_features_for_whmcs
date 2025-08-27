@@ -6,6 +6,7 @@ function enderecos() {
   function digits(s){ return (s||'').replace(/\\D/g,''); }
 
   function autofillDomainAddress(){
+    console.log("chamou o autofill domain");
     var firstName = document.getElementById("inputFirstName").value;
     var lastName = document.getElementById("inputLastName").value;
     var email = document.getElementById("inputEmail").value;
