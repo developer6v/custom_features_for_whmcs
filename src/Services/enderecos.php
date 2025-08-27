@@ -3,9 +3,6 @@ function enderecos() {
     return <<<HTML
 <script>
 (function(){
-  function digits(s){ return (s||'').replace(/\\D/g,''); }
-
-
   function getValue(id) {
     var el = document.getElementById(id);
     return el ? el.value : "";
@@ -13,15 +10,10 @@ function enderecos() {
 
   function setValue(id, value) {
     var el = document.getElementById(id);
-    if (el) {
-      el.value = value;
-    }
+    if (el) el.value = value;
   }
 
   function autofillDomainAddress(){
-    console.log("chamou o autofill domain");
-
-
     var firstName = getValue("inputFirstName");
     var lastName  = getValue("inputLastName");
     var email     = getValue("inputEmail");
@@ -29,7 +21,7 @@ function enderecos() {
     var address1  = getValue("inputAddress1");
     var address2  = getValue("inputAddress2");
     var city      = getValue("inputCity");
-    var state     = getValue("inputState");
+    var state     = getValue("stateselect"); // pode vir de <select> sem problema
     var postcode  = getValue("inputPostcode");
 
     setValue("inputDCFirstName", firstName);
@@ -43,13 +35,24 @@ function enderecos() {
     setValue("inputDCPostcode", postcode);
   }
 
+  // jQuery ready
   jQuery(function(){
+    // 1) Sincroniza imediatamente
     autofillDomainAddress();
-    jQuery('#inputFirstName, #inputLastName, #inputEmail, #inputPhone, #inputAddress1, #inputAddress2, #inputCity, #inputState, #inputPostcode').on('input', function(){
-      autofillDomainAddress(); 
+
+    // 2) Eventos que cobrem digitação, colagem e selects
+    var sel = '#inputFirstName, #inputLastName, #inputEmail, #inputPhone, #inputAddress1, #inputAddress2, #inputCity, #inputState, #inputPostcode';
+    jQuery(document).on('input change blur', sel, function(){
+      autofillDomainAddress();
     });
+
+    // 3) "Safeguard" para autofill do navegador (alguns só preenchem após paint)
+    setTimeout(autofillDomainAddress, 300);
+    setTimeout(autofillDomainAddress, 1000);
+    setTimeout(autofillDomainAddress, 2000);
   });
 })();
 </script>
 HTML;
 }
+?>
