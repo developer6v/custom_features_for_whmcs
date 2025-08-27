@@ -5,17 +5,26 @@ function enderecos() {
 (function(){
   function digits(s){ return (s||'').replace(/\\D/g,''); }
 
+
+  function getValue(id) {
+    var el = document.getElementById(id);
+    return el ? el.value : "";
+  }
+
   function autofillDomainAddress(){
     console.log("chamou o autofill domain");
-    var firstName = document.getElementById("inputFirstName").value;
-    var lastName = document.getElementById("inputLastName").value;
-    var email = document.getElementById("inputEmail").value;
-    var phone = document.getElementById("inputPhone").value;
-    var address1 = document.getElementById("inputAddress1").value;
-    var address2 = document.getElementById("inputAddress2").value;
-    var city = document.getElementById("inputCity").value;
-    var state = document.getElementById("inputState").value;
-    var postcode = document.getElementById("inputPostcode").value;
+
+
+    var firstName = getValue("inputFirstName");
+    var lastName  = getValue("inputLastName");
+    var email     = getValue("inputEmail");
+    var phone     = getValue("inputPhone");
+    var address1  = getValue("inputAddress1");
+    var address2  = getValue("inputAddress2");
+    var city      = getValue("inputCity");
+    var state     = getValue("inputState");
+    var postcode  = getValue("inputPostcode");
+
 
     document.getElementById('inputDCFirstName').value = firstName;
     document.getElementById('inputDCLastName').value = lastName;
