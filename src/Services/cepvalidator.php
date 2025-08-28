@@ -20,6 +20,7 @@ function cepvalidator_script() {
         \$msg.text(msg||'');
     }
     function validateCep(){
+        console.log("chamou")
         var \$cep=byName('postcode');
         if(!\$cep.length){return;}
         var cep=onlyDigits(\$cep.val());
