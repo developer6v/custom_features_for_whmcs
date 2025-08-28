@@ -3,78 +3,47 @@ function enderecos() {
     return <<<HTML
 <script>
 (function(){
-  function getValue(id) {
-    var el = document.getElementById(id);
-    return el ? el.value : "";
+  function firstIn(c, sel){var e=jQuery(c).find(sel).get(0);return e||null}
+  function gvIn(c, sel){var e=firstIn(c, sel);return e?e.value:""}
+  function svIn(c, sel, v){var e=firstIn(c, sel);if(e)e.value=v}
+
+  function syncPanels(){
+    var src = jQuery('#phonenumber').closest('.panel-body');
+    var dst = jQuery('#domaincontactphonenumber').closest('.panel-body');
+    if(!src.length || !dst.length) return;
+
+    var firstName = gvIn(src,'[name="firstname"]');
+    var lastName  = gvIn(src,'[name="lastname"]');
+    var email     = gvIn(src,'[name="email"]');
+    var phone     = gvIn(src,'#phonenumber,[name="phonenumber"]');
+    var address1  = gvIn(src,'[name="address1"]');
+    var address2  = gvIn(src,'[name="address2"]');
+    var city      = gvIn(src,'[name="city"]');
+    var state     = gvIn(src,'[name="state"]');
+    var postcode  = gvIn(src,'[name="postcode"]');
+    var empresa   = gvIn(src,'[name="companyname"]');
+
+    svIn(dst,'[name="firstname"]', firstName);
+    svIn(dst,'[name="lastname"]',  lastName);
+    svIn(dst,'[name="email"]',     email);
+    svIn(dst,'#domaincontactphonenumber,[name="domaincontactphonenumber"]', phone);
+    svIn(dst,'[name="address1"]',  address1);
+    svIn(dst,'[name="address2"]',  address2);
+    svIn(dst,'[name="city"]',      city);
+    svIn(dst,'[name="state"]',     state);
+    svIn(dst,'[name="postcode"]',  postcode);
+    svIn(dst,'[name="companyname"]', empresa);
   }
 
-  function setValue(id, value) {
-    var el = document.getElementById(id);
-    if (el) el.value = value;
-  }
-
-  function autofillDomainAddress(){
-    var firstName = getValue("inputFirstName");
-    var lastName  = getValue("inputLastName");
-    var email     = getValue("inputEmail");
-    var phone     = getValue("inputPhone");
-    var address1  = getValue("inputAddress1");
-    var address2  = getValue("inputAddress2");
-    var city      = getValue("inputCity");
-    var state     = getValue("stateselect"); 
-    var postcode  = getValue("inputPostcode");
-    var empresa  = getValue("inputCompanyName");
-    setValue("inputDCFirstName", firstName);
-    setValue("inputDCLastName", lastName);
-    setValue("inputDCEmail", email);
-    setValue("inputDCPhone", phone);
-    setValue("inputDCAddress1", address1);
-    setValue("inputDCAddress2", address2);
-    setValue("inputDCCity", city);
-    setValue("inputDCState", state);
-    setValue("inputDCPostcode", postcode);
-    setValue("inputDCCompanyName", empresa);
-
-
-
-    // novo checkout
-    var firstName = getValue("firstname");
-    var lastName  = getValue("lastname");
-    var email     = getValue("email");
-    var phone     = getValue("phonenumber");
-    var address1  = getValue("address1");
-    var address2  = getValue("address2") || "";
-    var city      = getValue("city");
-    var state     = getValue("state");
-    var postcode  = getValue("postcode");
-    setValue("firstname", firstName);
-    setValue("lastname", lastName);
-    setValue("email", email);
-    setValue("domaincontactphonenumber", phone);
-    setValue("address1", address1);
-    setValue("address2", address2);
-    setValue("city", city);
-    setValue("state", state);
-    setValue("postcode", postcode);
-    setValue("companyname", empresa);
-
-  }
-
-  // jQuery ready
   jQuery(function(){
-    // 1) Sincroniza imediatamente
-    autofillDomainAddress();
-
-    // 2) Eventos que cobrem digitação, colagem e selects
-    var sel = '#inputCompanyName, #inputFirstName, #inputLastName, #inputEmail, #inputPhone, #inputAddress1, #inputAddress2, #inputCity, #inputState, #inputPostcode';
-    jQuery(document).on('input change blur', sel, function(){
-      autofillDomainAddress();
-    });
-
-    // 3) "Safeguard" para autofill do navegador (alguns só preenchem após paint)
-    setTimeout(autofillDomainAddress, 300);
-    setTimeout(autofillDomainAddress, 1000);
-    setTimeout(autofillDomainAddress, 2000);
+    syncPanels();
+    var src = jQuery('#phonenumber').closest('.panel-body');
+    if(src.length){
+      jQuery(src).on('input change blur', 'input,select', function(){ syncPanels(); });
+    }
+    setTimeout(syncPanels,300);
+    setTimeout(syncPanels,1000);
+    setTimeout(syncPanels,2000);
   });
 })();
 </script>
