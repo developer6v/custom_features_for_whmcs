@@ -4,6 +4,7 @@ function enderecos() {
 <script>
 (function(){
   function autofillDomainAddress() {
+    console.log("foi acionado");
     // seleciona o primeiro formulário (cliente)
     var formCliente = document.querySelector("form[data-gtm-form-interact-id]"); 
     // seleciona o segundo formulário (domínio)
