@@ -42,6 +42,7 @@ function cepvalidator_script() {
         });
     }
     jQuery(function(){
+        setDisabled(true);
         validateCep();
         jQuery(document).on('change blur input','input[name="postcode"]',function(){validateCep();});
     });
