@@ -38,15 +38,23 @@ function cpfcnpj_script() {
         v = v.replace(/^(\\d{2})(\\d{0,3}).*$/, "\$1.\$2");
       }
     }
+    console.log("Valor com máscara:", v); // Log para ver o valor com a máscara
     \$el.val(v);
     toggleCompanyRequired(digits(v).length > 11);
   }
 
   jQuery(function(){
     var \$field = jQuery('#cl_custom_field_1');
+    console.log("Campo encontrado:", \$field.length); // Verifica se o campo foi encontrado
     if(\$field.length){
+      console.log("Aplicando máscara no campo...");
       maskCpfCnpj(\$field);
-      \$field.on('input', function(){ maskCpfCnpj(\$field); });
+      \$field.on('input', function(){
+        console.log("Input alterado, aplicando máscara...");
+        maskCpfCnpj(\$field);
+      });
+    } else {
+      console.log("Campo não encontrado!");
     }
   });
 })();
