@@ -3,27 +3,20 @@ function enderecos() {
     return <<<HTML
 <script>
 (function(){
-  function $$all(key){
-    var list=[];
-    var byId=document.getElementById(key); if(byId) list.push(byId);
-    var byName=document.getElementsByName(key); for(var i=0;i<byName.length;i++){ list.push(byName[i]); }
-    return list;
+  var panels = document.querySelectorAll('.panel-body');
+  var src = (document.getElementById('phonenumber') ? document.getElementById('phonenumber').closest('.panel-body') : null) || panels[0] || document;
+  var dst = (document.getElementById('domaincontactphonenumber') ? document.getElementById('domaincontactphonenumber').closest('.panel-body') : null) || panels[1] || panels[0] || document;
+
+  function getValue(id) {
+    var el = src.querySelector('#'+id+', [name="'+id+'"]');
+    return el ? el.value : "";
   }
-  function getValue(key){
-    var els=$$all(key);
-    for(var i=0;i<els.length;i++){
-      var v=els[i].value;
-      if(v!=null && v!=="") return v;
-    }
-    return "";
-  }
-  function setValue(key,value){
-    var els=$$all(key);
-    for(var i=0;i<els.length;i++){
-      if(els[i].value!==value){
-        els[i].value=value;
-        if(els[i].tagName==="SELECT"){ if(typeof jQuery!=="undefined") jQuery(els[i]).trigger("change"); }
-      }
+
+  function setValue(id, value) {
+    var el = dst.querySelector('#'+id+', [name="'+id+'"]');
+    if (el) {
+      el.value = value;
+      if (el.tagName === 'SELECT' && typeof jQuery !== 'undefined') jQuery(el).trigger('change');
     }
   }
 
@@ -42,7 +35,6 @@ function enderecos() {
     setValue("firstname", firstName);
     setValue("lastname", lastName);
     setValue("email", email);
-    setValue("phonenumber", phone);
     setValue("domaincontactphonenumber", phone);
     setValue("address1", address1);
     setValue("address2", address2);
@@ -54,18 +46,10 @@ function enderecos() {
 
   jQuery(function(){
     autofillDomainAddress();
-    var sel=[
-      '[name="firstname"]','[name="lastname"]','[name="email"]',
-      '[name="phonenumber"]','[name="domaincontactphonenumber"]',
-      '[name="address1"]','[name="address2"]','[name="city"]',
-      '[name="state"]','[name="postcode"]','[name="companyname"]',
-      '#firstname','#lastname','#email','#phonenumber','#domaincontactphonenumber',
-      '#address1','#address2','#city','#state','#postcode','#companyname'
-    ].join(", ");
-    jQuery(document).on("input change blur", sel, function(){ autofillDomainAddress(); });
-    setTimeout(autofillDomainAddress,300);
-    setTimeout(autofillDomainAddress,1000);
-    setTimeout(autofillDomainAddress,2000);
+    jQuery(src).on('input change blur', 'input,select', function(){ autofillDomainAddress(); });
+    setTimeout(autofillDomainAddress, 300);
+    setTimeout(autofillDomainAddress, 1000);
+    setTimeout(autofillDomainAddress, 2000);
   });
 })();
 </script>
