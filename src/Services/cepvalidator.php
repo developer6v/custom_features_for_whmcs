@@ -22,10 +22,6 @@ function cepvalidator_script() {
     function validateCep(){
         var \$cep=byName('postcode');
         if(!\$cep.length){return;}
-        
-        // Adicionando console.log() para debugar
-        console.log('Função validateCep chamada!'); // Verificação no console
-        
         var cep=onlyDigits(\$cep.val());
         if(cep.length!==8){
             setDisabled(true);
