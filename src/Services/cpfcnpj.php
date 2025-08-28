@@ -16,6 +16,7 @@ function cpfcnpj_script() {
   }
 
   function maskCpfCnpj(\$el){
+    console.log("chamou mascara de cnpj");
     var v = digits(\$el.val());
     if(v.length > 14) v = v.slice(0,14);
     if(v.length <= 11){
