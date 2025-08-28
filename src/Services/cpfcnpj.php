@@ -13,6 +13,7 @@ function cpfcnpj_script() {
   }
 
   function maskCpfCnpj($el){
+    console.log("mask was called")
     var d = digits($el.val());
     if(d.length > 14) d = d.slice(0,14);
     var v = d;
