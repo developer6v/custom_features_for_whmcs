@@ -53,6 +53,7 @@ function enderecos() {
     }
   }
   function autofillDomainAddress(){
+    console.log("houveram alterações");
     var S = getClientScope(), D = getDomainScope();
     if (!S || !D) return;
 
