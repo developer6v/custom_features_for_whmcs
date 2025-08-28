@@ -5,53 +5,61 @@ function cpfcnpj_script() {
 (function(){
   function digits(s){ return (s||'').replace(/\D/g,''); }
 
-  function toggleCompanyRequired(isCnpj){
-    var $company = jQuery('input[name="companyname"]');
-    if(!$company.length) return;
+  function toggleCompanyRequiredInScope($field, isCnpj){
+    var $scope = $field.closest('.panel-body');
+    var $company = $scope.find('input[name="companyname"]');
+    if(!$company.length) $company = jQuery('input[name="companyname"]'); 
     if(isCnpj){ $company.attr('required','required').attr('aria-required','true'); }
     else { $company.removeAttr('required').removeAttr('aria-required'); }
   }
 
   function maskCpfCnpj($el){
-    console.log("mask was called")
     var d = digits($el.val());
     if(d.length > 14) d = d.slice(0,14);
     var v = d;
 
     if(d.length <= 11){
-      // CPF
       $el.attr('maxlength','14');
       if(d.length > 9)       v = d.replace(/^(\d{3})(\d{3})(\d{3})(\d{0,2}).*$/, "$1.$2.$3-$4");
       else if(d.length > 6)  v = d.replace(/^(\d{3})(\d{3})(\d{0,3}).*$/,      "$1.$2.$3");
       else if(d.length > 3)  v = d.replace(/^(\d{3})(\d{0,3}).*$/,             "$1.$2");
+      toggleCompanyRequiredInScope($el, false);
     } else {
-      // CNPJ
       $el.attr('maxlength','18');
       if(d.length > 12)      v = d.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2}).*$/, "$1.$2.$3/$4-$5");
       else if(d.length > 8)  v = d.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4}).*$/,        "$1.$2.$3/$4");
       else if(d.length > 5)  v = d.replace(/^(\d{2})(\d{3})(\d{0,3}).*$/,               "$1.$2.$3");
       else if(d.length > 2)  v = d.replace(/^(\d{2})(\d{0,3}).*$/,                      "$1.$2");
+      toggleCompanyRequiredInScope($el, true);
     }
 
-    $el.val(v);
-    toggleCompanyRequired(d.length > 11);
+    if($el.val()!==v) $el.val(v);
+  }
+
+  function applyOnceToVisible(){
+    jQuery('input#customfield1, input#cl_custom_field_1, input[name="customfield[1]"]').each(function(){
+      maskCpfCnpj(jQuery(this));
+    });
   }
 
   jQuery(function(){
-    var $field  = jQuery('#customfield1');
-    var $field2 = jQuery('#cl_custom_field_1');
+    applyOnceToVisible();
 
-    if($field.length){
-      maskCpfCnpj($field);
-      $field.on('input blur paste', function(){ maskCpfCnpj($field); });
-    }
+    jQuery(document).on('input blur paste', 'input#customfield1, input#cl_custom_field_1, input[name="customfield[1]"]', function(){
+      maskCpfCnpj(jQuery(this));
+    });
 
-    if($field2.length){
-      maskCpfCnpj($field2);
-      $field2.on('input blur paste', function(){ maskCpfCnpj($field2); });
-    }
+    var mo = new MutationObserver(function(){
+      applyOnceToVisible();
+    });
+    mo.observe(document.documentElement, { childList:true, subtree:true });
+    
+    setTimeout(applyOnceToVisible, 300);
+    setTimeout(applyOnceToVisible, 1000);
+    setTimeout(applyOnceToVisible, 2000);
   });
 })();
 </script>
 HTML;
 }
+?>
