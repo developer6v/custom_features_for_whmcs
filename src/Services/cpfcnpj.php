@@ -16,7 +16,7 @@ function cpfcnpj_script() {
   }
 
   function maskCpfCnpj(\$el){
-    console.log("chamou mascara de cnpj");
+    console.log("Chamou a máscara de CPF/CNPJ");
     var v = digits(\$el.val());
     if(v.length > 14) v = v.slice(0,14);
     if(v.length <= 11){
@@ -44,18 +44,21 @@ function cpfcnpj_script() {
   }
 
   jQuery(function(){
-    var \$field = jQuery('#cl_custom_field_1');
-    console.log("Campo encontrado:", \$field.length); // Verifica se o campo foi encontrado
-    if(\$field.length){
-      console.log("Aplicando máscara no campo...");
-      maskCpfCnpj(\$field);
-      \$field.on('input', function(){
-        console.log("Input alterado, aplicando máscara...");
+    // Verifica periodicamente se o campo está disponível
+    var checkExist = setInterval(function() {
+      var \$field = jQuery('#cl_custom_field_1');
+      if (\$field.length) {
+        clearInterval(checkExist); // Quando o campo for encontrado, pare de verificar
+        console.log("Campo encontrado! Aplicando a máscara...");
         maskCpfCnpj(\$field);
-      });
-    } else {
-      console.log("Campo não encontrado!");
-    }
+        \$field.on('input', function(){
+          console.log("Input alterado, aplicando a máscara...");
+          maskCpfCnpj(\$field);
+        });
+      } else {
+        console.log("Campo não encontrado ainda...");
+      }
+    }, 100); // Verifica a cada 100 milissegundos
   });
 })();
 </script>
