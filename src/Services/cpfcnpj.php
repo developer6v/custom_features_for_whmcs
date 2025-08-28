@@ -42,10 +42,16 @@ function cpfcnpj_script() {
   }
 
   jQuery(function(){
-    var \$field = jQuery('#customfield1, #cl_custom_field_1');
+    var \$field = jQuery('#customfield1');
+    var \$field2 = jQuery('#cl_custom_field_1');
     if(\$field.length){
       maskCpfCnpj(\$field);
       \$field.on('input', function(){ maskCpfCnpj(\$field); });
+    }
+
+    if(\$field2.length){
+      maskCpfCnpj(\$field2);
+      \$field.on('input', function(){ maskCpfCnpj(\$field2); });
     }
   });
 })();
