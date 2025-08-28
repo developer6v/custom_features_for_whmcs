@@ -33,3 +33,28 @@ add_hook('ClientAreaFooterOutput', 1, function($vars) {
 add_hook('AfterRegistrarRegistrationFailed', 1, function($vars) {
     domain_manager($vars);
 });
+
+
+<?php
+
+use WHMCS\Hook;
+
+function add_cep_mask_script($vars) {
+    // Verifica se a página atual é a de checkout ou onde o campo CEP está presente
+    if ($vars['filename'] == 'order' || $vars['filename'] == 'cart') {
+        // Adiciona o script do jQuery Mask
+        $maskScript = '
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+     
+        ';
+        // Retorna o script para ser inserido na página
+        return $maskScript;
+    }
+}
+
+// Registra o hook para adicionar o script no cabeçalho
+add_hook('ClientAreaHeadOutput', 1, 'add_cep_mask_script');
+
+// Registra o hook para adicionar o script no corpo
+add_hook('ClientAreaHeaderOutput', 1, 'add_cep_mask_script');
+?>
