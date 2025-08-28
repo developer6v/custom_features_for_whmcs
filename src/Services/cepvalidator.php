@@ -46,11 +46,20 @@ function cepvalidator_script() {
         });
     }
 
-    // Verifica se o campo de CEP existe, e se sim, aplica a validação
+    // Função para aplicar a máscara de CEP
+    function applyCepMask() {
+        var \$cep = byName('postcode');
+        if ($\cep.length) {
+            \$cep.mask('00000-000'); // Máscara de CEP no formato XXXXX-XXX
+        }
+    }
+
+    // Verifica se o campo de CEP existe, e se sim, aplica a máscara e validação
     var checkExist = setInterval(function() {
         if (jQuery("input[name='postcode']").length) {
             clearInterval(checkExist); // Quando o elemento aparecer, pare de verificar
-            // Aplique sua máscara ou validação aqui
+            // Aplique a máscara de CEP e a validação
+            applyCepMask();
             jQuery(document).on('change blur input','input[name="postcode"]',function(){validateCep();});
         }
     }, 100); // Verifique a cada 100 milissegundos
