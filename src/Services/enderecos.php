@@ -21,10 +21,9 @@ function enderecos() {
     var address1  = getValue("inputAddress1");
     var address2  = getValue("inputAddress2");
     var city      = getValue("inputCity");
-    var state     = getValue("stateselect"); // pode vir de <select> sem problema
+    var state     = getValue("stateselect"); 
     var postcode  = getValue("inputPostcode");
     var empresa  = getValue("inputCompanyName");
-
     setValue("inputDCFirstName", firstName);
     setValue("inputDCLastName", lastName);
     setValue("inputDCEmail", email);
@@ -35,6 +34,30 @@ function enderecos() {
     setValue("inputDCState", state);
     setValue("inputDCPostcode", postcode);
     setValue("inputDCCompanyName", empresa);
+
+
+
+    // novo checkout
+    var firstName = getValue("firstname");
+    var lastName  = getValue("lastname");
+    var email     = getValue("email");
+    var phone     = getValue("phonenumber");
+    var address1  = getValue("address1");
+    var address2  = getValue("address2") || "";
+    var city      = getValue("city");
+    var state     = getValue("state");
+    var postcode  = getValue("postcode");
+    setValue("firstname", firstName);
+    setValue("lastname", lastName);
+    setValue("email", email);
+    setValue("domaincontactphonenumber", phone);
+    setValue("address1", address1);
+    setValue("address2", address2);
+    setValue("city", city);
+    setValue("state", state);
+    setValue("postcode", postcode);
+    setValue("companyname", empresa);
+
   }
 
   // jQuery ready

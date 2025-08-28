@@ -42,7 +42,7 @@ function cpfcnpj_script() {
   }
 
   jQuery(function(){
-    var \$field = jQuery('#customfield1');
+    var \$field = jQuery('#customfield1, #cl_custom_field_1');
     if(\$field.length){
       maskCpfCnpj(\$field);
       \$field.on('input', function(){ maskCpfCnpj(\$field); });
