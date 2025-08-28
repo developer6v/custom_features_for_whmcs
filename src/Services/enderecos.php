@@ -47,6 +47,7 @@ function enderecos() {
     setValue(D,'#domaincontactcountry',country);
   }
   function handle(e){
+    console.log("handle");
     var watch='#firstname,#lastname,#email,#phonenumber,#address1,#city,#state,#postcode,#companyname,#inputCountry,input[name="country-calling-code-phonenumber"]';
     if(e.target&&e.target.matches(watch))autofillDomainAddress();
   }
