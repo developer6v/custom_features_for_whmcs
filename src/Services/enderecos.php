@@ -4,34 +4,25 @@ function enderecos() {
 <script>
 (function(){
   function trigger(el,type){if(!el)return;try{el.dispatchEvent(new Event(type,{bubbles:true}));}catch(e){}}
-  function getDomainScope(){
-    var sel=document.getElementById('inputDomainContact');
-    if(!sel)return null;
-    var panel=sel.closest('.panel-body');
-    return panel?panel.nextElementSibling:null;
-  }
+  function getDomainScope(){var sel=document.getElementById('inputDomainContact');if(!sel)return null;var p=sel.closest('.panel-body');return p?p.nextElementSibling:null;}
   function getClientScope(){
-    return document.querySelector('form[data-gtm-form-interact-id]')?.closest('.panel-body')||null;
+    var byPhone=document.getElementById('phonenumber');
+    if(byPhone){var b=byPhone.closest('.panel-body');if(b)return b;}
+    var byCountry=document.getElementById('inputCountry');
+    if(byCountry){var c=byCountry.closest('.panel-body');if(c)return c;}
+    var f=document.querySelector('form[data-gtm-form-interact-id]');
+    return f?(f.closest('.panel-body')||null):null;
   }
-  function q(scope,sel){return scope?scope.querySelector(sel):null;}
-  function getValue(scope,sel){var el=q(scope,sel);return el?el.value:"";}
-  function setValue(scope,sel,value){
-    var el=q(scope,sel);if(!el)return;
-    if(el.tagName==='SELECT'){
-      var prev=el.value;el.value=value;
-      if(el.value!==value){
-        var opts=el.options||[];
-        for(var i=0;i<opts.length;i++){if(opts[i].text===value){el.value=opts[i].value;break;}}
-      }
-      if(el.value!==prev)trigger(el,'change');
-    }else{
-      if(el.value!==value){el.value=value;trigger(el,'input');trigger(el,'change');trigger(el,'blur');}
-    }
+  function q(s,sel){return s?s.querySelector(sel):null;}
+  function getValue(s,sel){var el=q(s,sel);return el?el.value:"";}
+  function setValue(s,sel,val){
+    var el=q(s,sel);if(!el)return;
+    if(el.tagName==='SELECT'){var prev=el.value;el.value=val;if(el.value!==val){var opts=el.options||[];for(var i=0;i<opts.length;i++){if(opts[i].text===val){el.value=opts[i].value;break;}}}if(el.value!==prev)trigger(el,'change');}
+    else{if(el.value!==val){el.value=val;trigger(el,'input');trigger(el,'change');trigger(el,'blur');}}
   }
   function autofillDomainAddress(){
     var S=getClientScope(),D=getDomainScope();
-    if(!S||!D)return;
-    console.log('[enderecos] sync',{S:!!S,D:!!D});
+    if(!S||!D){return;}
     var firstName=getValue(S,'#firstname');
     var lastName=getValue(S,'#lastname');
     var email=getValue(S,'#email');
@@ -55,16 +46,17 @@ function enderecos() {
     setValue(D,'#companyname',company);
     setValue(D,'#domaincontactcountry',country);
   }
+  function handle(e){
+    var watch='#firstname,#lastname,#email,#phonenumber,#address1,#city,#state,#postcode,#companyname,#inputCountry,input[name="country-calling-code-phonenumber"]';
+    if(e.target&&e.target.matches(watch))autofillDomainAddress();
+  }
   function bind(){
-    var watchSel='#firstname,#lastname,#email,#phonenumber,#address1,#city,#state,#postcode,#companyname,#inputCountry,input[name="country-calling-code-phonenumber"]';
-    document.addEventListener('input',function(e){if(e.target.matches(watchSel))autofillDomainAddress();},true);
-    document.addEventListener('change',function(e){if(e.target.matches(watchSel))autofillDomainAddress();},true);
-    document.addEventListener('blur',function(e){if(e.target.matches(watchSel))autofillDomainAddress();},true);
-    var dc=document.getElementById('inputDomainContact');
-    if(dc)dc.addEventListener('change',autofillDomainAddress);
+    document.addEventListener('input',handle,true);
+    document.addEventListener('change',handle,true);
+    document.addEventListener('blur',handle,true);
+    var dc=document.getElementById('inputDomainContact');if(dc)dc.addEventListener('change',autofillDomainAddress);
   }
   jQuery(function(){
-    console.log('[enderecos] init');
     bind();
     autofillDomainAddress();
     setTimeout(autofillDomainAddress,300);
