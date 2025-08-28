@@ -3,47 +3,77 @@ function enderecos() {
     return <<<HTML
 <script>
 (function(){
-  function firstIn(c, sel){var e=jQuery(c).find(sel).get(0);return e||null}
-  function gvIn(c, sel){var e=firstIn(c, sel);return e?e.value:""}
-  function svIn(c, sel, v){var e=firstIn(c, sel);if(e)e.value=v}
+  var syncing=false;
 
-  function syncPanels(){
-    var src = jQuery('#phonenumber').closest('.panel-body');
-    var dst = jQuery('#domaincontactphonenumber').closest('.panel-body');
-    if(!src.length || !dst.length) return;
+  var groups={
+    firstname:  ['[name="firstname"]'],
+    lastname:   ['[name="lastname"]'],
+    email:      ['[name="email"]'],
+    phone:      ['[name="phonenumber"]','[name="domaincontactphonenumber"]'],
+    address1:   ['[name="address1"]'],
+    city:       ['[name="city"]'],
+    state:      ['[name="state"]'],
+    postcode:   ['[name="postcode"]'],
+    company:    ['[name="companyname"]']
+  };
 
-    var firstName = gvIn(src,'[name="firstname"]');
-    var lastName  = gvIn(src,'[name="lastname"]');
-    var email     = gvIn(src,'[name="email"]');
-    var phone     = gvIn(src,'#phonenumber,[name="phonenumber"]');
-    var address1  = gvIn(src,'[name="address1"]');
-    var address2  = gvIn(src,'[name="address2"]');
-    var city      = gvIn(src,'[name="city"]');
-    var state     = gvIn(src,'[name="state"]');
-    var postcode  = gvIn(src,'[name="postcode"]');
-    var empresa   = gvIn(src,'[name="companyname"]');
+  function firstNonEmpty(list){
+    for(var i=0;i<list.length;i++){
+      var $els=jQuery(list[i]);
+      for(var j=0;j<$els.length;j++){
+        var v=$els.eq(j).val();
+        if(v!=null && v!=="") return v;
+      }
+    }
+    return "";
+  }
 
-    svIn(dst,'[name="firstname"]', firstName);
-    svIn(dst,'[name="lastname"]',  lastName);
-    svIn(dst,'[name="email"]',     email);
-    svIn(dst,'#domaincontactphonenumber,[name="domaincontactphonenumber"]', phone);
-    svIn(dst,'[name="address1"]',  address1);
-    svIn(dst,'[name="address2"]',  address2);
-    svIn(dst,'[name="city"]',      city);
-    svIn(dst,'[name="state"]',     state);
-    svIn(dst,'[name="postcode"]',  postcode);
-    svIn(dst,'[name="companyname"]', empresa);
+  function setAll(list,val,except){
+    for(var i=0;i<list.length;i++){
+      var $els=jQuery(list[i]);
+      $els.each(function(){
+        if(this===except) return;
+        if(this.value!==val){
+          this.value=val;
+          if(this.tagName==="SELECT") jQuery(this).trigger("change");
+        }
+      });
+    }
+  }
+
+  function init(){
+    if(syncing) return;
+    syncing=true;
+    for(var k in groups){
+      var v=firstNonEmpty(groups[k]);
+      if(v!=="") setAll(groups[k],v,null);
+    }
+    syncing=false;
+  }
+
+  function bind(){
+    var sels=[];
+    for(var k in groups){ sels=sels.concat(groups[k]); }
+    var uniq=[].filter.call(sels,function(v,i,arr){ return arr.indexOf(v)===i; });
+    jQuery(document).on("input change blur", uniq.join(", "), function(){
+      if(syncing) return;
+      syncing=true;
+      var el=this, val=jQuery(this).val();
+      for(var k in groups){
+        if(jQuery(el).is(groups[k].join(", "))){
+          setAll(groups[k],val,el);
+        }
+      }
+      syncing=false;
+    });
   }
 
   jQuery(function(){
-    syncPanels();
-    var src = jQuery('#phonenumber').closest('.panel-body');
-    if(src.length){
-      jQuery(src).on('input change blur', 'input,select', function(){ syncPanels(); });
-    }
-    setTimeout(syncPanels,300);
-    setTimeout(syncPanels,1000);
-    setTimeout(syncPanels,2000);
+    bind();
+    init();
+    setTimeout(init,300);
+    setTimeout(init,1000);
+    setTimeout(init,2000);
   });
 })();
 </script>
