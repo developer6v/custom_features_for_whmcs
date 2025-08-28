@@ -3,77 +3,69 @@ function enderecos() {
     return <<<HTML
 <script>
 (function(){
-  var syncing=false;
-
-  var groups={
-    firstname:  ['[name="firstname"]'],
-    lastname:   ['[name="lastname"]'],
-    email:      ['[name="email"]'],
-    phone:      ['[name="phonenumber"]','[name="domaincontactphonenumber"]'],
-    address1:   ['[name="address1"]'],
-    city:       ['[name="city"]'],
-    state:      ['[name="state"]'],
-    postcode:   ['[name="postcode"]'],
-    company:    ['[name="companyname"]']
-  };
-
-  function firstNonEmpty(list){
-    for(var i=0;i<list.length;i++){
-      var $els=jQuery(list[i]);
-      for(var j=0;j<$els.length;j++){
-        var v=$els.eq(j).val();
-        if(v!=null && v!=="") return v;
-      }
+  function $$all(key){
+    var list=[];
+    var byId=document.getElementById(key); if(byId) list.push(byId);
+    var byName=document.getElementsByName(key); for(var i=0;i<byName.length;i++){ list.push(byName[i]); }
+    return list;
+  }
+  function getValue(key){
+    var els=$$all(key);
+    for(var i=0;i<els.length;i++){
+      var v=els[i].value;
+      if(v!=null && v!=="") return v;
     }
     return "";
   }
-
-  function setAll(list,val,except){
-    for(var i=0;i<list.length;i++){
-      var $els=jQuery(list[i]);
-      $els.each(function(){
-        if(this===except) return;
-        if(this.value!==val){
-          this.value=val;
-          if(this.tagName==="SELECT") jQuery(this).trigger("change");
-        }
-      });
-    }
-  }
-
-  function init(){
-    if(syncing) return;
-    syncing=true;
-    for(var k in groups){
-      var v=firstNonEmpty(groups[k]);
-      if(v!=="") setAll(groups[k],v,null);
-    }
-    syncing=false;
-  }
-
-  function bind(){
-    var sels=[];
-    for(var k in groups){ sels=sels.concat(groups[k]); }
-    var uniq=[].filter.call(sels,function(v,i,arr){ return arr.indexOf(v)===i; });
-    jQuery(document).on("input change blur", uniq.join(", "), function(){
-      if(syncing) return;
-      syncing=true;
-      var el=this, val=jQuery(this).val();
-      for(var k in groups){
-        if(jQuery(el).is(groups[k].join(", "))){
-          setAll(groups[k],val,el);
-        }
+  function setValue(key,value){
+    var els=$$all(key);
+    for(var i=0;i<els.length;i++){
+      if(els[i].value!==value){
+        els[i].value=value;
+        if(els[i].tagName==="SELECT"){ if(typeof jQuery!=="undefined") jQuery(els[i]).trigger("change"); }
       }
-      syncing=false;
-    });
+    }
+  }
+
+  function autofillDomainAddress(){
+    var firstName = getValue("firstname");
+    var lastName  = getValue("lastname");
+    var email     = getValue("email");
+    var phone     = getValue("phonenumber") || getValue("domaincontactphonenumber");
+    var address1  = getValue("address1");
+    var address2  = getValue("address2");
+    var city      = getValue("city");
+    var state     = getValue("state");
+    var postcode  = getValue("postcode");
+    var empresa   = getValue("companyname");
+
+    setValue("firstname", firstName);
+    setValue("lastname", lastName);
+    setValue("email", email);
+    setValue("phonenumber", phone);
+    setValue("domaincontactphonenumber", phone);
+    setValue("address1", address1);
+    setValue("address2", address2);
+    setValue("city", city);
+    setValue("state", state);
+    setValue("postcode", postcode);
+    setValue("companyname", empresa);
   }
 
   jQuery(function(){
-    bind();
-    init();
-    setTimeout(init,300);
-    setTimeout(init,1000);
-    setTimeout(init,2000);
+    autofillDomainAddress();
+    var sel=[
+      '[name="firstname"]','[name="lastname"]','[name="email"]',
+      '[name="phonenumber"]','[name="domaincontactphonenumber"]',
+      '[name="address1"]','[name="address2"]','[name="city"]',
+      '[name="state"]','[name="postcode"]','[name="companyname"]',
+      '#firstname','#lastname','#email','#phonenumber','#domaincontactphonenumber',
+      '#address1','#address2','#city','#state','#postcode','#companyname'
+    ].join(", ");
+    jQuery(document).on("input change blur", sel, function(){ autofillDomainAddress(); });
+    setTimeout(autofillDomainAddress,300);
+    setTimeout(autofillDomainAddress,1000);
+    setTimeout(autofillDomainAddress,2000);
   });
 })();
 </script>
