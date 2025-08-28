@@ -1,1 +1,5 @@
 <?php
+function enderecos() {
+    return '';
+}
+?>
