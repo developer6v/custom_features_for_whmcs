@@ -66,15 +66,20 @@ function enderecos() {
     var dc=document.getElementById('inputDomainContact');if(dc)dc.addEventListener('change',autofillDomainAddress);
   }
 
-  // Loop para verificar a presença do segundo formulário
+  // Loop para verificar a presença do segundo formulário baseado no campo inputDomainContact
   var checkFormExist = setInterval(function() {
-    var secondForm = document.querySelector('form#secondFormId'); // Altere 'secondFormId' para o ID do seu segundo formulário
-    if (secondForm) {
-      clearInterval(checkFormExist); // Quando o segundo formulário for encontrado, pare de verificar
-      console.log("Segundo formulário encontrado! Preenchendo os dados...");
-      autofillDomainAddress(); // Preenche os dados no segundo formulário
+    var inputField = document.getElementById('inputDomainContact'); // Procura pelo campo com ID 'inputDomainContact'
+    if (inputField) {
+      clearInterval(checkFormExist); // Quando o campo for encontrado, pare de verificar
+      var secondForm = inputField.closest('form'); // Encontrar o formulário mais próximo do campo
+      if (secondForm) {
+        console.log("Segundo formulário encontrado! Preenchendo os dados...");
+        autofillDomainAddress(); // Preenche os dados no segundo formulário
+      } else {
+        console.log("Formulário não encontrado próximo ao campo!");
+      }
     } else {
-      console.log("Segundo formulário ainda não encontrado...");
+      console.log("Campo inputDomainContact ainda não encontrado...");
     }
   }, 500); // Verifica a cada 500 milissegundos
 
