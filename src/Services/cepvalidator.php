@@ -51,8 +51,17 @@ function cepvalidator_script() {
             $cep.mask('00000-000');  // Máscara para o CEP
         }
 
+        // Função para garantir que o campo esteja pronto para aplicar a máscara
+        function checkAndApplyMask() {
+            var $cep = byName('postcode');
+            if ($cep.length) {
+                maskCep(); // Aplica a máscara quando o campo estiver disponível
+                clearInterval(maskInterval); // Para o intervalo após aplicar a máscara
+            }
+        }
+
         jQuery(function(){
-            maskCep(); // Aplica a máscara ao carregar a página
+            var maskInterval = setInterval(checkAndApplyMask, 100); // Verifica a cada 100ms se o campo foi carregado
             setDisabled(true);
             validateCep();
             jQuery(document).on('change', 'input[name="postcode"]', function(){ validateCep(); });
