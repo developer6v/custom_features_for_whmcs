@@ -16,7 +16,6 @@ function cpfcnpj_script() {
   }
 
   function maskCpfCnpj(\$el){
-    console.log("Chamou a máscara de CPF/CNPJ");
     var v = digits(\$el.val());
     if(v.length > 14) v = v.slice(0,14);
     if(v.length <= 11){
@@ -38,7 +37,6 @@ function cpfcnpj_script() {
         v = v.replace(/^(\\d{2})(\\d{0,3}).*$/, "\$1.\$2");
       }
     }
-    console.log("Valor com máscara:", v); // Log para ver o valor com a máscara
     \$el.val(v);
     toggleCompanyRequired(digits(v).length > 11);
   }
@@ -49,14 +47,10 @@ function cpfcnpj_script() {
       var \$field = jQuery('#cl_custom_field_1');
       if (\$field.length) {
         clearInterval(checkExist); // Quando o campo for encontrado, pare de verificar
-        console.log("Campo encontrado! Aplicando a máscara...");
         maskCpfCnpj(\$field);
         \$field.on('input', function(){
-          console.log("Input alterado, aplicando a máscara...");
           maskCpfCnpj(\$field);
         });
-      } else {
-        console.log("Campo não encontrado ainda...");
       }
     }, 100); // Verifica a cada 100 milissegundos
   });
