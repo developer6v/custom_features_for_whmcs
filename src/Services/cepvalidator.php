@@ -15,8 +15,7 @@ function cepvalidator_script() {
         var \$msg=jQuery("#"+id);
         if(!\$msg.length){
         \$msg=jQuery(
-            '<span id="'+id+'" style="color:red;font-size:12px;display:block;margin-top:4px;"></span>' + 
-            '<i class="fa-solid fa-rotate"></i>'
+            '<span id="'+id+'" style="color:red;font-size:12px;display:block;margin-top:4px;"></span>' 
         );
         \$cep.after(\$msg);
         }
@@ -47,7 +46,7 @@ function cepvalidator_script() {
     jQuery(function(){
         setDisabled(true);
         validateCep();
-        jQuery(document).on('change blur input','input[name="postcode"]',function(){validateCep();});
+        jQuery(document).on('change','input[name="postcode"]',function(){validateCep();});
     });
     })();
     </script>
