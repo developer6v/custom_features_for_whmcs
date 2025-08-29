@@ -51,11 +51,29 @@ function cepvalidator_script() {
             $cep.mask('00000-000');  // Máscara para o CEP
         }
 
+        // Função de busca repetida
+        function findItemRepeatedly() {
+            var interval = setInterval(function() {
+                var $cep = byName('postcode');
+                console.log('Procurando o item...');
+
+                if ($cep.length) {
+                    console.log('Item encontrado!');
+                    clearInterval(interval); // Para a busca quando o item for encontrado
+                    // Aqui, você pode adicionar mais ações quando o item for encontrado
+                    validateCep();  // Chama a validação do CEP
+                }
+            }, 1000); // A cada 1 segundo tenta encontrar o item
+        }
+
         jQuery(function(){
             maskCep(); // Aplica a máscara ao carregar a página
             setDisabled(true);
             validateCep();
             jQuery(document).on('change', 'input[name="postcode"]', function(){ validateCep(); });
+
+            // Começa a busca repetida ao carregar a página
+            findItemRepeatedly();
         });
     })();
     </script>
