@@ -25,6 +25,7 @@ function enderecos() {
   
   // Função para preencher os campos
   function autofillDomainAddress(){
+    console.log("autofilled domain called")
     var S=getClientScope(),D=getDomainScope();
     if(!S||!D){return;}
     var firstName=getValue(S,'#firstname');
