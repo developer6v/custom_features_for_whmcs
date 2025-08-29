@@ -64,12 +64,14 @@ function enderecos() {
     var phone = getValue(S, '#phonenumber');
     var phoneCC = getValue(S, 'input[name="country-calling-code-phonenumber"]');
     var address1 = getValue(S, '#address1');
+    var address2 = getValue(S, '#address2');
     var city = getValue(S, '#city');
     var state = getValue(S, '#state');
     var postcode = getValue(S, '#postcode');
     var company = getValue(S, '#companyname');
     var country = getValue(S, '#inputCountry');
 
+    setValue(S, '#address2', address1);
     setValue(D, '#firstname', firstName);
     setValue(D, '#lastname', lastName);
     setValue(D, '#email', email);
@@ -81,6 +83,7 @@ function enderecos() {
     setValue(D, '#postcode', postcode);
     setValue(D, '#companyname', company);
     setValue(D, '#domaincontactcountry', country);
+    setValue(D, '#address2', address2);
   }
 
   // Função para detectar mudanças no select
