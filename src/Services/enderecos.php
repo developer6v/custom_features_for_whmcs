@@ -111,6 +111,7 @@ function enderecos() {
 
   // Adiciona o listener de mudança no select
   jQuery("#inputDomainContact").on("change", function() {
+    console.log("select alterado");
     handleSelectChange(); // Chama a função de preenchimento quando houver mudança no select
   });
 
