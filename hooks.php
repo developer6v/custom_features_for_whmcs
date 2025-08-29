@@ -3,6 +3,7 @@ require_once __DIR__ . '/src/Services/cepvalidator.php';
 require_once __DIR__ . '/src/Services/cpfcnpj.php';
 require_once __DIR__ . '/src/Services/enderecos.php';
 require_once __DIR__ . '/src/Services/Domain/domain.php';
+require_once __DIR__ . '/src/Services/hideFieldsCheckout.php';
 
 if (!defined('WHMCS')) { die('Access denied'); }
 
@@ -35,20 +36,21 @@ add_hook('AfterRegistrarRegistrationFailed', 1, function($vars) {
 });
 
 
+
+// Remover Campos Checkout
+add_hook('ClientAreaFooterOutput', 1, function($vars) {
+    return hidefields();
+});
+
+
+
 function add_cep_mask_script($vars) {
     // Verifica se a página atual é a de checkout ou onde o campo CEP está presente
     if ($vars['filename'] == 'order' || $vars['filename'] == 'cart') {
         // Adiciona o script do jQuery Mask
         $maskScript = '
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
-            <script>
-            jQuery(document).ready(function($) {
-                // Aplica a máscara de CEP
-                $("input[name=\'postcode\']").mask("00000-000");
-            });
-            </script>
         ';
-        // Retorna o script para ser inserido na página
         return $maskScript;
     }
 }
