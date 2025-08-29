@@ -6,7 +6,15 @@ function enderecos() {
   function trigger(el,type){if(!el)return;try{el.dispatchEvent(new Event(type,{bubbles:true}));}catch(e){}}
   
   // Funções de escopo e de captura de valores
-  function getDomainScope(){var sel=document.getElementById('inputDomainContact');if(!sel)return null;var p=sel.closest('.panel-body');return p?p.nextElementSibling:null;}
+  function getDomainScope(){
+    var sel = document.getElementById('inputDomainContact');
+    if (!sel) return null;
+    var p = sel.closest('.panel-body');
+    // Mesmo que o campo não esteja visível, retorne o próximo elemento
+    return p ? p.nextElementSibling : null;
+  }
+
+
   function getClientScope(){
     var byPhone=document.getElementById('phonenumber');
     if(byPhone){var b=byPhone.closest('.panel-body');if(b)return b;}
