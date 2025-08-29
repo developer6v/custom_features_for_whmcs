@@ -27,7 +27,12 @@ function enderecos() {
   function autofillDomainAddress(){
     console.log("autofilled domain called")
     var S=getClientScope(),D=getDomainScope();
-    if(!S||!D){return;}
+    if(!S||!D){
+      console.log("retornando")
+      console.log("s", S)
+      console.log("d", D)
+      return;
+    }
     var firstName=getValue(S,'#firstname');
     var lastName=getValue(S,'#lastname');
     var email=getValue(S,'#email');
