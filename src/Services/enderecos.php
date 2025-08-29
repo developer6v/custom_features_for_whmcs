@@ -8,6 +8,7 @@ function enderecos() {
   // Funções de escopo e de captura de valores
   function getDomainScope(){ 
     var sel=document.getElementById('inputDomainContact');
+    console.log("Procurando inputDomainContact:", sel); // Log para verificar o estado de 'inputDomainContact'
     if (!sel) return null;
     var p=sel.closest('.panel-body');
     return p ? p.nextElementSibling : null; // Retorna o próximo elemento irmão
@@ -100,6 +101,7 @@ function enderecos() {
   // Verifica periodicamente se o campo 'inputDomainContact' está disponível
   var checkFormExist = setInterval(function() {
     var inputField = document.getElementById('inputDomainContact'); 
+    console.log("Procurando campo 'inputDomainContact':", inputField); // Log para verificar se o campo foi encontrado
     if (inputField) {
       clearInterval(checkFormExist); // Quando o campo for encontrado, pare de verificar
       console.log("Campo inputDomainContact encontrado!");
@@ -117,6 +119,7 @@ function enderecos() {
 
   // Inicializa a lógica no carregamento da página
   jQuery(function(){
+    console.log("Iniciando autofillDomainAddress no carregamento da página...");
     autofillDomainAddress();  // Preenche os dados automaticamente assim que o documento estiver pronto
   });
 })();
