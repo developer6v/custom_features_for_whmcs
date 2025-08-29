@@ -11,6 +11,7 @@ function enderecos() {
     console.log("Procurando inputDomainContact:", sel); // Log para verificar o estado de 'inputDomainContact'
     if (!sel) return null;
     var p=sel.closest('.panel-body');
+    console.log("Procurando próximo elemento irmão do inputDomainContact:", p); // Log para verificar se o 'closest' retorna o elemento esperado
     return p ? p.nextElementSibling : null; // Retorna o próximo elemento irmão
   }
 
@@ -90,11 +91,13 @@ function enderecos() {
 
   // Função para detectar mudanças no select
   function handleSelectChange() {
-    console.log("Mudança detectada no select!");
+    console.log("Mudança detectada no select!"); // Log para verificar se o evento 'change' foi disparado
     var secondForm = getDomainScope();
     if (secondForm) {
       console.log("Formulario encontrado! Preenchendo...");
       autofillDomainAddress(); // Chama a função de preenchimento quando o formulário é revelado
+    } else {
+      console.log("Formulario não encontrado.");
     }
   }
 
@@ -103,6 +106,17 @@ function enderecos() {
     var inputField = document.getElementById('inputDomainContact'); 
     console.log("Procurando campo 'inputDomainContact':", inputField); // Log para verificar se o campo foi encontrado
     if (inputField) {
+      // Adiciona o listener de mudança no select com addEventListener
+      if (inputField) {
+        inputField.addEventListener("change", function() {
+          console.log("select alterado"); // Log para verificar se o evento 'change' foi disparado
+          handleSelectChange(); // Chama a função de preenchimento quando houver mudança no select
+        });
+      } else {
+        console.log("inputDomainContact não encontrado na inicialização!");
+      }
+
+
       clearInterval(checkFormExist); // Quando o campo for encontrado, pare de verificar
       console.log("Campo inputDomainContact encontrado!");
       autofillDomainAddress(); // Preenche os dados no segundo formulário automaticamente
@@ -111,11 +125,6 @@ function enderecos() {
     }
   }, 500); // Verifica a cada 500 milissegundos
 
-  // Adiciona o listener de mudança no select
-  jQuery("#inputDomainContact").on("change", function() {
-    console.log("select alterado");
-    handleSelectChange(); // Chama a função de preenchimento quando houver mudança no select
-  });
 
   // Inicializa a lógica no carregamento da página
   jQuery(function(){
