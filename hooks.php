@@ -39,8 +39,13 @@ add_hook('AfterRegistrarRegistrationFailed', 1, function($vars) {
 
 // Remover Campos Checkout
 add_hook('ClientAreaFooterOutput', 1, function($vars) {
-    return hidefields();
+    // Verifica se estamos na página de checkout e a URL contém o produto específico
+    if (strpos($_SERVER['REQUEST_URI'], 'hospedam-dedicada/teste-otavioi') !== false) {
+        // Produto encontrado, executa a função para esconder os campos
+        return hidefields();
+    }
 });
+
 
 
 
