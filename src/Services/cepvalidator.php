@@ -2,6 +2,7 @@
 function cepvalidator_script() {
     return <<<HTML
     <script>
+        console.log('cepvalidator script')
     (function(){
         function byName(n){ return jQuery('input[name="'+n+'"]'); }
         function btns() {
