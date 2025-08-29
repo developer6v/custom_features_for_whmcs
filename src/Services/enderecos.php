@@ -4,6 +4,8 @@ function enderecos() {
 <script>
 (function(){
   function trigger(el,type){if(!el)return;try{el.dispatchEvent(new Event(type,{bubbles:true}));}catch(e){}}
+  
+  // Funções de escopo e de captura de valores
   function getDomainScope(){var sel=document.getElementById('inputDomainContact');if(!sel)return null;var p=sel.closest('.panel-body');return p?p.nextElementSibling:null;}
   function getClientScope(){
     var byPhone=document.getElementById('phonenumber');
@@ -20,6 +22,8 @@ function enderecos() {
     if(el.tagName==='SELECT'){var prev=el.value;el.value=val;if(el.value!==val){var opts=el.options||[];for(var i=0;i<opts.length;i++){if(opts[i].text===val){el.value=opts[i].value;break;}}}if(el.value!==prev)trigger(el,'change');}
     else{if(el.value!==val){el.value=val;trigger(el,'input');trigger(el,'change');trigger(el,'blur');}}
   }
+  
+  // Função para preencher os campos
   function autofillDomainAddress(){
     var S=getClientScope(),D=getDomainScope();
     if(!S||!D){return;}
@@ -46,17 +50,35 @@ function enderecos() {
     setValue(D,'#companyname',company);
     setValue(D,'#domaincontactcountry',country);
   }
+  
+  // Função de evento para detectar mudanças no formulário
   function handle(e){
     console.log("handle");
     var watch='#firstname,#lastname,#email,#phonenumber,#address1,#city,#state,#postcode,#companyname,#inputCountry,input[name="country-calling-code-phonenumber"]';
     if(e.target&&e.target.matches(watch))autofillDomainAddress();
   }
+  
+  // Função para ligar os eventos de input, change, blur
   function bind(){
     document.addEventListener('input',handle,true);
     document.addEventListener('change',handle,true);
     document.addEventListener('blur',handle,true);
     var dc=document.getElementById('inputDomainContact');if(dc)dc.addEventListener('change',autofillDomainAddress);
   }
+
+  // Loop para verificar a presença do segundo formulário
+  var checkFormExist = setInterval(function() {
+    var secondForm = document.querySelector('form#secondFormId'); // Altere 'secondFormId' para o ID do seu segundo formulário
+    if (secondForm) {
+      clearInterval(checkFormExist); // Quando o segundo formulário for encontrado, pare de verificar
+      console.log("Segundo formulário encontrado! Preenchendo os dados...");
+      autofillDomainAddress(); // Preenche os dados no segundo formulário
+    } else {
+      console.log("Segundo formulário ainda não encontrado...");
+    }
+  }, 500); // Verifica a cada 500 milissegundos
+
+  // Inicializa a lógica no carregamento da página
   jQuery(function(){
     bind();
     autofillDomainAddress();
