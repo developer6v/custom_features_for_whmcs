@@ -14,7 +14,10 @@ function cepvalidator_script() {
         var id="cep-validator-msg";
         var \$msg=jQuery("#"+id);
         if(!\$msg.length){
-        \$msg=jQuery('<span id="'+id+'" style="color:red;font-size:12px;display:block;margin-top:4px;"></span>');
+        \$msg=jQuery(
+            '<span id="'+id+'" style="color:red;font-size:12px;display:block;margin-top:4px;"></span>' + 
+            '<i class="fa-solid fa-rotate"></i>'
+        );
         \$cep.after(\$msg);
         }
         \$msg.text(msg||'');
