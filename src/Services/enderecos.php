@@ -97,29 +97,21 @@ function enderecos() {
   // Verifica periodicamente se o campo 'inputDomainContact' está disponível
   var checkFormExist = setInterval(function() {
     var inputField = document.getElementById('inputDomainContact'); 
-    var inputs = ["#firstname", "#lastname", "#email", "#phonenumber", "#address1", "#address2", "#city", "#state", "#postcode", "#companyname", "#inputCountry"];
-    
+    var seletor = ("#firstname", "#lastname", "#email", "#phonenumber");
     if (inputField) {
-      // Adiciona o listener de mudança para os campos do formulário
-      inputs.forEach(function(inputSelector) {
-        var inputElement = document.querySelector(inputSelector);
-        if (inputElement) {
-          inputElement.addEventListener("input", function() {
-            autofillDomainAddress(); // Chama a função de preenchimento sempre que qualquer campo for alterado
-          });
-        }
-      });
-
-      // Listener adicional para select
-      var selectElement = document.querySelector("#inputDomainContact");
-      if (selectElement) {
-        selectElement.addEventListener("change", handleSelectChange); // Detecta mudanças no select
+      // Adiciona o listener de mudança no select com addEventListener
+      if (inputField) {
+        inputField.addEventListener("change", function() {
+          handleSelectChange(); // Chama a função de preenchimento quando houver mudança no select
+        });
       }
+
 
       clearInterval(checkFormExist); // Quando o campo for encontrado, pare de verificar
       autofillDomainAddress(); // Preenche os dados no segundo formulário automaticamente
     } 
   }, 500); // Verifica a cada 500 milissegundos
+
 
   // Inicializa a lógica no carregamento da página
   jQuery(function(){
