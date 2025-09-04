@@ -7,7 +7,7 @@ function domain_manager($vars) {
 
         $domain_id = $vars['params']['domainid'];
         $domain_name = $vars['params']['sld'] . '.' . $vars['params']['tld'];  
-        $client_id = $vars['params']['clientid']; 
+        $client_id = $vars['params']['userid']; 
 
         $existingDomain = Capsule::table('sr_cf_domain_error_129')
             ->where('domain_id', $domain_id)
@@ -37,7 +37,8 @@ function domain_manager($vars) {
                 Capsule::table('sr_cf_domain_error_129')
                     ->where('domain', $domain_name)
                     ->update([
-                        'trials' => $existingDomain->trials + 1
+                        'trials' => $existingDomain->trials + 1,
+                        'updated_at' => date('Y-m-d H:i:s'),
                 ]);
             }
         } else {
@@ -46,7 +47,9 @@ function domain_manager($vars) {
                 'trials' => 1,
                 'status' => 0,
                 'client_id' => $client_id,
-                'domain' => $domain_name
+                'domain' => $domain_name,
+                'created_at' => date('Y-m-d H:i:s'), 
+                
             ]);
         }
     }
@@ -56,23 +59,34 @@ function domain_manager($vars) {
 
 
 function openTicket($vars) {
-    $client_id = $vars['params']['clientid'];
-    $subject = "Saldo a ser convertido como crédito";
-    $message = "O número de tentativas para o domínio {$vars['params']['sld']}.{$vars['params']['tld']} foi excedido. A equipe precisa converter o saldo como crédito.";
+    $client_id = $vars['params']['userid'];
+    $subject = "-";
+    $message = "-";
     
-    // Parâmetros do ticket
-    $ticketParams = [
-        'userid' => $client_id,
+    $command = 'OpenTicket';
+    $postData = array(
+        'deptid' => '1',
         'subject' => $subject,
         'message' => $message,
-        'priority' => 'High', 
-        'status' => 'Open', 
-        'department' => 1
-    ];
-    $result = localAPI('OpenTicket', $ticketParams);
+        'clientid' => $client_id,
+        'admin' => true,
+        'name' => "Stay Cloud - Suporte Técnico",
+        'priority' => 'High',
+        'markdown' => true
+    );
+    
+    $result = localAPI($command, $postData);
+
     if ($result['result'] == 'success') {
-        logModuleCall('domain_manager', 'openTicket', $ticketParams, $result);
+        logActivity('domain_manager openTicket');
     } else {
-        logModuleCall('domain_manager', 'openTicket_error', $ticketParams, $result);
+        $error_message = isset($result['message']) ? $result['message'] : 'Unknown error';
+        logActivity('domain_manager openTicket_error - clientid: ' . $client_id . ' - Error: ' . $error_message);
+   
     }
+}
+
+
+function markAsCancelled () {
+
 }
