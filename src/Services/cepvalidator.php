@@ -4,7 +4,7 @@ function cepvalidator_script() {
 <script>
 (function(){
   'use strict';
-  console.log('[cepvalidator] init');
+  alert('[cepvalidator] init');
 
   function onlyDigits(s){ return (s||'').replace(/\\D/g,''); }
   function btns(){ return jQuery('button[type="submit"], input[type="submit"], button#checkout, #place_order'); }
