@@ -2,18 +2,40 @@
 function cpfcnpj_script() {
     return <<<HTML
 <script>
+  // [COMPARTILHADO] controle único do botão
+window.__checkout = window.__checkout || { cep:false, doc:false, company:true };
+
+window.__recomputeCheckout = function(){
+  const g = window.__checkout;
+  const disabled = !(g.cep && g.doc && g.company); // AND de todas as condições
+  document.querySelectorAll('button#checkout, #place_order')
+    .forEach(b => b.disabled = disabled);
+};
+
 (function(){
   function digits(s){ return (s||'').replace(/\\D/g,''); }
 
-  function toggleCompanyRequired(isCnpj){
-    var \$company = jQuery('input[name="companyname"]');
-    if(!\$company.length) return;
-    if(isCnpj){
-      \$company.attr('required', 'required').attr('aria-required', 'true');
-    }else{
-      \$company.removeAttr('required').removeAttr('aria-required');
-    }
+function toggleCompanyRequired(isCnpj){
+  var $company = jQuery('input[name="companyname"]');
+  if(!$company.length) return;
+
+  if(isCnpj){
+    $company.attr('required','required').attr('aria-required','true');
+  }else{
+    $company.removeAttr('required').removeAttr('aria-required');
   }
+
+  // Atualiza a flag "company": se for CNPJ, exige valor; se CPF, libera.
+  window.__checkout.company = !isCnpj || ($company.val().trim().length > 0);
+  window.__recomputeCheckout();
+
+  // Revalida ao digitar/alterar
+  $company.off('.companychk').on('input.companychk change.companychk blur.companychk', function(){
+    window.__checkout.company = !isCnpj || (this.value.trim().length > 0);
+    window.__recomputeCheckout();
+  });
+}
+
 
   function maskCpfCnpj(\$el){
     var v = digits(\$el.val());

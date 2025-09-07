@@ -2,13 +2,23 @@
 function cepvalidator_script() {
     return <<<HTML
 <script>
+  // [COMPARTILHADO] controle único do botão
+window.__checkout = window.__checkout || { cep:false, doc:false, company:true };
+
+window.__recomputeCheckout = function(){
+  const g = window.__checkout;
+  const disabled = !(g.cep && g.doc && g.company); // AND de todas as condições
+  document.querySelectorAll('button#checkout, #place_order')
+    .forEach(b => b.disabled = disabled);
+};
+
 ;(() => {
   // --- Utils (vanilla) ---
   const $ = (sel, root=document) => root.querySelector(sel);
   const $$ = (sel, root=document) => root.querySelectorAll(sel);
   const onlyDigits = s => (s||'').replace(/\\D/g, '');
   const getSubmitButtons = () =>
-    Array.from($$('button[type="submit"], input[type="submit"], button#checkout, #place_order'));
+    Array.from($$('button#checkout, #place_order'));
   const setDisabled = dis => getSubmitButtons().forEach(b => b.disabled = !!dis);
 
   const ensureMsgEl = (afterEl) => {
@@ -38,14 +48,28 @@ function cepvalidator_script() {
 
   const validateCep = (input) => {
     const cep = onlyDigits(input.value);
-    if (cep.length !== 8) { setDisabled(true); showMsg(input, 'CEP inválido'); return; }
+    if (cep.length !== 8) { 
+      window.__checkout.cep = false; window.__recomputeCheckout();
+      showMsg(input, 'CEP inválido');
+      return;
+    }
     fetch('https://viacep.com.br/ws/'+cep+'/json/')
       .then(r => r.json())
       .then(d => {
-        if (d && d.erro) { setDisabled(true); showMsg(input, 'CEP inválido'); }
-        else { setDisabled(false); showMsg(input, ''); }
+        if (d && d.erro) {
+          window.__checkout.cep = false; window.__recomputeCheckout();
+          showMsg(input, 'CEP inválido');
+        }
+        else { 
+          window.__checkout.cep = true; window.__recomputeCheckout();
+
+          showMsg(input, '');
+        }
       })
-      .catch(() => { setDisabled(true); showMsg(input, 'CEP inválido'); });
+      .catch(() => {
+        window.__checkout.cep = false; window.__recomputeCheckout();
+        showMsg(input, 'CEP inválido');
+      });
   };
 
   // --- Busca repetida até achar um campo de CEP ---
@@ -65,7 +89,7 @@ function cepvalidator_script() {
     if (input) {
       clearInterval(timer);
       maskCep(input);
-      setDisabled(true);
+      window.__checkout.cep = false; window.__recomputeCheckout();
       if (input.value) validateCep(input);
       ['input','blur','change'].forEach(evt => input.addEventListener(evt, () => validateCep(input)));
     } else if (tries > 180) {

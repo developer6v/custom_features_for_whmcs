@@ -66,10 +66,21 @@ function enderecos() {
   // Copia agora (e aplica sua regra: address2 = address1 no cliente)
   function autofillDomainAddress(){
     var S = getClientScope(), D = getDomainScope();
-    if(!S || !D) return;
+
+    var address1 = getValue(S, '#address1');
+    [S, D].forEach(function(scope){
+      if(!scope) return;
+      scope.querySelectorAll('#address2').forEach(function(el){
+        var grp = el.closest('.form-group'); if (grp) grp.style.display = 'none';
+        if (el.value !== address1) { el.value = address1; trigger(el,'input'); trigger(el,'change'); trigger(el,'blur'); }
+      });
+    });
+
 
     var address1 = getValue(S, '#address1');
     setValue(S, '#address2', address1);
+    
+    if(!S || !D) return;
 
     for(var i=0;i<MAPPINGS.length;i++){
       setValue(D, MAPPINGS[i][1], getValue(S, MAPPINGS[i][0]));
@@ -140,6 +151,8 @@ function enderecos() {
       });
     }
   }
+
+  
 })();
 </script>
 HTML;
