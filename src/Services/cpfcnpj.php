@@ -34,37 +34,43 @@ function cpfcnpj_script() {
       });
     }
 
-    function maskCpfCnpj($el){
-      var v = digits($el.val());
-      if(v.length > 14) v = v.slice(0,14);
-      if(v.length <= 11){
-        if(v.length > 9){
-          v = v.replace(/^(\d{3})(\d{3})(\d{3})(\d{0,2}).*$/, "$1.$2.$3-$4");
-        } else if(v.length > 6){
-          v = v.replace(/^(\d{3})(\d{3})(\d{0,3}).*$/, "$1.$2.$3");
-        } else if(v.length > 3){
-          v = v.replace(/^(\d{3})(\d{0,3}).*$/, "$1.$2");
-        }
-      } else {
-        if(v.length > 12){
-          v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2}).*$/, "$1.$2.$3/$4-$5");
-        } else if(v.length > 8){
-          v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4}).*$/, "$1.$2.$3/$4");
-        } else if(v.length > 5){
-          v = v.replace(/^(\d{2})(\d{3})(\d{0,3}).*$/, "$1.$2.$3");
-        } else if(v.length > 2){
-          v = v.replace(/^(\d{2})(\d{0,3}).*$/, "$1.$2");
-        }
-      }
-      $el.val(v);
+ function maskCpfCnpj($el){
+  var v = digits($el.val());
+  if(v.length > 14) v = v.slice(0,14);
 
-      // Atualiza flags globais
-      const len = digits(v).length;
-      window.__checkout.doc = (len === 11 || len === 14); // validação mínima de tamanho
-      window.__recomputeCheckout();
-
-      toggleCompanyRequired(len > 11); // CNPJ exige empresa
+  if(v.length <= 11){
+    if(v.length > 9){
+      v = v.replace(/^(\d{3})(\d{3})(\d{3})(\d{0,2}).*$/, "$1.$2.$3-$4");
+    } else if(v.length > 6){
+      v = v.replace(/^(\d{3})(\d{3})(\d{0,3}).*$/, "$1.$2.$3");
+    } else if(v.length > 3){
+      v = v.replace(/^(\d{3})((\d{0,3})).*$/, "$1.$2");
     }
+  } else {
+    if(v.length > 12){
+      v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2}).*$/, "$1.$2.$3/$4-$5");
+    } else if(v.length > 8){
+      v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4}).*$/, "$1.$2.$3/$4");
+    } else if(v.length > 5){
+      v = v.replace(/^(\d{2})(\d{3})(\d{0,3}).*$/, "$1.$2.$3");
+    } else if(v.length > 2){
+      v = v.replace(/^(\d{2})(\d{0,3}).*$/, "$1.$2");
+    }
+  }
+
+  $el.val(v);
+
+  // >>> NOVO: libere mais caracteres quando chegar em 11 dígitos (transição p/ CNPJ)
+  var len = digits(v).length;
+  $el.prop('maxLength', (len >= 11 ? 18 : 14)); // CPF=14 chars, CNPJ=18 chars
+
+  // Flags globais (AND do checkout)
+  window.__checkout.doc = (len === 11 || len === 14);
+  window.__recomputeCheckout();
+
+  toggleCompanyRequired(len > 11); // CNPJ exige empresa
+}
+
 
     jQuery(function(){
       // Verifica periodicamente se o campo está disponível
