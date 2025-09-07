@@ -13,21 +13,23 @@ function cpfcnpj_script() {
   (function(){
     function digits(s){ return (s||'').replace(/\D/g,''); }
 
-    function toggleCompanyRequired(isCnpj){
-      var $company = jQuery('input[name="companyname"]');
-      if(!$company.length) return;
-      var elOpCompany = $company.closest(".control-label-info")[0];
+  function toggleCompanyRequired(isCnpj){
+    var $company = jQuery('input[name="companyname"]');
+    if(!$company.length) return;
 
-      if(isCnpj){
-        $company.attr('required','required').attr('aria-required','true');
+    // pega o "(opcional)" dentro do label correspondente
+    var elOpCompany = $company.closest('.form-group')
+                              .find('.control-label .control-label-info')[0];
 
-        if(elOpCompany) elOpCompany.style.display = "none";
-
-
-      }else{
-        if(elOpCompany) elOpCompany.style.display = "block";
-        $company.removeAttr('required').removeAttr('aria-required');
-      }
+    if(isCnpj){
+      // torna obrigatório e esconde "(opcional)"
+      $company.attr({'required':'required','aria-required':'true'});
+      if(elOpCompany) elOpCompany.style.display = 'none';
+    } else {
+      // torna opcional e mostra "(opcional)"
+      $company.removeAttr('required aria-required');
+      if(elOpCompany) elOpCompany.style.display = 'inline';
+    }
 
       // Flag "company": se for CNPJ, exige valor; se CPF, libera
       window.__checkout.company = !isCnpj || ($company.val().trim().length > 0);
