@@ -19,7 +19,9 @@ function cpfcnpj_script() {
 
       if(isCnpj){
         $company.attr('required','required').attr('aria-required','true');
+        $company.closest(".control-label-info").style.display = "none";
       }else{
+        $company.closest(".control-label-info").style.display = "block";
         $company.removeAttr('required').removeAttr('aria-required');
       }
 
