@@ -16,12 +16,16 @@ function cpfcnpj_script() {
     function toggleCompanyRequired(isCnpj){
       var $company = jQuery('input[name="companyname"]');
       if(!$company.length) return;
+      var elOpCompany = $company.closest(".control-label-info")[0];
 
       if(isCnpj){
         $company.attr('required','required').attr('aria-required','true');
-        $company.closest(".control-label-info").style.display = "none";
+
+        if(elOpCompany) elOpCompany.style.display = "none";
+
+
       }else{
-        $company.closest(".control-label-info").style.display = "block";
+        if(elOpCompany) elOpCompany.style.display = "block";
         $company.removeAttr('required').removeAttr('aria-required');
       }
 
