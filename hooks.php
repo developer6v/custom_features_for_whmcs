@@ -36,6 +36,12 @@ add_hook('ClientAreaFooterOutput', 1, function($vars) {
     return enderecos();
 });
 
+
+// RegisterNumber
+add_hook('ClientAreaFooterOutput', 1, function($vars) {
+    return registerNumber();
+});
+
 // Erro 129
 add_hook('AfterRegistrarRegistrationFailed', 1, function($vars) {
     domain_manager($vars);

@@ -1,5 +1,5 @@
 <?php
-function enderecos() {
+function registerNumber() {
     return <<<HTML
 <script>
 (function(){
