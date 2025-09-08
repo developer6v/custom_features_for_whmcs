@@ -2,7 +2,6 @@
 function cpfcnpj_script() {
     return <<<'HTML'
 <script>
-  // [COMPARTILHADO] controle único do botão (idempotente)
   window.__checkout = window.__checkout || { cep:false, doc:false, company:true };
   window.__recomputeCheckout = window.__recomputeCheckout || function(){
     const g = window.__checkout;
@@ -18,24 +17,19 @@ function cpfcnpj_script() {
     if(!$company.length) return;
 
     // pega o "(opcional)" dentro do label correspondente
-    var elOpCompany = $company.closest('.form-group')
-                              .find('.control-label .control-label-info')[0];
+    var elOpCompany = $company.closest('.form-group').find('.control-label .control-label-info')[0];
 
     if(isCnpj){
-      // torna obrigatório e esconde "(opcional)"
       $company.attr({'required':'required','aria-required':'true'});
       if(elOpCompany) elOpCompany.style.display = 'none';
     } else {
-      // torna opcional e mostra "(opcional)"
       $company.removeAttr('required aria-required');
       if(elOpCompany) elOpCompany.style.display = 'inline';
     }
 
-      // Flag "company": se for CNPJ, exige valor; se CPF, libera
       window.__checkout.company = !isCnpj || ($company.val().trim().length > 0);
       window.__recomputeCheckout();
 
-      // Revalida ao digitar/alterar
       $company.off('.companychk').on('input.companychk change.companychk blur.companychk', function(){
         window.__checkout.company = !isCnpj || (this.value.trim().length > 0);
         window.__recomputeCheckout();

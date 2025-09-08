@@ -77,13 +77,7 @@ function openTicket($vars) {
     
     $result = localAPI($command, $postData);
 
-    if ($result['result'] == 'success') {
-        logActivity('domain_manager openTicket');
-    } else {
-        $error_message = isset($result['message']) ? $result['message'] : 'Unknown error';
-        logActivity('domain_manager openTicket_error - clientid: ' . $client_id . ' - Error: ' . $error_message);
    
-    }
 }
 
 

@@ -49,7 +49,7 @@ function config() {
                         
                         <div class="cf_form-group">
                             <label for="tentativas-registro">Quantidade de tentativas de registro até marcar para cancelado:</label>
-                            <input type="number" id="tentativas-registro" name="tentativas-registro" min="1" max="10" value="' . $tentativasRegistro . '">
+                            <input type="number" id="tentativas-registro" name="tentativas-registro" min="1" value="' . $tentativasRegistro . '">
                         </div>
 
                         <div class="cf_form-group">
@@ -62,7 +62,7 @@ function config() {
 
                         <div class="cf_form-group">
                             <label for="intervalo-tentativas">Tempo de intervalo entre tentativas de registro (em minutos):</label>
-                            <input type="number" id="intervalo-tentativas" name="intervalo-tentativas" min="1" max="60" value="' . $intervaloTentativas . '">
+                            <input type="number" id="intervalo-tentativas" name="intervalo-tentativas" min="1"  value="' . $intervaloTentativas . '">
                         </div>
 
                         <div class="cf_form-actions">

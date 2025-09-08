@@ -159,7 +159,7 @@ class ConfiguracaoApp {
         const numTentativas = parseInt(tentativas);
         const numIntervalo = parseInt(intervalo);
 
-        return numTentativas >= 1 && numTentativas <= 10 && numIntervalo >= 1 && numIntervalo <= 60;
+        return numTentativas >= 1 && numTentativas <= 10 && numIntervalo >= 1 && numIntervalo <= 500;
     }
 
     validarCampoNumerico(input, min, max) {
