@@ -6,8 +6,8 @@ function registerNumber() {
   function trigger(el,t){ if(!el) return; try{ el.dispatchEvent(new Event(t,{bubbles:true})); }catch(e){} }
 
   function copyOnce(){
-    var from = document.getElementById('0');
-    var to   = document.getElementById('1');
+    var from = document.getElementById('inputPromotionCode');
+    var to   = document.getElementById('customfield19');
     if(!from || !to) return false;
 
     var val = (from.value != null) ? from.value : '';
