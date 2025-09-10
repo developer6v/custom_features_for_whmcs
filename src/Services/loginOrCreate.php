@@ -15,9 +15,10 @@ function loginOrCreate() {
   };
 
   document.querySelector('#user_user').addEventListener('change', function() {
-    // Chama a função que verifica se o botão de checkout deve ser habilitado ou desabilitado
-    window.__recomputeCheckout();
-});
+        // Chama a função que verifica se o botão de checkout deve ser habilitado ou desabilitado
+        alert("chamou a função de mudar check")
+        window.__recomputeCheckout();
+    });
 
 (function() {
   jQuery(function() {
