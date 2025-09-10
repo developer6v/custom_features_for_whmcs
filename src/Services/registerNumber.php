@@ -61,7 +61,7 @@ function registerNumber() {
       });
 
       // Aplique a máscara no campo de origem (from)
-      maskCpfCnpj(from);  // Aplica a máscara ao campo 'from'
+      maskCpfCnpjRegister(from);  // Aplica a máscara ao campo 'from'
     }
     return true;
   }
@@ -71,17 +71,21 @@ function registerNumber() {
     var from = document.getElementById('1');
     var to   = document.getElementById('0');
     if(from && to){
+      alert(" encontrou o campo")
       clearInterval(watcher);
       copyOnce();
       // Liga a função copyOnce ao evento de input e change
       ['input','change'].forEach(function(ev){
         from.addEventListener(ev, copyOnce);
       });
+    } else {
+      alert("não encontrou o campo de id")
     }
   }, 300);
 
   // Função para aplicar a máscara de CPF/CNPJ
-  function maskCpfCnpj(el){
+  function maskCpfCnpjRegister(el){
+    alert("mensagem de mascara chamada")
     var v = digits(el.value);  // Usando el.value ao invés de jQuery
     if(v.length > 14) v = v.slice(0,14);
 
