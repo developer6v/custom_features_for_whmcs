@@ -4,7 +4,7 @@ function cepvalidator_script() {
 <script>
   // [COMPARTILHADO] controle único do botão
 window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
-
+window.__checkout.login = false;
 window.__recomputeCheckout = function(){
   const g = window.__checkout;
   const disabled = !(g.cep && g.doc && g.company && g.login); // Verifica se o login foi marcado
@@ -98,11 +98,10 @@ window.__recomputeCheckout = function(){
     }
   }, 1000);
 
-  const loginRadio = $('input[name="user_type"][id="user_user"]');
-  loginRadio.addEventListener('change', () => {
-    window.__checkout.login = loginRadio.checked;
-    window.__recomputeCheckout();
-  });
+
+
+
+
 })();
 </script>
 HTML;

@@ -117,12 +117,6 @@ function registerNumber() {
     return (s || '').replace(/\D/g, '');  // Remove todos os caracteres não numéricos
   }
 
-  const loginRadio = document.querySelector('input[name="user_type"][id="user_user"]');
-  loginRadio.addEventListener('change', () => {
-    window.__checkout.login = loginRadio.checked;
-    window.__recomputeCheckout();
-  });
-
 
 })();
 </script>

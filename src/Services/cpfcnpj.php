@@ -87,11 +87,6 @@ function cpfcnpj_script() {
       }, 100);
     });
 
-    const loginRadio = document.querySelector('input[name="user_type"][id="user_user"]');
-    loginRadio.addEventListener('change', () => {
-      window.__checkout.login = loginRadio.checked;
-      window.__recomputeCheckout();
-    });
 
   })();
 </script>
