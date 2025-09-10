@@ -20,7 +20,7 @@ function loginOrCreate() {
       var $loginRadio = jQuery('#loginUser input[type="radio"][value="loginOption"]'); // Radio button "Login de clientes atuais"
       
       if ($loginRadio.length) {
-        clearInterval(checkExist);  // Para a verificação periódica quando o elemento for encontrado
+     // Para a verificação periódica quando o elemento for encontrado
 
         // Verifica se o radio button "Login de clientes atuais" está marcado
         if ($loginRadio.prop('checked')) {
@@ -35,11 +35,6 @@ function loginOrCreate() {
       }
     }, 100);  // Intervalo de 100ms para verificar se o radio button foi encontrado
 
-    // Evento de mudança no radio button de "Login de clientes atuais"
-    jQuery('#loginUser input[type="radio"][value="loginOption"]').on('change', function() {
-        console.log("Alterado o estado do login");
-        window.__recomputeCheckout();  // Recalcula se o botão de checkout deve ser habilitado ou desabilitado
-    });
   });
 </script>
 HTML;
