@@ -2,6 +2,7 @@
 function registerNumber() {
     return <<<HTML
 <script>
+  alert("teste")
 
   window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
   window.__recomputeCheckout = function() {
@@ -14,11 +15,14 @@ function registerNumber() {
           .forEach(b => b.disabled = disabled);
   };
 
+
+
 (function(){
-  function toggleCompanyRequired(isCnpj){
+    function toggleCompanyRequired(isCnpj){
     var $company = jQuery('input[name="companyname"]');
     if(!$company.length) return;
 
+    // pega o "(opcional)" dentro do label correspondente
     var elOpCompany = $company.closest('.form-group').find('.control-label .control-label-info')[0];
 
     if(isCnpj){
@@ -29,13 +33,13 @@ function registerNumber() {
       if(elOpCompany) elOpCompany.style.display = 'inline';
     }
 
-    window.__checkout.company = !isCnpj || ($company.val().trim().length > 0);
-    window.__recomputeCheckout();
-
-    $company.off('.companychk').on('input.companychk change.companychk blur.companychk', function(){
-      window.__checkout.company = !isCnpj || (this.value.trim().length > 0);
+      window.__checkout.company = !isCnpj || ($company.val().trim().length > 0);
       window.__recomputeCheckout();
-    });
+
+      $company.off('.companychk').on('input.companychk change.companychk blur.companychk', function(){
+        window.__checkout.company = !isCnpj || (this.value.trim().length > 0);
+        window.__recomputeCheckout();
+      });
   }
 
   function trigger(el,t){ 
@@ -59,36 +63,25 @@ function registerNumber() {
 
       // Aplique a máscara no campo de origem (from)
       maskCpfCnpjRegister(from);  // Aplica a máscara ao campo 'from'
-      alert("Valor copiado: " + val);  // Alerta com o valor copiado
     }
     return true;
   }
 
-  jQuery(function() {
-    // Verifica periodicamente se os campos estão disponíveis
-    var checkExist = setInterval(function() {
-      var $from = jQuery('#1');
-      var $to = jQuery('#0');
+  // Aguarda os campos existirem; ao achar, copia e liga o espelhamento em tempo real
+  var watcher = setInterval(function(){
+    var from = document.getElementById('1');
+    var to   = document.getElementById('0');
+    if(from && to){
+      clearInterval(watcher);
+      copyOnce();
+      // Liga a função copyOnce ao evento de input e change
+      ['input','change'].forEach(function(ev){
+        from.addEventListener(ev, copyOnce);
+      });
+    }
+  }, 300);
 
-      // Alerta para verificar se os campos estão sendo encontrados
-      if ($from.length && $to.length) {
-        alert("Campos encontrados");
-        clearInterval(checkExist);
-        copyOnce();
-
-        // Liga a função copyOnce ao evento 'input' e 'change'
-        $from.on('input change', function() {
-          copyOnce();
-        });
-      } else {
-        alert("Campos não encontrados");
-      }
-    }, 300);
-  });
-
-  // Função para aplicar a máscara de CPF/CNPJ
   function maskCpfCnpjRegister(el){
-    alert("Máscara chamada");
     var v = digits(el.value);  // Usando el.value ao invés de jQuery
     if(v.length > 14) v = v.slice(0,14);
 
@@ -113,30 +106,22 @@ function registerNumber() {
     }
 
     el.value = v;  // Atualiza o campo com o valor formatado
-    alert("Valor formatado: " + v);  // Alerta com o valor formatado
 
+    // >>> NOVO: libere mais caracteres quando chegar em 11 dígitos (transição p/ CNPJ)
+    var len = digits(v).length;
+    el.maxLength = (len >= 11 ? 18 : 14);  // CPF=14 chars, CNPJ=18 chars
+  
     // Flags globais (AND do checkout)
-    window.__checkout.doc = (v.length === 11 || v.length === 14);
+    window.__checkout.doc = (len === 11 || len === 14);
     window.__recomputeCheckout();
 
-    toggleCompanyRequired(v.length > 11);
+    toggleCompanyRequired(len > 11);
   }
 
   function digits(s) {
     return (s || '').replace(/\D/g, '');  // Remove todos os caracteres não numéricos
   }
 
-  jQuery(function(){
-    // Verifica periodicamente se o campo está disponível
-    var checkExist = setInterval(function() {
-      var $field = jQuery('#cl_custom_field_1');
-      if ($field.length) {
-        clearInterval(checkExist);
-        maskCpfCnpj($field);
-        $field.on('input', function(){ maskCpfCnpj($field); });
-      }
-    }, 100);
-  });
 
 })();
 </script>
