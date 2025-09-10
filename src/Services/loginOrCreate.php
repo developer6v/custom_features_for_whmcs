@@ -13,6 +13,12 @@ function loginOrCreate() {
       document.querySelectorAll('button#checkout, #place_order')
           .forEach(b => b.disabled = disabled);
   };
+
+  document.querySelector('#user_user').addEventListener('change', function() {
+    // Chama a função que verifica se o botão de checkout deve ser habilitado ou desabilitado
+    window.__recomputeCheckout();
+});
+
 (function() {
   jQuery(function() {
     // Verifica periodicamente se o campo de "Login de clientes atuais" foi selecionado
