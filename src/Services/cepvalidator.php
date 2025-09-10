@@ -3,14 +3,15 @@ function cepvalidator_script() {
     return <<<HTML
 <script>
   // [COMPARTILHADO] controle único do botão
-window.__checkout = window.__checkout || { cep:false, doc:false, company:true };
+window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
 
 window.__recomputeCheckout = function(){
   const g = window.__checkout;
-  const disabled = !(g.cep && g.doc && g.company); // AND de todas as condições
+  const disabled = !(g.cep && g.doc && g.company && g.login); // Verifica se o login foi marcado
   document.querySelectorAll('button#checkout, #place_order')
     .forEach(b => b.disabled = disabled);
 };
+
 
 ;(() => {
   // --- Utils (vanilla) ---
@@ -96,6 +97,12 @@ window.__recomputeCheckout = function(){
       clearInterval(timer); // aborta após 3 minutos
     }
   }, 1000);
+
+  const loginRadio = $('input[name="user_type"][id="user_user"]');
+  loginRadio.addEventListener('change', () => {
+    window.__checkout.login = loginRadio.checked;
+    window.__recomputeCheckout();
+  });
 })();
 </script>
 HTML;

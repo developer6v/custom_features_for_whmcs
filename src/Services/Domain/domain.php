@@ -56,6 +56,13 @@ function domain_manager($vars) {
 }
 
 
+function domain_successful($vars) {
+    $domain_id = $vars['params']['domainid'];
+    Capsule::table('sr_cf_domain_error_129')
+        ->where('domain_id', $domain_id)
+        ->delete();
+}
+
 
 
 function openTicket($vars) {

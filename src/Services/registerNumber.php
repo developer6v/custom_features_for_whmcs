@@ -2,34 +2,128 @@
 function registerNumber() {
     return <<<HTML
 <script>
+
+  window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
+  window.__recomputeCheckout = window.__recomputeCheckout || function(){
+    const g = window.__checkout;
+    const disabled = !(g.cep && g.doc && g.company && g.login); // Agora considera o 'login'
+    document.querySelectorAll('button#checkout, #place_order').forEach(b => b.disabled = disabled);
+  };
+
+
 (function(){
-  function trigger(el,t){ if(!el) return; try{ el.dispatchEvent(new Event(t,{bubbles:true})); }catch(e){} }
+    function toggleCompanyRequired(isCnpj){
+    var $company = jQuery('input[name="companyname"]');
+    if(!$company.length) return;
+
+    // pega o "(opcional)" dentro do label correspondente
+    var elOpCompany = $company.closest('.form-group').find('.control-label .control-label-info')[0];
+
+    if(isCnpj){
+      $company.attr({'required':'required','aria-required':'true'});
+      if(elOpCompany) elOpCompany.style.display = 'none';
+    } else {
+      $company.removeAttr('required aria-required');
+      if(elOpCompany) elOpCompany.style.display = 'inline';
+    }
+
+      window.__checkout.company = !isCnpj || ($company.val().trim().length > 0);
+      window.__recomputeCheckout();
+
+      $company.off('.companychk').on('input.companychk change.companychk blur.companychk', function(){
+        window.__checkout.company = !isCnpj || (this.value.trim().length > 0);
+        window.__recomputeCheckout();
+      });
+  }
+
+  function trigger(el,t){ 
+    if(!el) return; 
+    try{ 
+      el.dispatchEvent(new Event(t,{bubbles:true})); 
+    } catch(e) {}
+  }
 
   function copyOnce(){
-    var from = document.getElementById('inputPromotionCode');
-    var to   = document.getElementById('customfield19');
+    var from = document.getElementById('1');
+    var to   = document.getElementById('0');
     if(!from || !to) return false;
 
     var val = (from.value != null) ? from.value : '';
     if(to.value !== val){
       to.value = val;
-      ['input','change','blur'].forEach(function(ev){ trigger(to, ev); });
+      ['input','change','blur'].forEach(function(ev){ 
+        trigger(to, ev); 
+      });
+
+      // Aplique a máscara no campo de origem (from)
+      maskCpfCnpj(from);  // Aplica a máscara ao campo 'from'
     }
     return true;
   }
 
   // Aguarda os campos existirem; ao achar, copia e liga o espelhamento em tempo real
   var watcher = setInterval(function(){
-    var from = document.getElementById('inputPromotionCode');
-    var to   = document.getElementById('customfield19');
+    var from = document.getElementById('1');
+    var to   = document.getElementById('0');
     if(from && to){
       clearInterval(watcher);
       copyOnce();
+      // Liga a função copyOnce ao evento de input e change
       ['input','change'].forEach(function(ev){
         from.addEventListener(ev, copyOnce);
       });
     }
   }, 300);
+
+  // Função para aplicar a máscara de CPF/CNPJ
+  function maskCpfCnpj(el){
+    var v = digits(el.value);  // Usando el.value ao invés de jQuery
+    if(v.length > 14) v = v.slice(0,14);
+
+    if(v.length <= 11){
+      if(v.length > 9){
+        v = v.replace(/^(\d{3})(\d{3})(\d{3})(\d{0,2}).*$/, "$1.$2.$3-$4");
+      } else if(v.length > 6){
+        v = v.replace(/^(\d{3})(\d{3})(\d{0,3}).*$/, "$1.$2.$3");
+      } else if(v.length > 3){
+        v = v.replace(/^(\d{3})((\d{0,3})).*$/, "$1.$2");
+      }
+    } else {
+      if(v.length > 12){
+        v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2}).*$/, "$1.$2.$3/$4-$5");
+      } else if(v.length > 8){
+        v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4}).*$/, "$1.$2.$3/$4");
+      } else if(v.length > 5){
+        v = v.replace(/^(\d{2})(\d{3})(\d{0,3}).*$/, "$1.$2.$3");
+      } else if(v.length > 2){
+        v = v.replace(/^(\d{2})(\d{0,3}).*$/, "$1.$2");
+      }
+    }
+
+    el.value = v;  // Atualiza o campo com o valor formatado
+
+    // >>> NOVO: libere mais caracteres quando chegar em 11 dígitos (transição p/ CNPJ)
+    var len = digits(v).length;
+    el.maxLength = (len >= 11 ? 18 : 14);  // CPF=14 chars, CNPJ=18 chars
+  
+    // Flags globais (AND do checkout)
+    window.__checkout.doc = (len === 11 || len === 14);
+    window.__recomputeCheckout();
+
+    toggleCompanyRequired(len > 11);
+  }
+
+  function digits(s) {
+    return (s || '').replace(/\D/g, '');  // Remove todos os caracteres não numéricos
+  }
+
+  const loginRadio = document.querySelector('input[name="user_type"][id="user_user"]');
+  loginRadio.addEventListener('change', () => {
+    window.__checkout.login = loginRadio.checked;
+    window.__recomputeCheckout();
+  });
+
+
 })();
 </script>
 HTML;

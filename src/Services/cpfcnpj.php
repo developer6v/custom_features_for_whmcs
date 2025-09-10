@@ -2,12 +2,13 @@
 function cpfcnpj_script() {
     return <<<'HTML'
 <script>
-  window.__checkout = window.__checkout || { cep:false, doc:false, company:true };
+  window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
   window.__recomputeCheckout = window.__recomputeCheckout || function(){
     const g = window.__checkout;
-    const disabled = !(g.cep && g.doc && g.company);
+    const disabled = !(g.cep && g.doc && g.company && g.login); // Agora considera o 'login'
     document.querySelectorAll('button#checkout, #place_order').forEach(b => b.disabled = disabled);
   };
+
 
   (function(){
     function digits(s){ return (s||'').replace(/\D/g,''); }
@@ -34,7 +35,7 @@ function cpfcnpj_script() {
         window.__checkout.company = !isCnpj || (this.value.trim().length > 0);
         window.__recomputeCheckout();
       });
-    }
+  }
 
  function maskCpfCnpj($el){
   var v = digits($el.val());
@@ -85,6 +86,13 @@ function cpfcnpj_script() {
         }
       }, 100);
     });
+
+    const loginRadio = document.querySelector('input[name="user_type"][id="user_user"]');
+    loginRadio.addEventListener('change', () => {
+      window.__checkout.login = loginRadio.checked;
+      window.__recomputeCheckout();
+    });
+
   })();
 </script>
 HTML;

@@ -42,9 +42,21 @@ add_hook('ClientAreaFooterOutput', 1, function($vars) {
     return registerNumber();
 });
 
+
+// CSS - Client
+add_hook('ClientAreaFooterOutput', 1, function($vars) {
+    return assetsClient();
+});
+
 // Erro 129
 add_hook('AfterRegistrarRegistrationFailed', 1, function($vars) {
     domain_manager($vars);
+});
+
+
+// Sucessful
+add_hook('AfterRegistrarRegistration', 1, function($vars) {
+    domain_successful($vars);
 });
 
 
@@ -54,5 +66,7 @@ add_hook('ClientAreaFooterOutput', 1, function($vars) {
         return hidefields();
     }
 });
+
+
 
 ?>
