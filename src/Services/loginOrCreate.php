@@ -14,13 +14,6 @@ function loginOrCreate() {
           .forEach(b => b.disabled = disabled);
   };
 
-  document.querySelector('#user_user').addEventListener('change', function() {
-        // Chama a função que verifica se o botão de checkout deve ser habilitado ou desabilitado
-        alert("chamou a função de mudar check")
-        window.__recomputeCheckout();
-    });
-
-(function() {
   jQuery(function() {
     // Verifica periodicamente se o campo de "Login de clientes atuais" foi selecionado
     var checkExist = setInterval(function() {
@@ -31,19 +24,23 @@ function loginOrCreate() {
 
         // Verifica se o radio button "Login de clientes atuais" está marcado
         if ($loginRadio.prop('checked')) {
-            alert("checked")
-          window.__checkout.login = true;  // Marca como login de cliente atual
+            console.log("Login de cliente atual selecionado");
+            window.__checkout.login = true;  // Marca como login de cliente atual
         } else {
-            alert("nn checked")
-          window.__checkout.login = false;  // Caso contrário, marca como falso
+            console.log("Login de cliente atual NÃO selecionado");
+            window.__checkout.login = false;  // Caso contrário, marca como falso
         }
 
         window.__recomputeCheckout();  // Atualiza o estado do checkout
       }
     }, 100);  // Intervalo de 100ms para verificar se o radio button foi encontrado
-  });
-})();
 
+    // Evento de mudança no radio button de "Login de clientes atuais"
+    jQuery('#loginUser input[type="radio"][value="loginOption"]').on('change', function() {
+        console.log("Alterado o estado do login");
+        window.__recomputeCheckout();  // Recalcula se o botão de checkout deve ser habilitado ou desabilitado
+    });
+  });
 </script>
 HTML;
 }
