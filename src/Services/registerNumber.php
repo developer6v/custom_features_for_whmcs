@@ -21,7 +21,6 @@ function registerNumber() {
     var $company = jQuery('input[name="companyname"]');
     if(!$company.length) return;
 
-    // pega o "(opcional)" dentro do label correspondente
     var elOpCompany = $company.closest('.form-group').find('.control-label .control-label-info')[0];
 
     if(isCnpj){
@@ -66,22 +65,28 @@ function registerNumber() {
     return true;
   }
 
-  // Aguarda os campos existirem; ao achar, copia e liga o espelhamento em tempo real
-  var watcher = setInterval(function(){
-    var from = document.getElementById('1');
-    var to   = document.getElementById('0');
-    if(from && to){
-      alert(" encontrou o campo")
-      clearInterval(watcher);
-      copyOnce();
-      // Liga a função copyOnce ao evento de input e change
-      ['input','change'].forEach(function(ev){
-        from.addEventListener(ev, copyOnce);
-      });
-    } else {
-      alert("não encontrou o campo de id")
-    }
-  }, 300);
+  
+  jQuery(function() {
+    // Verifica periodicamente se os campos estão disponíveis
+    var checkExist = setInterval(function() {
+      var $from = jQuery('#1');
+      var $to = jQuery('#0');
+
+      if ($from.length && $to.length) {
+        alert("Encontrou o campo");
+        clearInterval(checkExist);
+        copyOnce();
+
+        // Liga a função copyOnce ao evento 'input' e 'change'
+        $from.on('input change', function() {
+          copyOnce();
+        });
+      } else {
+        alert("Não encontrou o campo de id");
+      }
+    }, 300);
+  });
+
 
   // Função para aplicar a máscara de CPF/CNPJ
   function maskCpfCnpjRegister(el){
@@ -125,6 +130,18 @@ function registerNumber() {
   function digits(s) {
     return (s || '').replace(/\D/g, '');  // Remove todos os caracteres não numéricos
   }
+
+  jQuery(function(){
+  // Verifica periodicamente se o campo está disponível
+    var checkExist = setInterval(function() {
+      var $field = jQuery('#cl_custom_field_1');
+      if ($field.length) {
+        clearInterval(checkExist);
+        maskCpfCnpj($field);
+        $field.on('input', function(){ maskCpfCnpj($field); });
+      }
+    }, 100);
+  });
 
 
 })();
