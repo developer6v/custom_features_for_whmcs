@@ -4,13 +4,16 @@ function cepvalidator_script() {
 <script>
   // [COMPARTILHADO] controle único do botão
 window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
-window.__checkout.login = false;
-window.__recomputeCheckout = function(){
-  const g = window.__checkout;
-  const disabled = !(g.cep && g.doc && g.company && g.login); // Verifica se o login foi marcado
-  document.querySelectorAll('button#checkout, #place_order')
-    .forEach(b => b.disabled = disabled);
+window.__recomputeCheckout = function() {
+    const g = window.__checkout;
+    // Se o login de clientes atuais estiver ativado, habilita o botão
+    const disabled = !(g.login) && !(g.cep && g.doc && g.company);  // Considera login como prioridade
+
+    // Atualiza o estado dos botões
+    document.querySelectorAll('button#checkout, #place_order')
+        .forEach(b => b.disabled = disabled);
 };
+
 
 
 ;(() => {
