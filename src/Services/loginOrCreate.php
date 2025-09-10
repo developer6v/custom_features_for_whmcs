@@ -13,31 +13,30 @@ function loginOrCreate() {
       document.querySelectorAll('button#checkout, #place_order')
           .forEach(b => b.disabled = disabled);
   };
+(function() {
+  jQuery(function() {
+    // Verifica periodicamente se o campo de "Login de clientes atuais" foi selecionado
+    var checkExist = setInterval(function() {
+      var $loginRadio = jQuery('#loginUser input[type="radio"][value="loginOption"]'); // Radio button "Login de clientes atuais"
+      
+      if ($loginRadio.length) {
+        clearInterval(checkExist);  // Para a verificação periódica quando o elemento for encontrado
 
-  (function(){
-    jQuery(function(){
-      // Verifica periodicamente se o campo de login de clientes atuais está marcado
-      var checkExist = setInterval(function() {
-        var $loginField = jQuery('#loginUser .panel-heading input[type="radio"]'); // Verifica o radio button "Login de clientes atuais"
-        if ($loginField.length) {
-            alert("encontrou")
-          clearInterval(checkExist);
-
-          // Verifica se o checkbox está marcado
-          if ($loginField.is(':checked')) {
-            window.__checkout.login = true;  // Marca o login como verdadeiro
-          } else {
-            window.__checkout.login = false;  // Caso contrário, marca como falso
-          }
-
-          window.__recomputeCheckout();  // Atualiza o estado do checkout
+        // Verifica se o radio button "Login de clientes atuais" está marcado
+        if ($loginRadio.prop('checked')) {
+            alert("checked")
+          window.__checkout.login = true;  // Marca como login de cliente atual
         } else {
-                        alert("nn encontrou")
-
+            alert("nn checked")
+          window.__checkout.login = false;  // Caso contrário, marca como falso
         }
-      }, 100);  // Intervalo de 100ms
-    });
-  })();
+
+        window.__recomputeCheckout();  // Atualiza o estado do checkout
+      }
+    }, 100);  // Intervalo de 100ms para verificar se o radio button foi encontrado
+  });
+})();
+
 </script>
 HTML;
 }
