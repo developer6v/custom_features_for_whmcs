@@ -5,6 +5,7 @@ require_once __DIR__ . '/src/Services/enderecos.php';
 require_once __DIR__ . '/src/Services/Domain/domain.php';
 require_once __DIR__ . '/src/Services/hideFieldsCheckout.php';
 require_once __DIR__ . '/src/Services/registerNumber.php';
+require_once __DIR__ . '/src/Services/loginOrCreate.php';
 require_once __DIR__ . '/src/Config/assets.php';
 
 if (!defined('WHMCS')) { die('Access denied'); }
@@ -46,6 +47,11 @@ add_hook('ClientAreaFooterOutput', 1, function($vars) {
 // CSS - Client
 add_hook('ClientAreaFooterOutput', 1, function($vars) {
     return assetsClient();
+});
+
+// CSS - Client
+add_hook('ClientAreaFooterOutput', 1, function($vars) {
+    return loginOrCreate();
 });
 
 // Erro 129

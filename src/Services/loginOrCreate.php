@@ -1,0 +1,43 @@
+<?php
+function loginOrCreate() {
+    return <<<'HTML'
+<script>
+  window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
+
+  // Função para reavaliar o estado do checkout
+  window.__recomputeCheckout = function() {
+      const g = window.__checkout;
+      // A lógica agora considera o login como maiorial
+      const disabled = !(g.login) && !(g.cep && g.doc && g.company);  // Considera login como prioridade
+
+      document.querySelectorAll('button#checkout, #place_order')
+          .forEach(b => b.disabled = disabled);
+  };
+
+  (function(){
+    jQuery(function(){
+      // Verifica periodicamente se o campo de login de clientes atuais está marcado
+      var checkExist = setInterval(function() {
+        var $loginField = jQuery('#loginUser .panel-heading input[type="radio"]'); // Verifica o radio button "Login de clientes atuais"
+        if ($loginField.length) {
+            alert("encontrou")
+          clearInterval(checkExist);
+
+          // Verifica se o checkbox está marcado
+          if ($loginField.is(':checked')) {
+            window.__checkout.login = true;  // Marca o login como verdadeiro
+          } else {
+            window.__checkout.login = false;  // Caso contrário, marca como falso
+          }
+
+          window.__recomputeCheckout();  // Atualiza o estado do checkout
+        } else {
+                        alert("nn encontrou")
+
+        }
+      }, 100);  // Intervalo de 100ms
+    });
+  })();
+</script>
+HTML;
+}
