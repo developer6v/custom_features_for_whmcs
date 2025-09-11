@@ -18,7 +18,7 @@ function loginOrCreate() {
     // Verifica periodicamente se o campo de "Login de clientes atuais" foi selecionado
     var checkExist = setInterval(function() {
       var $loginRadio = jQuery('#loginUser input[type="radio"][value="loginOption"]'); // Radio button "Login de clientes atuais"
-      var $accountID = jQuery('#accountID'); // Radio button "Login de clientes atuais"
+      var $accountID = jQuery('#account_id'); // Radio button "Login de clientes atuais"
       
 
       if ($loginRadio.length && $accountID.length ) {
