@@ -26,11 +26,11 @@ function loginOrCreate() {
 
         // Verifica se o radio button "Login de clientes atuais" está marcado
         if ($loginRadio.prop('checked') || $accountID.prop('checked')) {
-          alert("checked")
+          console.log("checked")
             console.log("Login de cliente atual selecionado");
             window.__checkout.login = true;  // Marca como login de cliente atual
         } else if (!$loginRadio.prop('checked') && !$accountID.prop('checked')) {
-                    alert("notchecked")
+                    console.log("notchecked")
 
             console.log("Login de cliente atual NÃO selecionado");
             window.__checkout.login = false;  // Caso contrário, marca como falso
