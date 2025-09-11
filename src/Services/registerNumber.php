@@ -2,44 +2,53 @@
 function registerNumber() {
     return <<<HTML
 <script>
-  alert("teste")
 
   window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
   window.__recomputeCheckout = function() {
       const g = window.__checkout;
-      // Se o login de clientes atuais estiver ativado, habilita o botão
-      const disabled = !(g.login) && !(g.cep && g.doc && g.company);  // Considera login como prioridade
-
-      // Atualiza o estado dos botões
+      const disabled = !(g.login) && !(g.cep && g.doc && g.company);  
       document.querySelectorAll('button#checkout, #place_order')
           .forEach(b => b.disabled = disabled);
   };
 
-
-
 (function(){
-    function toggleCompanyRequired(isCnpj){
-    var $company = jQuery('input[name="companyname"]');
-    if(!$company.length) return;
+  function toggleCompanyRequiredRegister(isCnpj){
+      // Seleciona o input pelo name
+      var company = document.querySelector('input[name="companyname"]');
+      if (!company) return;
 
-    // pega o "(opcional)" dentro do label correspondente
-    var elOpCompany = $company.closest('.form-group').find('.control-label .control-label-info')[0];
+      // Seleciona o label que contém "(opcional)" dentro da mesma form-group
+      var formGroup = company.closest('.form-group');
+      var elOpCompany = formGroup ? formGroup.querySelector('.control-label .control-label-info') : null;
 
-    if(isCnpj){
-      $company.attr({'required':'required','aria-required':'true'});
-      if(elOpCompany) elOpCompany.style.display = 'none';
-    } else {
-      $company.removeAttr('required aria-required');
-      if(elOpCompany) elOpCompany.style.display = 'inline';
-    }
+      if (isCnpj) {
+          company.setAttribute('required', 'required');
+          company.setAttribute('aria-required', 'true');
+          if (elOpCompany) elOpCompany.style.display = 'none';
+      } else {
+          company.removeAttribute('required');
+          company.removeAttribute('aria-required');
+          if (elOpCompany) elOpCompany.style.display = 'inline';
+      }
 
-      window.__checkout.company = !isCnpj || ($company.val().trim().length > 0);
+      // Atualiza o estado global do checkout
+      window.__checkout.company = !isCnpj || (company.value.trim().length > 0);
       window.__recomputeCheckout();
 
-      $company.off('.companychk').on('input.companychk change.companychk blur.companychk', function(){
-        window.__checkout.company = !isCnpj || (this.value.trim().length > 0);
-        window.__recomputeCheckout();
-      });
+      // Remove event listeners antigos antes de adicionar novos
+      company.removeEventListener('input', company._companyListener);
+      company.removeEventListener('change', company._companyListener);
+      company.removeEventListener('blur', company._companyListener);
+
+      // Adiciona os eventos para atualizar o estado ao digitar
+      company._companyListener = function() {
+          window.__checkout.company = !isCnpj || (this.value.trim().length > 0);
+          window.__recomputeCheckout();
+      };
+
+      company.addEventListener('input', company._companyListener);
+      company.addEventListener('change', company._companyListener);
+      company.addEventListener('blur', company._companyListener);
   }
 
   function trigger(el,t){ 
@@ -61,13 +70,11 @@ function registerNumber() {
         trigger(to, ev); 
       });
 
-      // Aplique a máscara no campo de origem (from)
-      maskCpfCnpjRegister(from);  // Aplica a máscara ao campo 'from'
+      maskCpfCnpj(from);  
     }
     return true;
   }
 
-  // Aguarda os campos existirem; ao achar, copia e liga o espelhamento em tempo real
   var watcher = setInterval(function(){
     var from = document.getElementById('1');
     var to   = document.getElementById('0');
@@ -81,7 +88,7 @@ function registerNumber() {
     }
   }, 300);
 
-  function maskCpfCnpjRegister(el){
+  function maskCpfCnpj(el){
     var v = digits(el.value);  // Usando el.value ao invés de jQuery
     if(v.length > 14) v = v.slice(0,14);
 
@@ -105,21 +112,17 @@ function registerNumber() {
       }
     }
 
-    el.value = v;  // Atualiza o campo com o valor formatado
-
-    // >>> NOVO: libere mais caracteres quando chegar em 11 dígitos (transição p/ CNPJ)
+    el.value = v; 
     var len = digits(v).length;
-    el.maxLength = (len >= 11 ? 18 : 14);  // CPF=14 chars, CNPJ=18 chars
-  
-    // Flags globais (AND do checkout)
+    el.maxLength = (len >= 11 ? 18 : 14);  
     window.__checkout.doc = (len === 11 || len === 14);
     window.__recomputeCheckout();
 
-    toggleCompanyRequired(len > 11);
+    toggleCompanyRequiredRegister(len > 11);
   }
 
   function digits(s) {
-    return (s || '').replace(/\D/g, '');  // Remove todos os caracteres não numéricos
+    return (s || '').replace(/\D/g, '');  
   }
 
 

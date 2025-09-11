@@ -38,11 +38,6 @@ add_hook('ClientAreaFooterOutput', 1, function($vars) {
 });
 
 
-// RegisterNumber
-add_hook('ClientAreaFooterOutput', 1, function($vars) {
-    return registerNumber();
-});
-
 
 // CSS - Client
 add_hook('ClientAreaFooterOutput', 1, function($vars) {
@@ -71,6 +66,11 @@ add_hook('ClientAreaFooterOutput', 1, function($vars) {
     if (strpos($_SERVER['REQUEST_URI'], 'hospedam-dedicada/teste-otavioi') ) {
         return hidefields();
     }
+});
+
+// RegisterNumber
+add_hook('ClientAreaFooterOutput', 1, function($vars) {
+    return registerNumber();
 });
 
 
