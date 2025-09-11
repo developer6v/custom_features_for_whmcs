@@ -64,11 +64,11 @@ class ConfiguracaoApp {
         const intervaloInput = document.getElementById('intervalo-tentativas');
 
         tentativasInput.addEventListener('input', () => {
-            this.validarCampoNumerico(tentativasInput, 1, 10);
+            this.validarCampoNumerico(tentativasInput, 1, 9999999999999);
         });
 
         intervaloInput.addEventListener('input', () => {
-            this.validarCampoNumerico(intervaloInput, 1, 60);
+            this.validarCampoNumerico(intervaloInput, 1, 9999999999999999);
         });
     }
 
@@ -159,7 +159,7 @@ class ConfiguracaoApp {
         const numTentativas = parseInt(tentativas);
         const numIntervalo = parseInt(intervalo);
 
-        return numTentativas >= 1 && numTentativas <= 90 && numIntervalo >= 1 && numIntervalo <= 1000;
+        return numTentativas >= 1 && numTentativas <= 90 && numIntervalo >= 1 && numIntervalo <= 1440;
     }
 
     validarCampoNumerico(input, min, max) {
