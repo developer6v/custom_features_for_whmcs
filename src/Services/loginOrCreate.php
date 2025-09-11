@@ -2,63 +2,44 @@
 function loginOrCreate() {
     return <<<'HTML'
 <script>
-  console.log('[checkout] script carregado');
-
   window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
-  console.log('[checkout] estado inicial:', JSON.stringify(window.__checkout));
 
   // Função para reavaliar o estado do checkout
   window.__recomputeCheckout = function() {
       const g = window.__checkout;
-      const disabled = !(g.login) && !(g.cep && g.doc && g.company);
-      console.log('[recompute] g=', g, '=> disabled=', disabled);
+      // A lógica agora considera o login como maiorial
+      const disabled = !(g.login) && !(g.cep && g.doc && g.company);  // Considera login como prioridade
 
-      const btns = document.querySelectorAll('button#checkout, #place_order');
-      console.log('[recompute] botoes encontrados:', btns.length);
-
-      btns.forEach((b, i) => {
-        b.disabled = disabled;
-        console.log(`[recompute] botao[${i}] id=${b.id || '(sem id)'} disabled=`, b.disabled);
-      });
+      document.querySelectorAll('button#checkout, #place_order')
+          .forEach(b => b.disabled = disabled);
   };
 
   jQuery(function() {
-    console.log('[jquery] DOM pronto');
-
-    var tick = 0;
+    // Verifica periodicamente se o campo de "Login de clientes atuais" foi selecionado
     var checkExist = setInterval(function() {
-      tick++;
-      console.log('[interval] tick=', tick);
+      var $loginRadio = jQuery('#loginUser input[type="radio"][value="loginOption"]'); // Radio button "Login de clientes atuais"
+      var $accountID = jQuery('#account_id'); // Radio button "Login de clientes atuais"
+      
 
-      var $loginRadio = jQuery('#loginUser input[type="radio"][value="loginOption"]'); // Radio "Login de clientes atuais"
-      var $accountID  = jQuery('#account_id');
+      if ($loginRadio.length || $accountID.length ) {
+     // Para a verificação periódica quando o elemento for encontrado
 
-      console.log('[interval] $loginRadio length=', $loginRadio.length);
-      console.log('[interval] $accountID  length=', $accountID.length);
+        // Verifica se o radio button "Login de clientes atuais" está marcado
+        if ($loginRadio.prop('checked') || $accountID.prop('checked')) {
+          console.log("checked")
+            console.log("Login de cliente atual selecionado");
+            window.__checkout.login = true;  // Marca como login de cliente atual
+        } else if (!$loginRadio.prop('checked') && !$accountID.prop('checked')) {
+                    console.log("notchecked")
 
-      if ($loginRadio.length && $accountID.length) {
-        console.log('[interval] ambos elementos existem');
-
-        var loginRadioChecked = $loginRadio.prop('checked');
-        var accountIDChecked  = $accountID.prop('checked');
-
-        console.log('[interval] loginRadioChecked=', loginRadioChecked, 'accountIDChecked=', accountIDChecked);
-
-        if (loginRadioChecked || accountIDChecked) {
-          window.__checkout.login = true;
-          console.log('[interval] set login=true');
-        } else {
-          window.__checkout.login = false;
-          console.log('[interval] set login=false');
+            console.log("Login de cliente atual NÃO selecionado");
+            window.__checkout.login = false;  // Caso contrário, marca como falso
         }
 
-        console.log('[interval] chamando __recomputeCheckout()');
-        window.__recomputeCheckout();
-      } else {
-        if (!$loginRadio.length) console.log('[interval] #loginUser input[value="loginOption"] NÃO encontrado');
-        if (!$accountID.length)  console.log('[interval] #account_id NÃO encontrado');
+        window.__recomputeCheckout();  // Atualiza o estado do checkout
       }
-    }, 100); // 100ms
+    }, 100);  // Intervalo de 100ms para verificar se o radio button foi encontrado
+
   });
 </script>
 HTML;
