@@ -18,15 +18,17 @@ function loginOrCreate() {
     // Verifica periodicamente se o campo de "Login de clientes atuais" foi selecionado
     var checkExist = setInterval(function() {
       var $loginRadio = jQuery('#loginUser input[type="radio"][value="loginOption"]'); // Radio button "Login de clientes atuais"
+      var $accountID = jQuery('#loginUser input[type="radio"][value="loginOption"]'); // Radio button "Login de clientes atuais"
       
-      if ($loginRadio.length) {
+
+      if ($loginRadio.length && $accountID.length ) {
      // Para a verificação periódica quando o elemento for encontrado
 
         // Verifica se o radio button "Login de clientes atuais" está marcado
-        if ($loginRadio.prop('checked')) {
+        if ($loginRadio.prop('checked') || $accountID.prop('checked')) {
             console.log("Login de cliente atual selecionado");
             window.__checkout.login = true;  // Marca como login de cliente atual
-        } else {
+        } else if (!$loginRadio.prop('checked') && !$accountID.prop('checked')) {
             console.log("Login de cliente atual NÃO selecionado");
             window.__checkout.login = false;  // Caso contrário, marca como falso
         }
