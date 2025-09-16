@@ -10,42 +10,46 @@ require_once __DIR__ . '/src/Config/assets.php';
 
 if (!defined('WHMCS')) { die('Access denied'); }
 
-
-
+// Função auxiliar para checar se está no checkout
+function isCheckoutPage() {
+    return (strpos($_SERVER['REQUEST_URI'], 'cart.php?a=checkout') !== false);
+}
 
 // CEP
 add_hook('ClientAreaFooterOutput', 1, function($vars) {
+    if (isCheckoutPage()) return '';
     return cepvalidator_script();
 });
 add_hook('AdminAreaFooterOutput', 1, function($vars) {
+    if (isCheckoutPage()) return '';
     return cepvalidator_script();
 });
+
 // CNPJ/CPF
 add_hook('ClientAreaFooterOutput', 1, function($vars) {
+    if (isCheckoutPage()) return '';
     return cpfcnpj_script();
 });
 add_hook('AdminAreaFooterOutput', 1, function($vars) {
+    if (isCheckoutPage()) return '';
     return cpfcnpj_script();
 });
-
-
-
-
 
 // Endereço
 add_hook('ClientAreaFooterOutput', 1, function($vars) {
+    if (isCheckoutPage()) return '';
     return enderecos();
 });
 
-
-
 // CSS - Client
 add_hook('ClientAreaFooterOutput', 1, function($vars) {
+    if (isCheckoutPage()) return '';
     return assetsClient();
 });
 
-// CSS - Client
+// Login ou Criar Conta
 add_hook('ClientAreaFooterOutput', 1, function($vars) {
+    if (isCheckoutPage()) return '';
     return loginOrCreate();
 });
 
@@ -54,25 +58,22 @@ add_hook('AfterRegistrarRegistrationFailed', 1, function($vars) {
     domain_manager($vars);
 });
 
-
-// Sucessful
+// Sucesso
 add_hook('AfterRegistrarRegistration', 1, function($vars) {
     domain_successful($vars);
 });
 
-
-
+// Exemplo para outra URL específica
 add_hook('ClientAreaFooterOutput', 1, function($vars) {
-    if (strpos($_SERVER['REQUEST_URI'], 'hospedam-dedicada/teste-otavioi') ) {
+    if (strpos($_SERVER['REQUEST_URI'], 'hospedam-dedicada/teste-otavioi') !== false) {
         return hidefields();
     }
 });
 
 // RegisterNumber
 add_hook('ClientAreaFooterOutput', 1, function($vars) {
+    if (isCheckoutPage()) return '';
     return registerNumber();
 });
-
-
 
 ?>
