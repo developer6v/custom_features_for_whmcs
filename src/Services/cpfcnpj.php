@@ -115,25 +115,31 @@ function cpfcnpj_script_cart() {
     window.__initCompanyAggregator = true;
     window.__docState = { reg:0, other:0 };
 
-    function getCompanyInput(){
-      return document.querySelector('input[name="companyname"]');
+   function getCompanyInput(){
+    return document.querySelector('input[name="companyname"]');
+  }
+
+  function setCompanyRequired(required){
+    var company = getCompanyInput();
+    if (!company) return;
+
+    var formGroup = company.closest('.form-group');
+    var label = formGroup ? formGroup.querySelector('label.control-label') : null;
+
+    if (required) {
+      company.setAttribute('required','required');
+      company.setAttribute('aria-required','true');
+      if (label) label.textContent = 'Empresa';
+    } else {
+      company.removeAttribute('required');
+      company.removeAttribute('aria-required');
+      if (label) label.textContent = 'Empresa (opcional)';
     }
-    function setCompanyRequired(required){
-      var company = getCompanyInput();
-      if (!company) return;
-      var formGroup = company.closest('.form-group');
-      var elOpCompany = formGroup ? formGroup.querySelector('.control-label .control-label-info') : null;
-      if (required) {
-        company.setAttribute('required','required');
-        company.setAttribute('aria-required','true');
-        if (elOpCompany) elOpCompany.innerHTML = 'Empresa';
-      } else {
-        company.removeAttribute('required');
-        company.removeAttribute('aria-required');
-        if (elOpCompany) elOpCompany.innerHTML = 'Empresa (opcional)';
-      }
-      window.__checkout.company = !required || (company.value.trim().length > 0);
-    }
+
+    window.__checkout = window.__checkout || {};
+    window.__checkout.company = !required || (company.value.trim().length > 0);
+  }
+
     function attachCompanyListenerOnce(){
       var company = getCompanyInput();
       if (!company || company._companyListenerAttached) return;
