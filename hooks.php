@@ -11,45 +11,84 @@ require_once __DIR__ . '/src/Config/assets.php';
 if (!defined('WHMCS')) { die('Access denied'); }
 
 // Função auxiliar para checar se está no checkout
-function isCheckoutPage() {
+function isCheckoutCartPage() {
     return (strpos($_SERVER['REQUEST_URI'], 'cart.php?a=checkout') !== false);
+}
+
+function isCheckoutOrderPage() {
+    return (strpos($_SERVER['REQUEST_URI'], "/order/") !== false);
 }
 
 // CEP
 add_hook('ClientAreaFooterOutput', 1, function($vars) {
-    if (isCheckoutPage()) return '';
+    if (isCheckoutCartPage()) {
+        return cepvalidator_script_cart();
+    }
+    if (isCheckoutOrderPage()) {
+        return cepvalidator_script();
+    }
     return cepvalidator_script();
 });
 add_hook('AdminAreaFooterOutput', 1, function($vars) {
-    if (isCheckoutPage()) return '';
+    if (isCheckoutCartPage()) {
+        return cepvalidator_script_cart();
+    }
+    if (isCheckoutOrderPage()) {
+        return cepvalidator_script();
+    }
     return cepvalidator_script();
 });
 
 // CNPJ/CPF
 add_hook('ClientAreaFooterOutput', 1, function($vars) {
-    if (isCheckoutPage()) return '';
+    if (isCheckoutCartPage()) {
+        return cpfcnpj_script_cart();
+    }
+    if (isCheckoutOrderPage()) {
+        return cpfcnpj_script();
+    }
     return cpfcnpj_script();
 });
 add_hook('AdminAreaFooterOutput', 1, function($vars) {
-    if (isCheckoutPage()) return '';
+    if (isCheckoutCartPage()) {
+        return cpfcnpj_script_cart();
+    }
+    if (isCheckoutOrderPage()) {
+        return cpfcnpj_script();
+    }
     return cpfcnpj_script();
 });
 
 // Endereço
 add_hook('ClientAreaFooterOutput', 1, function($vars) {
-    if (isCheckoutPage()) return '';
+    if (isCheckoutCartPage()) {
+        return enderecos_cart();
+    }
+    if (isCheckoutOrderPage()) {
+        return enderecos();
+    }
     return enderecos();
 });
 
 // CSS - Client
 add_hook('ClientAreaFooterOutput', 1, function($vars) {
-    if (isCheckoutPage()) return '';
+    if (isCheckoutCartPage()) {
+        return assetsClient_cart();
+    }
+    if (isCheckoutOrderPage()) {
+        return assetsClient();
+    }
     return assetsClient();
 });
 
 // Login ou Criar Conta
 add_hook('ClientAreaFooterOutput', 1, function($vars) {
-    if (isCheckoutPage()) return '';
+    if (isCheckoutCartPage()) {
+        return loginOrCreate_cart();
+    }
+    if (isCheckoutOrderPage()) {
+        return loginOrCreate();
+    }
     return loginOrCreate();
 });
 
@@ -72,8 +111,12 @@ add_hook('ClientAreaFooterOutput', 1, function($vars) {
 
 // RegisterNumber
 add_hook('ClientAreaFooterOutput', 1, function($vars) {
-    if (isCheckoutPage()) return '';
+    if (isCheckoutCartPage()) {
+        return registerNumber_cart();
+    }
+    if (isCheckoutOrderPage()) {
+        return registerNumber();
+    }
     return registerNumber();
 });
-
 ?>
