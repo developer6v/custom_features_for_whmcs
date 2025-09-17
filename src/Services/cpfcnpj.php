@@ -126,11 +126,11 @@ function cpfcnpj_script_cart() {
       if (required) {
         company.setAttribute('required','required');
         company.setAttribute('aria-required','true');
-        if (elOpCompany) elOpCompany.style.display = 'none';
+        if (elOpCompany) elOpCompany.innerHTML = 'Empresa';
       } else {
         company.removeAttribute('required');
         company.removeAttribute('aria-required');
-        if (elOpCompany) elOpCompany.style.display = 'inline';
+        if (elOpCompany) elOpCompany.innerHTML = 'Empresa (opcional)';
       }
       window.__checkout.company = !required || (company.value.trim().length > 0);
     }
