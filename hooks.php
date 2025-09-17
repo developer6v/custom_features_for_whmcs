@@ -72,12 +72,7 @@ add_hook('ClientAreaFooterOutput', 1, function($vars) {
 
 // CSS - Client
 add_hook('ClientAreaFooterOutput', 1, function($vars) {
-    if (isCheckoutCartPage()) {
-        return assetsClient_cart();
-    }
-    if (isCheckoutOrderPage()) {
-        return assetsClient();
-    }
+    
     return assetsClient();
 });
 
