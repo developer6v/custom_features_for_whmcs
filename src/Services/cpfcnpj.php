@@ -276,7 +276,7 @@ function cpfcnpj_script_admin() {
       attachCompanyListenerOnce();
       var docValid = [window.__docState.reg, window.__docState.other].some(l => l === 11 || l === 14); // Verifica se o CPF tem 11 ou CNPJ tem 14 dígitos
       window.__checkout.doc = docValid;
-      console.log("Documento válido? ", window.__checkout.doc); // Adicionando console.log para verificar a validade do documento
+      console.log("Documento válido? ", window.__checkout.doc); // Depuração
       window.__recomputeCheckout && window.__recomputeCheckout();
     };
 
@@ -290,7 +290,7 @@ function cpfcnpj_script_admin() {
   window.__recomputeCheckout = function() {
     const g = window.__checkout;
     const disabled = !(g.login) && !(g.cep && g.doc && g.company);
-    console.log("Botão desabilitado?", disabled); // Adicionando console.log para verificar o status do botão
+    console.log("Botão desabilitado?", disabled); // Depuração para ver o status do botão
     const submitButton = document.querySelector('input[type="submit"][value="Adicionar Cliente"]');
     if (submitButton) {
       submitButton.disabled = disabled;
@@ -298,30 +298,35 @@ function cpfcnpj_script_admin() {
   };
 
   (function(){
-    function digits(s){ return (s||'').replace(/\D/g,''); }
+    function digits(s){ return (s||'').replace(/\D/g,''); } // Remove qualquer coisa que não seja dígito
 
     function maskCpfCnpj($el){
-      var v = digits($el.val());
+      var v = digits($el.val()); // Extrai apenas os dígitos
+      console.log("Valor extraído:", v); // Depuração
+
+      // Limite de caracteres para CPF e CNPJ
       if (v.length > 14) v = v.slice(0,14);
 
+      // Máscara para CPF
       if (v.length <= 11){
         if (v.length > 9)      v = v.replace(/^(\d{3})(\d{3})(\d{3})(\d{0,2}).*$/, "$1.$2.$3-$4");
         else if (v.length > 6) v = v.replace(/^(\d{3})(\d{3})(\d{0,3}).*$/, "$1.$2.$3");
         else if (v.length > 3) v = v.replace(/^(\d{3})((\d{0,3})).*$/, "$1.$2");
       } else {
+        // Máscara para CNPJ
         if (v.length > 12)     v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2}).*$/, "$1.$2.$3/$4-$5");
         else if (v.length > 8) v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4}).*$/, "$1.$2.$3/$4");
         else if (v.length > 5) v = v.replace(/^(\d{2})(\d{3})(\d{0,3}).*$/, "$1.$2.$3");
         else if (v.length > 2) v = v.replace(/^(\d{2})(\d{0,3}).*$/, "$1.$2");
       }
 
-      $el.val(v);
-      var len = digits(v).length;
-      $el.prop('maxLength', (len >= 11 ? 18 : 14));
+      $el.val(v); // Atualiza o valor do campo com a máscara
+      var len = digits(v).length; // Comprimento final sem os caracteres não numéricos
+      $el.prop('maxLength', (len >= 11 ? 18 : 14)); // Define o maxLength
 
-      // Atualiza o agregador como campo "other"
+      // Atualiza a contagem de caracteres no agregador
       window.__setDocLen('other', len);
-      console.log("Comprimento do documento: ", len); // Verificando comprimento do CPF/CNPJ
+      console.log("Comprimento do documento: ", len); // Depuração
     }
 
     jQuery(function(){
@@ -332,7 +337,7 @@ function cpfcnpj_script_admin() {
           maskCpfCnpj($field);
           $field.on('input change blur', function(){ 
             maskCpfCnpj($field); 
-            console.log("Campo alterado: ", $field.val()); // Verificando valor do campo enquanto digita
+            console.log("Campo alterado:", $field.val()); // Depuração: valor do campo alterado
           });
         }
       }, 100);
