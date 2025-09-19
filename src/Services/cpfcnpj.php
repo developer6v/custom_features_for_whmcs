@@ -216,7 +216,6 @@ HTML;
 
 
 
-
 function cpfcnpj_script_admin() {
     return <<<'HTML'
 <script>
@@ -294,6 +293,7 @@ function cpfcnpj_script_admin() {
     const submitButton = document.querySelector('input[type="submit"][value="Adicionar Cliente"]');
     if (submitButton) {
       submitButton.disabled = disabled;
+      console.log("Botão atualizado? ", submitButton.disabled);
     }
   };
 
