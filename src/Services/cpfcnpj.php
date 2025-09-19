@@ -216,7 +216,6 @@ HTML;
 
 
 
-
 function cpfcnpj_script_admin() {
     return <<<'HTML'
 <script>
@@ -269,14 +268,16 @@ function cpfcnpj_script_admin() {
       };
       ['input','change','blur'].forEach(ev => company.addEventListener(ev, handler));
     }
+
     window.__recomputeCompany = function(){
-      var anyCnpj = (window.__docState.reg > 11) || (window.__docState.other > 11);
+      var anyCnpj = (window.__docState.reg === 14) || (window.__docState.other === 14); // Verifica se o CNPJ tem 14 caracteres
       setCompanyRequired(anyCnpj);
       attachCompanyListenerOnce();
-      var docValid = [window.__docState.reg, window.__docState.other].some(l => l === 11 || l === 14);
+      var docValid = [window.__docState.reg, window.__docState.other].some(l => l === 11 || l === 14); // Verifica se o CPF tem 11 ou CNPJ tem 14 dígitos
       window.__checkout.doc = docValid;
       window.__recomputeCheckout && window.__recomputeCheckout();
     };
+
     window.__setDocLen = function(source, len){
       if (source === 'reg') window.__docState.reg = len;
       else window.__docState.other = len;
@@ -287,7 +288,10 @@ function cpfcnpj_script_admin() {
   window.__recomputeCheckout = function() {
     const g = window.__checkout;
     const disabled = !(g.login) && !(g.cep && g.doc && g.company);
-    document.querySelectorAll('button#checkout, #place_order').forEach(b => b.disabled = disabled);
+    const submitButton = document.querySelector('input[type="submit"][value="Adicionar Cliente"]');
+    if (submitButton) {
+      submitButton.disabled = disabled;
+    }
   };
 
   (function(){
@@ -312,7 +316,7 @@ function cpfcnpj_script_admin() {
       var len = digits(v).length;
       $el.prop('maxLength', (len >= 11 ? 18 : 14));
 
-      // >>> Atualiza o agregador como campo "other"
+      // Atualiza o agregador como campo "other"
       window.__setDocLen('other', len);
     }
 
@@ -328,6 +332,5 @@ function cpfcnpj_script_admin() {
     });
   })();
 </script>
-
 HTML;
 }
