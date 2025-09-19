@@ -1,25 +1,25 @@
 <?php
 function enderecos() {
     return <<<HTML
-<script>
-(function(){
-  function trigger(el,type){if(!el)return;try{el.dispatchEvent(new Event(type,{bubbles:true}));}catch(e){}}
-  
-  // Escopos
-  function getDomainScope(){ 
-    var sel=document.getElementById('inputDomainContact');
-    if (!sel) return null;
-    var p=sel.closest('.panel-body');
-    return p ? p.nextElementSibling : null; // Segundo bloco de formulário
-  }
-  function getClientScope(){
-    var byPhone=document.getElementById('phonenumber');
-    if(byPhone){var b=byPhone.closest('.panel-body');if(b)return b;}
-    var byCountry=document.getElementById('inputCountry');
-    if(byCountry){var c=byCountry.closest('.panel-body');if(c)return c;}
-    var f=document.querySelector('form[data-gtm-form-interact-id]');
-    return f ? f.closest('.panel-body') : null;
-  }
+  <script>
+  (function(){
+    function trigger(el,type){if(!el)return;try{el.dispatchEvent(new Event(type,{bubbles:true}));}catch(e){}}
+    
+    // Escopos
+    function getDomainScope(){ 
+      var sel=document.getElementById('inputDomainContact');
+      if (!sel) return null;
+      var p=sel.closest('.panel-body');
+      return p ? p.nextElementSibling : null; // Segundo bloco de formulário
+    }
+    function getClientScope(){
+      var byPhone=document.getElementById('phonenumber');
+      if(byPhone){var b=byPhone.closest('.panel-body');if(b)return b;}
+      var byCountry=document.getElementById('inputCountry');
+      if(byCountry){var c=byCountry.closest('.panel-body');if(c)return c;}
+      var f=document.querySelector('form[data-gtm-form-interact-id]');
+      return f ? f.closest('.panel-body') : null;
+    }
 
   function q(s,sel){ return s ? s.querySelector(sel) : null; }
   function getValue(s,sel){ var el = q(s,sel); return el ? el.value : ""; }

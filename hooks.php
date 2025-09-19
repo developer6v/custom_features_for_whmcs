@@ -50,13 +50,7 @@ add_hook('ClientAreaFooterOutput', 1, function($vars) {
     return cpfcnpj_script();
 });
 add_hook('AdminAreaFooterOutput', 1, function($vars) {
-    if (isCheckoutCartPage()) {
-        return cpfcnpj_script_cart();
-    }
-    if (isCheckoutOrderPage()) {
-        return cpfcnpj_script();
-    }
-    return cpfcnpj_script();
+    return cpfcnpj_script_cart();
 });
 
 // Endereço
@@ -114,4 +108,6 @@ add_hook('ClientAreaFooterOutput', 1, function($vars) {
     }
     return registerNumber();
 });
+
+
 ?>

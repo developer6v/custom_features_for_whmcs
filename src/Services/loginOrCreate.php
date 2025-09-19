@@ -27,13 +27,8 @@ function loginOrCreate() {
 
         // Verifica se o radio button "Login de clientes atuais" está marcado
         if ($loginRadio.prop('checked') || $accountID.prop('checked') || $accountID2.prop('checked')) {
-          console.log("checked")
-            console.log("Login de cliente atual selecionado");
             window.__checkout.login = true;  // Marca como login de cliente atual
         } else if (!$loginRadio.prop('checked') && !$accountID.prop('checked') && !$accountID2.prop('checked')) {
-                    console.log("notchecked")
-
-            console.log("Login de cliente atual NÃO selecionado");
             window.__checkout.login = false;  // Caso contrário, marca como falso
         }
 
@@ -75,12 +70,8 @@ jQuery(function() {
 
             // Verifica se o radio button "Login de clientes atuais" está marcado
             if ($existingAccountRadio.prop('checked')) {
-                console.log("checked");
-                console.log("Login de cliente atual selecionado");
                 window.__checkout.login = true;  // Marca como login de cliente atual
             } else if (!$existingAccountRadio.prop('checked')) {
-                console.log("notchecked");
-                console.log("Login de cliente atual NÃO selecionado");
                 window.__checkout.login = false;  // Caso contrário, marca como falso
             }
 

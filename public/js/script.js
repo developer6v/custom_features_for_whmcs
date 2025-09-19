@@ -194,7 +194,6 @@ class ConfiguracaoApp {
 // Inicialização
 document.addEventListener('DOMContentLoaded', () => {
     window.configApp = new ConfiguracaoApp();
-    console.log('Aplicação de configuração inicializada com sucesso!');
 });
 
 window.ConfiguracaoApp = ConfiguracaoApp;
