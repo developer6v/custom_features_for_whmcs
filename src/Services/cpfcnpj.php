@@ -215,134 +215,157 @@ HTML;
 
 
 
-
 function cpfcnpj_script_admin() {
     return <<<'HTML'
-<script>
-  window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
+  <script>
+    window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
 
-  (function ensureAggregator(){
-    if (window.__initCompanyAggregator) return;
-    window.__initCompanyAggregator = true;
-    window.__docState = { reg:0, other:0 };
-    
-    function getCompanyInput(){
-      return document.querySelector('input[name="companyname"]');
-    }
+    (function ensureAggregator(){
+      if (window.__initCompanyAggregator) return;
+      window.__initCompanyAggregator = true;
+      window.__docState = { reg:0, other:0 };
 
-    function setCompanyRequired(required){
-      var company = getCompanyInput();
-      if (!company) return;
-
-      var formGroup = company.closest('td.fieldarea'); // Encontrando a célula que contém o input
-      var label = formGroup ? formGroup.querySelector('small') : null;
-
-      if (required) {
-        company.setAttribute('required','required');
-        company.setAttribute('aria-required','true');
-        if (label) {
-          label.textContent = 'Empresa'; // Atualiza o texto do label
-          label.style.display = 'none'; // Esconde o "(Opcional)".
-        }
-      } else {
-        company.removeAttribute('required');
-        company.removeAttribute('aria-required');
-        if (label) {
-          label.textContent = 'Empresa (opcional)';
-          label.style.display = 'inline'; // Exibe novamente o "(Opcional)".
-        }
+      function getCompanyInput(){
+        return document.querySelector('input[name="companyname"]');
       }
 
-      window.__checkout = window.__checkout || {};
-      window.__checkout.company = !required || (company.value.trim().length > 0);
-    }
+      function setCompanyRequired(required){
+        var company = getCompanyInput();
+        if (!company) return;
 
-    function attachCompanyListenerOnce(){
-      var company = getCompanyInput();
-      if (!company || company._companyListenerAttached) return;
-      company._companyListenerAttached = true;
-      var handler = function(){
-        var required = company.hasAttribute('required');
+        var formGroup = company.closest('td.fieldarea'); // Encontrando a célula que contém o input
+        var label = formGroup ? formGroup.querySelector('small') : null;
+
+        if (required) {
+          company.setAttribute('required','required');
+          company.setAttribute('aria-required','true');
+          if (label) {
+            label.textContent = 'Empresa'; // Atualiza o texto do label
+            label.style.display = 'none'; // Esconde o "(Opcional)".
+          }
+        } else {
+          company.removeAttribute('required');
+          company.removeAttribute('aria-required');
+          if (label) {
+            label.textContent = 'Empresa (opcional)';
+            label.style.display = 'inline'; // Exibe novamente o "(Opcional)".
+          }
+        }
+
+        window.__checkout = window.__checkout || {};
         window.__checkout.company = !required || (company.value.trim().length > 0);
+      }
+
+      function attachCompanyListenerOnce(){
+        var company = getCompanyInput();
+        if (!company || company._companyListenerAttached) return;
+        company._companyListenerAttached = true;
+        var handler = function(){
+          var required = company.hasAttribute('required');
+          window.__checkout.company = !required || (company.value.trim().length > 0);
+          window.__recomputeCheckout && window.__recomputeCheckout();
+        };
+        ['input','change','blur'].forEach(ev => company.addEventListener(ev, handler));
+      }
+
+      window.__recomputeCompany = function(){
+        var anyCnpj = (window.__docState.reg === 14) || (window.__docState.other === 14); // Verifica se o CNPJ tem 14 caracteres
+        setCompanyRequired(anyCnpj);
+        attachCompanyListenerOnce();
+        var docValid = [window.__docState.reg, window.__docState.other].some(l => l === 11 || l === 14); // Verifica se o CPF tem 11 ou CNPJ tem 14 dígitos
+        window.__checkout.doc = docValid;
+        console.log("Documento válido? ", window.__checkout.doc); // Depuração
         window.__recomputeCheckout && window.__recomputeCheckout();
       };
-      ['input','change','blur'].forEach(ev => company.addEventListener(ev, handler));
-    }
 
-    window.__recomputeCompany = function(){
-      var anyCnpj = (window.__docState.reg === 14) || (window.__docState.other === 14); // Verifica se o CNPJ tem 14 caracteres
-      setCompanyRequired(anyCnpj);
-      attachCompanyListenerOnce();
-      var docValid = [window.__docState.reg, window.__docState.other].some(l => l === 11 || l === 14); // Verifica se o CPF tem 11 ou CNPJ tem 14 dígitos
-      window.__checkout.doc = docValid;
-      console.log("Documento válido? ", window.__checkout.doc); // Depuração
-      window.__recomputeCheckout && window.__recomputeCheckout();
+      window.__setDocLen = function(source, len){
+        if (source === 'reg') window.__docState.reg = len;
+        else window.__docState.other = len;
+        window.__recomputeCompany();
+      };
+    })();
+
+    window.__recomputeCheckout = function() {
+      const g = window.__checkout;
+      const disabled = !(g.login) && !(g.cep && g.doc && g.company);
+      console.log("Botão desabilitado?", disabled); // Depuração para ver o status do botão
+      const submitButton = document.querySelector('input[type="submit"][value="Adicionar Cliente"]');
+      if (submitButton) {
+        submitButton.disabled = disabled;
+        console.log("Botão atualizado? ", submitButton.disabled);
+      }
     };
 
-    window.__setDocLen = function(source, len){
-      if (source === 'reg') window.__docState.reg = len;
-      else window.__docState.other = len;
-      window.__recomputeCompany();
-    };
-  })();
+    (function(){
+      function digits(s){ return (s||'').replace(/\D/g,''); } // Remove qualquer coisa que não seja dígito
 
-  window.__recomputeCheckout = function() {
-    const g = window.__checkout;
-    const disabled = !(g.login) && !(g.cep && g.doc && g.company);
-    console.log("Botão desabilitado?", disabled); // Depuração para ver o status do botão
-    const submitButton = document.querySelector('input[type="submit"][value="Adicionar Cliente"]');
-    if (submitButton) {
-      submitButton.disabled = disabled;
-      console.log("Botão atualizado? ", submitButton.disabled);
-    }
-  };
+      function maskCpfCnpj($el){
+        var v = digits($el.val()); // Extrai apenas os dígitos
+        console.log("Valor extraído:", v); // Depuração
 
-  (function(){
-    function digits(s){ return (s||'').replace(/\D/g,''); } // Remove qualquer coisa que não seja dígito
+        // Limite de caracteres para CPF e CNPJ
+        if (v.length > 14) v = v.slice(0,14);
 
-    function maskCpfCnpj($el){
-      var v = digits($el.val()); // Extrai apenas os dígitos
-      console.log("Valor extraído:", v); // Depuração
+        // Máscara para CPF
+        if (v.length <= 11){
+          if (v.length > 9)      v = v.replace(/^(\d{3})(\d{3})(\d{3})(\d{0,2}).*$/, "$1.$2.$3-$4");
+          else if (v.length > 6) v = v.replace(/^(\d{3})(\d{3})(\d{0,3}).*$/, "$1.$2.$3");
+          else if (v.length > 3) v = v.replace(/^(\d{3})((\d{0,3})).*$/, "$1.$2");
+        } else {
+          // Máscara para CNPJ
+          if (v.length > 12)     v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2}).*$/, "$1.$2.$3/$4-$5");
+          else if (v.length > 8) v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4}).*$/, "$1.$2.$3/$4");
+          else if (v.length > 5) v = v.replace(/^(\d{2})(\d{3})(\d{0,3}).*$/, "$1.$2.$3");
+          else if (v.length > 2) v = v.replace(/^(\d{2})(\d{0,3}).*$/, "$1.$2");
+        }
 
-      // Limite de caracteres para CPF e CNPJ
-      if (v.length > 14) v = v.slice(0,14);
+        $el.val(v); // Atualiza o valor do campo com a máscara
+        var len = digits(v).length; // Comprimento final sem os caracteres não numéricos
+        $el.prop('maxLength', (len >= 11 ? 18 : 14)); // Define o maxLength
 
-      // Máscara para CPF
-      if (v.length <= 11){
-        if (v.length > 9)      v = v.replace(/^(\d{3})(\d{3})(\d{3})(\d{0,2}).*$/, "$1.$2.$3-$4");
-        else if (v.length > 6) v = v.replace(/^(\d{3})(\d{3})(\d{0,3}).*$/, "$1.$2.$3");
-        else if (v.length > 3) v = v.replace(/^(\d{3})((\d{0,3})).*$/, "$1.$2");
-      } else {
-        // Máscara para CNPJ
-        if (v.length > 12)     v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2}).*$/, "$1.$2.$3/$4-$5");
-        else if (v.length > 8) v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4}).*$/, "$1.$2.$3/$4");
-        else if (v.length > 5) v = v.replace(/^(\d{2})(\d{3})(\d{0,3}).*$/, "$1.$2.$3");
-        else if (v.length > 2) v = v.replace(/^(\d{2})(\d{0,3}).*$/, "$1.$2");
+        // Atualiza a contagem de caracteres no agregador
+        window.__setDocLen('other', len);
+        console.log("Comprimento do documento: ", len); // Depuração
+
+        // Exibe a mensagem de erro se o CPF/CNPJ for inválido
+        const msgElement = ensureMsgEl($el);
+        if (len !== 11 && len !== 14) {
+          showMsg($el, 'CPF/CNPJ inválido');
+        } else {
+          showMsg($el, ''); // Limpa a mensagem de erro se válido
+        }
       }
 
-      $el.val(v); // Atualiza o valor do campo com a máscara
-      var len = digits(v).length; // Comprimento final sem os caracteres não numéricos
-      $el.prop('maxLength', (len >= 11 ? 18 : 14)); // Define o maxLength
-
-      // Atualiza a contagem de caracteres no agregador
-      window.__setDocLen('other', len);
-      console.log("Comprimento do documento: ", len); // Depuração
-    }
-
-    jQuery(function(){
-      var checkExist = setInterval(function() {
-        var $field = jQuery('#customfield1');
-        if ($field.length) {
-          clearInterval(checkExist);
-          maskCpfCnpj($field);
-          $field.on('input change blur', function(){ 
-            maskCpfCnpj($field); 
-            console.log("Campo alterado:", $field.val()); // Depuração: valor do campo alterado
-          });
+      function ensureMsgEl(input) {
+        const id = 'cpfcnpj-validator-msg';
+        let msg = document.getElementById(id);
+        if (!msg) {
+          msg = document.createElement('span');
+          msg.id = id;
+          msg.style.cssText = 'color:red;font-size:12px;display:block;margin-top:4px;';
+          input.parentNode.appendChild(msg);
         }
-      }, 100);
-    });
-  })();
-</script>
-HTML;
+        return msg;
+      }
+
+      function showMsg(input, text) {
+        const msgEl = ensureMsgEl(input);
+        msgEl.textContent = text || '';
+      }
+
+      jQuery(function(){
+        var checkExist = setInterval(function() {
+          var $field = jQuery('#customfield1'); // Assumindo que é o campo de CPF/CNPJ
+          if ($field.length) {
+            clearInterval(checkExist);
+            maskCpfCnpj($field);
+            $field.on('input change blur', function(){ 
+              maskCpfCnpj($field); 
+            });
+          }
+        }, 100);
+      });
+    })();
+  </script>
+  HTML;
 }
