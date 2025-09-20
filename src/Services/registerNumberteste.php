@@ -1,7 +1,7 @@
 <?php
 
 function registerNumberTeste () {
-    return <<<HTML
+   return <<<'HTML'
     <script>
 
         jQuery(document).ready(function($) {
@@ -42,30 +42,29 @@ function registerNumberTeste () {
 
             }
 
-            var watcher = setInterval(function(){
+           var watcher = setInterval(function(){
                 console.log("[DEBUG] watcher chamado...");
 
-                var from = document.getElementById('1');
-                var to   = document.getElementById('0');
+                var from = $('#1');
+                var to   = $('#0');
 
-                console.log("[DEBUG] from:", from, "to:", to);
+                console.log("[DEBUG] from:", from.length, "to:", to.length);
 
-                if(from && to){
+                if(from.length && to.length){
                     console.log("[DEBUG] elementos encontrados! Limpando watcher e configurando listeners.");
                     clearInterval(watcher);
 
-                    copyOnce(); // cuidado: se essa função não existir, vai quebrar
-
-                    ['input','change','blur'].forEach(ev => {
+                   ['input','change','blur'].forEach(ev => {
                         console.log("[DEBUG] adicionando listener para evento:", ev);
-                        from.addEventListener(ev, function(){ 
+                        from.on(ev, function(){ 
                             console.log("[DEBUG] evento", ev, "detectado no campo FROM");
-                            maskCpfCnpj($(from));
-; 
+                            maskCpfCnpj(from);
                         });
                     });
+
                 }
             }, 300);
+
 
         });
     </script>
