@@ -129,6 +129,14 @@ function cpfcnpj_script() {
         var $field = jQuery('#cl_custom_field_1');
         if ($field.length) {
           clearInterval(checkExist);
+          
+          // Criação do elemento de erro logo após encontrar o campo
+          var messageElement = document.createElement('span');
+          messageElement.id = 'cpf-cnpj-message';
+          messageElement.style.fontSize = '12px';
+          messageElement.style.marginTop = '5px';
+          $field.parent().append(messageElement);
+          
           maskCpfCnpj($field);
           $field.on('input change blur', function(){ maskCpfCnpj($field); });
         }
@@ -138,7 +146,6 @@ function cpfcnpj_script() {
 </script>
 HTML;
 }
-
 
 function cpfcnpj_script_cart() {
     return <<<'HTML'
