@@ -334,18 +334,24 @@ function cpfcnpj_script_admin() {
           showMsg($el, ''); // Limpa a mensagem de erro se válido
         }
       }
+function ensureMsgEl(input) {
+    const id = 'cpfcnpj-validator-msg';
+    let msg = document.getElementById(id);
+    if (!msg) {
+        msg = document.createElement('span');
+        msg.id = id;
+        msg.style.cssText = 'color:red;font-size:12px;display:block;margin-top:4px;';
 
-      function ensureMsgEl(input) {
-        const id = 'cpfcnpj-validator-msg';
-        let msg = document.getElementById(id);
-        if (!msg) {
-          msg = document.createElement('span');
-          msg.id = id;
-          msg.style.cssText = 'color:red;font-size:12px;display:block;margin-top:4px;';
-          input.parentNode.appendChild(msg);
+        // Verifica se o parentNode do input existe antes de tentar anexar a mensagem
+        if (input.parentNode) {
+            input.parentNode.appendChild(msg);
+        } else {
+            console.log("Erro: input.parentNode não encontrado!");
         }
-        return msg;
-      }
+    }
+    return msg;
+}
+
 
       function showMsg(input, text) {
         const msgEl = ensureMsgEl(input);
