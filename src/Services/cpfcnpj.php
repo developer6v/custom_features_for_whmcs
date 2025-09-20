@@ -34,7 +34,7 @@ function cpfcnpj_script() {
     function setMessageCPFCNPJ(required){
       var spanMes =  document.querySelector('#cpf-cnpj-message');
       if (spanMes) {
-        spanMes.textContent = "encontrou";  
+        spanMes.innerHTML  = "encontrou";  
       } else {
         console.log("nao encontrou o campo")
       }
