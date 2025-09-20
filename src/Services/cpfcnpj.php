@@ -214,6 +214,8 @@ HTML;
 }
 
 
+
+
 function cpfcnpj_script_admin() {
     return <<<'HTML'
   <script>
@@ -223,7 +225,7 @@ function cpfcnpj_script_admin() {
       if (window.__initCompanyAggregator) return;
       window.__initCompanyAggregator = true;
       window.__docState = { reg:0, other:0 };
-
+      
       function getCompanyInput(){
         return document.querySelector('input[name="companyname"]');
       }
@@ -322,50 +324,20 @@ function cpfcnpj_script_admin() {
         var len = digits(v).length; // Comprimento final sem os caracteres não numéricos
         $el.prop('maxLength', (len >= 11 ? 18 : 14)); // Define o maxLength
 
-        console.log("Comprimento do documento:", len); // Depuração
-
-        // Exibe a mensagem de erro se o CPF/CNPJ for inválido
-        const msgElement = ensureMsgEl($el);
-        if (len !== 11 && len !== 14) {
-          console.log("CPF/CNPJ inválido!");
-          showMsg($el, 'CPF/CNPJ inválido');
-        } else {
-          console.log("CPF/CNPJ válido!");
-          showMsg($el, ''); // Limpa a mensagem de erro se válido
-        }
-      }
-function ensureMsgEl(input) {
-    const id = 'cpfcnpj-validator-msg';
-    let msg = document.getElementById(id);
-    if (!msg) {
-        msg = document.createElement('span');
-        msg.id = id;
-        msg.style.cssText = 'color:red;font-size:12px;display:block;margin-top:4px;';
-
-        // Verifica se o parentNode do input existe antes de tentar anexar a mensagem
-        if (input.parentNode) {
-            input.parentNode.appendChild(msg);
-        } else {
-            console.log("Erro: input.parentNode não encontrado!");
-        }
-    }
-    return msg;
-}
-
-
-      function showMsg(input, text) {
-        const msgEl = ensureMsgEl(input);
-        msgEl.textContent = text || '';
+        // Atualiza a contagem de caracteres no agregador
+        window.__setDocLen('other', len);
+        console.log("Comprimento do documento: ", len); // Depuração
       }
 
       jQuery(function(){
         var checkExist = setInterval(function() {
-          var $field = jQuery('#customfield1'); // Assumindo que é o campo de CPF/CNPJ
+          var $field = jQuery('#customfield1');
           if ($field.length) {
             clearInterval(checkExist);
             maskCpfCnpj($field);
             $field.on('input change blur', function(){ 
               maskCpfCnpj($field); 
+              console.log("Campo alterado:", $field.val()); // Depuração: valor do campo alterado
             });
           }
         }, 100);
