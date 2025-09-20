@@ -1,15 +1,14 @@
 <?php
 function cpfcnpj_script() {
     return <<<'HTML'
+  <script>
+    window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
 
-<script>
-  window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
-
-  // Agregador já definido no outro script; se não, define aqui rapidamente
-  (function ensureAggregator(){
-    if (window.__initCompanyAggregator) return;
-    window.__initCompanyAggregator = true;
-    window.__docState = { reg:0, other:0 };
+    // Agregador já definido no outro script; se não, define aqui rapidamente
+    (function ensureAggregator(){
+      if (window.__initCompanyAggregator) return;
+      window.__initCompanyAggregator = true;
+      window.__docState = { reg:0, other:0 };
 
     function getCompanyInput(){
       return document.querySelector('input[name="companyname"]');
@@ -54,18 +53,18 @@ function cpfcnpj_script() {
       else window.__docState.other = len;
       window.__recomputeCompany();
     };
-  })();
+    
 
-  window.__recomputeCheckout = function() {
-    const g = window.__checkout;
-    const disabled = !(g.login) && !(g.cep && g.doc && g.company);
-    document.querySelectorAll('button#checkout, #place_order').forEach(b => b.disabled = disabled);
-  };
+    window.__recomputeCheckout = function() {
+      const g = window.__checkout;
+      const disabled = !(g.login) && !(g.cep && g.doc && g.company);
+      document.querySelectorAll('button#checkout, #place_order').forEach(b => b.disabled = disabled);
+    };
 
-  (function(){
-    function digits(s){ return (s||'').replace(/\D/g,''); }
+    (function(){
+      function digits(s){ return (s||'').replace(/\D/g,''); }
 
-    function maskCpfCnpj($el){
+      function maskCpfCnpj($el){
       var v = digits($el.val());
       if (v.length > 14) v = v.slice(0,14);
 
@@ -86,43 +85,6 @@ function cpfcnpj_script() {
 
       // >>> Atualiza o agregador como campo "other"
       window.__setDocLen('other', len);
-
-      // Criação ou validação da mensagem de erro
-      var messageElement = document.getElementById('cpf-cnpj-message');
-      if (!messageElement) {
-        messageElement = document.createElement('span');
-        messageElement.id = 'cpf-cnpj-message';
-        messageElement.style.fontSize = '12px';
-        messageElement.style.marginTop = '5px';
-        $el.parentNode.appendChild(messageElement);
-      }
-
-      // Função para verificar CPF ou CNPJ
-      if (len === 11) {  // CPF
-        if (!isValidCpf(v)) {
-          messageElement.textContent = "CPF Inválido";
-          messageElement.style.color = "red";
-        } else {
-          messageElement.textContent = "";
-        }
-      } else if (len === 14) {  // CNPJ
-        if (!isValidCnpj(v)) {
-          messageElement.textContent = "CNPJ Inválido";
-          messageElement.style.color = "red";
-        } else {
-          messageElement.textContent = "";
-        }
-      }
-    }
-
-    function isValidCpf(cpf) {
-      // Lógica de validação de CPF (simplificada para exemplo)
-      return /^(\d{3}\.\d{3}\.\d{3}-\d{2})$/.test(cpf);
-    }
-
-    function isValidCnpj(cnpj) {
-      // Lógica de validação de CNPJ (simplificada para exemplo)
-      return /^(\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2})$/.test(cnpj);
     }
 
     jQuery(function(){
@@ -137,7 +99,6 @@ function cpfcnpj_script() {
     });
   })();
 </script>
-
 
 HTML;
 }
