@@ -9,5 +9,5 @@ function registerNumberTeste () {
         });
     </script>
 
-    HTML
+    HTML;
 }
