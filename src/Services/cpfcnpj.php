@@ -93,23 +93,23 @@ function cpfcnpj_script() {
         messageElement.id = 'cpf-cnpj-message';
         messageElement.style.fontSize = '12px';
         messageElement.style.marginTop = '5px';
-        $el.parentNode.appendChild(messageElement);
+        $el.parent().append(messageElement);  // Adiciona o elemento abaixo do campo
       }
 
       // Função para verificar CPF ou CNPJ
       if (len === 11) {  // CPF
         if (!isValidCpf(v)) {
-          messageElement.textContent = "CPF Inválido";
+          messageElement.textContent = "CPF Inválido";  // Adiciona o texto
           messageElement.style.color = "red";
         } else {
-          messageElement.textContent = "";
+          messageElement.textContent = "";  // Limpa o texto caso seja válido
         }
       } else if (len === 14) {  // CNPJ
         if (!isValidCnpj(v)) {
-          messageElement.textContent = "CNPJ Inválido";
+          messageElement.textContent = "CNPJ Inválido";  // Adiciona o texto
           messageElement.style.color = "red";
         } else {
-          messageElement.textContent = "";
+          messageElement.textContent = "";  // Limpa o texto caso seja válido
         }
       }
     }
@@ -146,6 +146,8 @@ function cpfcnpj_script() {
 </script>
 HTML;
 }
+?>
+
 
 function cpfcnpj_script_cart() {
     return <<<'HTML'
