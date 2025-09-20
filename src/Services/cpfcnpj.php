@@ -1,14 +1,14 @@
 <?php
 function cpfcnpj_script() {
     return <<<'HTML'
-  <script>
-    window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
+<script>
+  window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
 
-    // Agregador já definido no outro script; se não, define aqui rapidamente
-    (function ensureAggregator(){
-      if (window.__initCompanyAggregator) return;
-      window.__initCompanyAggregator = true;
-      window.__docState = { reg:0, other:0 };
+  // Agregador já definido no outro script; se não, define aqui rapidamente
+  (function ensureAggregator(){
+    if (window.__initCompanyAggregator) return;
+    window.__initCompanyAggregator = true;
+    window.__docState = { reg:0, other:0 };
 
     function getCompanyInput(){
       return document.querySelector('input[name="companyname"]');
@@ -53,18 +53,18 @@ function cpfcnpj_script() {
       else window.__docState.other = len;
       window.__recomputeCompany();
     };
-    
+  })();
 
-    window.__recomputeCheckout = function() {
-      const g = window.__checkout;
-      const disabled = !(g.login) && !(g.cep && g.doc && g.company);
-      document.querySelectorAll('button#checkout, #place_order').forEach(b => b.disabled = disabled);
-    };
+  window.__recomputeCheckout = function() {
+    const g = window.__checkout;
+    const disabled = !(g.login) && !(g.cep && g.doc && g.company);
+    document.querySelectorAll('button#checkout, #place_order').forEach(b => b.disabled = disabled);
+  };
 
-    (function(){
-      function digits(s){ return (s||'').replace(/\D/g,''); }
+  (function(){
+    function digits(s){ return (s||'').replace(/\D/g,''); }
 
-      function maskCpfCnpj($el){
+    function maskCpfCnpj($el){
       var v = digits($el.val());
       if (v.length > 14) v = v.slice(0,14);
 
