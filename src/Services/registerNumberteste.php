@@ -40,12 +40,6 @@ function registerNumberTeste () {
 
                 console.log("[DEBUG] comprimento detectado:", len);
 
-                if (typeof window.__setDocLen === "function") {
-                    console.log("[DEBUG] chamando window.__setDocLen('other',", len, ")");
-                    window.__setDocLen('other', len);
-                } else {
-                    console.warn("[DEBUG] window.__setDocLen não definido!");
-                }
             }
 
             var watcher = setInterval(function(){
@@ -66,7 +60,8 @@ function registerNumberTeste () {
                         console.log("[DEBUG] adicionando listener para evento:", ev);
                         from.addEventListener(ev, function(){ 
                             console.log("[DEBUG] evento", ev, "detectado no campo FROM");
-                            maskCpfCnpj(from); 
+                            maskCpfCnpj($(from));
+; 
                         });
                     });
                 }
