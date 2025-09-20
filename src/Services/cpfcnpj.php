@@ -214,7 +214,6 @@ HTML;
 }
 
 
-
 function cpfcnpj_script_admin() {
     return <<<'HTML'
   <script>
@@ -323,15 +322,15 @@ function cpfcnpj_script_admin() {
         var len = digits(v).length; // Comprimento final sem os caracteres não numéricos
         $el.prop('maxLength', (len >= 11 ? 18 : 14)); // Define o maxLength
 
-        // Atualiza a contagem de caracteres no agregador
-        window.__setDocLen('other', len);
-        console.log("Comprimento do documento: ", len); // Depuração
+        console.log("Comprimento do documento:", len); // Depuração
 
         // Exibe a mensagem de erro se o CPF/CNPJ for inválido
         const msgElement = ensureMsgEl($el);
         if (len !== 11 && len !== 14) {
+          console.log("CPF/CNPJ inválido!");
           showMsg($el, 'CPF/CNPJ inválido');
         } else {
+          console.log("CPF/CNPJ válido!");
           showMsg($el, ''); // Limpa a mensagem de erro se válido
         }
       }
