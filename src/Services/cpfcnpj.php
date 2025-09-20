@@ -13,6 +13,7 @@ function cpfcnpj_script() {
     function getCompanyInput(){
       return document.querySelector('input[name="companyname"]');
     }
+
     function setCompanyRequired(required){
       var company = getCompanyInput();
       if (!company) return;
@@ -29,6 +30,17 @@ function cpfcnpj_script() {
       }
       window.__checkout.company = !required || (company.value.trim().length > 0);
     }
+
+    function setMessageCPFCNPJ(required){
+      var spanMes =  document.querySelector('#cpf-cnpj-message');
+      if (spanMes) {
+        spanMes.textContent = "encontrou";  
+      } else {
+        console.log("nao encontrou o campo")
+      }
+    }
+
+
     function attachCompanyListenerOnce(){
       var company = getCompanyInput();
       if (!company || company._companyListenerAttached) return;
@@ -43,6 +55,7 @@ function cpfcnpj_script() {
     window.__recomputeCompany = function(){
       var anyCnpj = (window.__docState.reg === 14) || (window.__docState.other === 14);
       setCompanyRequired(anyCnpj);
+      setMessageCPFCNPJ(anyCnpj);
       attachCompanyListenerOnce();
       var docValid = [window.__docState.reg, window.__docState.other].some(l => l === 11 || l === 14);
       window.__checkout.doc = docValid;
