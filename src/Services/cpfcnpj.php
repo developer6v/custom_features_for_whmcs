@@ -85,43 +85,6 @@ function cpfcnpj_script() {
 
       // >>> Atualiza o agregador como campo "other"
       window.__setDocLen('other', len);
-
-      // Criação ou validação da mensagem de erro
-      var messageElement = document.getElementById('cpf-cnpj-message');
-      if (!messageElement) {
-        messageElement = document.createElement('span');
-        messageElement.id = 'cpf-cnpj-message';
-        messageElement.style.fontSize = '12px';
-        messageElement.style.marginTop = '5px';
-        $el.parent().append(messageElement);  // Adiciona o elemento abaixo do campo
-      }
-
-      // Função para verificar CPF ou CNPJ
-      if (len === 11) {  // CPF
-        if (!isValidCpf(v)) {
-          messageElement.textContent = "CPF Inválido";  // Adiciona o texto
-          messageElement.style.color = "red";
-        } else {
-          messageElement.textContent = "";  // Limpa o texto caso seja válido
-        }
-      } else if (len === 14) {  // CNPJ
-        if (!isValidCnpj(v)) {
-          messageElement.textContent = "CNPJ Inválido";  // Adiciona o texto
-          messageElement.style.color = "red";
-        } else {
-          messageElement.textContent = "";  // Limpa o texto caso seja válido
-        }
-      }
-    }
-
-    function isValidCpf(cpf) {
-      // Lógica de validação de CPF (simplificada para exemplo)
-      return /^(\d{3}\.\d{3}\.\d{3}-\d{2})$/.test(cpf);
-    }
-
-    function isValidCnpj(cnpj) {
-      // Lógica de validação de CNPJ (simplificada para exemplo)
-      return /^(\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2})$/.test(cnpj);
     }
 
     jQuery(function(){
@@ -129,14 +92,14 @@ function cpfcnpj_script() {
         var $field = jQuery('#cl_custom_field_1');
         if ($field.length) {
           clearInterval(checkExist);
-          
+
           // Criação do elemento de erro logo após encontrar o campo
           var messageElement = document.createElement('span');
           messageElement.id = 'cpf-cnpj-message';
           messageElement.style.fontSize = '12px';
           messageElement.style.marginTop = '5px';
-          $field.parent().append(messageElement);
-          
+          $field.parent().append(messageElement);  // Adiciona o elemento abaixo do campo
+
           maskCpfCnpj($field);
           $field.on('input change blur', function(){ maskCpfCnpj($field); });
         }
@@ -146,7 +109,6 @@ function cpfcnpj_script() {
 </script>
 HTML;
 }
-?>
 
 
 function cpfcnpj_script_cart() {
