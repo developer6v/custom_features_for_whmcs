@@ -1,6 +1,7 @@
 <?php
 function cpfcnpj_script() {
     return <<<'HTML'
+
 <script>
   window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
 
@@ -85,6 +86,43 @@ function cpfcnpj_script() {
 
       // >>> Atualiza o agregador como campo "other"
       window.__setDocLen('other', len);
+
+      // Criação ou validação da mensagem de erro
+      var messageElement = document.getElementById('cpf-cnpj-message');
+      if (!messageElement) {
+        messageElement = document.createElement('span');
+        messageElement.id = 'cpf-cnpj-message';
+        messageElement.style.fontSize = '12px';
+        messageElement.style.marginTop = '5px';
+        $el.parentNode.appendChild(messageElement);
+      }
+
+      // Função para verificar CPF ou CNPJ
+      if (len === 11) {  // CPF
+        if (!isValidCpf(v)) {
+          messageElement.textContent = "CPF Inválido";
+          messageElement.style.color = "red";
+        } else {
+          messageElement.textContent = "";
+        }
+      } else if (len === 14) {  // CNPJ
+        if (!isValidCnpj(v)) {
+          messageElement.textContent = "CNPJ Inválido";
+          messageElement.style.color = "red";
+        } else {
+          messageElement.textContent = "";
+        }
+      }
+    }
+
+    function isValidCpf(cpf) {
+      // Lógica de validação de CPF (simplificada para exemplo)
+      return /^(\d{3}\.\d{3}\.\d{3}-\d{2})$/.test(cpf);
+    }
+
+    function isValidCnpj(cnpj) {
+      // Lógica de validação de CNPJ (simplificada para exemplo)
+      return /^(\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2})$/.test(cnpj);
     }
 
     jQuery(function(){
@@ -99,6 +137,7 @@ function cpfcnpj_script() {
     });
   })();
 </script>
+
 
 HTML;
 }
