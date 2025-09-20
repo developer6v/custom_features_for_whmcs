@@ -41,7 +41,7 @@ function cpfcnpj_script() {
       ['input','change','blur'].forEach(ev => company.addEventListener(ev, handler));
     }
     window.__recomputeCompany = function(){
-      var anyCnpj = (window.__docState.reg > 11) || (window.__docState.other > 11);
+      var anyCnpj = (window.__docState.reg === 14) || (window.__docState.other === 14);
       setCompanyRequired(anyCnpj);
       attachCompanyListenerOnce();
       var docValid = [window.__docState.reg, window.__docState.other].some(l => l === 11 || l === 14);
