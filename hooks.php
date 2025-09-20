@@ -12,7 +12,7 @@ if (!defined('WHMCS')) { die('Access denied'); }
 
 // Função auxiliar para checar se está no checkout
 function isCheckoutCartPage() {
-    return (strpos($_SERVER['REQUEST_URI'], 'cart.php?a=checkout') !== false);
+    return (strpos($_SERVER['REQUEST_URI'], 'cart.php') !== false);
 }
 
 function isCheckoutOrderPage() {
@@ -43,11 +43,9 @@ add_hook('AdminAreaFooterOutput', 1, function($vars) {
 add_hook('ClientAreaFooterOutput', 1, function($vars) {
     if (isCheckoutCartPage()) {
         return cpfcnpj_script_cart();
-    }
-    if (isCheckoutOrderPage()) {
+    }elseif (isCheckoutOrderPage()) {
         return cpfcnpj_script();
     }
-    return cpfcnpj_script();
 });
 add_hook('AdminAreaFooterOutput', 1, function($vars) {
     return cpfcnpj_script_admin();

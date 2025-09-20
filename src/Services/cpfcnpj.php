@@ -1,132 +1,148 @@
 <?php
 function cpfcnpj_script() {
     return <<<'HTML'
-<script>
-  window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
+  <script>
+    window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
 
-  // Agregador já definido no outro script; se não, define aqui rapidamente
-  (function ensureAggregator(){
-    if (window.__initCompanyAggregator) return;
-    window.__initCompanyAggregator = true;
-    window.__docState = { reg:0, other:0 };
+    // Agregador já definido no outro script; se não, define aqui rapidamente
+    (function ensureAggregator(){
+      if (window.__initCompanyAggregator) return;
+      window.__initCompanyAggregator = true;
+      window.__docState = { reg:0, other:0 };
 
-    function getCompanyInput(){
-      return document.querySelector('input[name="companyname"]');
-    }
-
-    function setCompanyRequired(required){
-      var company = getCompanyInput();
-      if (!company) return;
-      var formGroup = company.closest('.form-group');
-      var elOpCompany = formGroup ? formGroup.querySelector('.control-label .control-label-info') : null;
-      if (required) {
-        company.setAttribute('required','required');
-        company.setAttribute('aria-required','true');
-        if (elOpCompany) elOpCompany.style.display = 'none';
-      } else {
-        company.removeAttribute('required');
-        company.removeAttribute('aria-required');
-        if (elOpCompany) elOpCompany.style.display = 'inline';
+      function getCompanyInput(){
+        return document.querySelector('input[name="companyname"]');
       }
-      window.__checkout.company = !required || (company.value.trim().length > 0);
+
+      function setCompanyRequired(required){
+        var company = getCompanyInput();
+        if (!company) return;
+        var formGroup = company.closest('.form-group');
+        var elOpCompany = formGroup ? formGroup.querySelector('.control-label .control-label-info') : null;
+        if (required) {
+          company.setAttribute('required','required');
+          company.setAttribute('aria-required','true');
+          if (elOpCompany) elOpCompany.style.display = 'none';
+        } else {
+          company.removeAttribute('required');
+          company.removeAttribute('aria-required');
+          if (elOpCompany) elOpCompany.style.display = 'inline';
+        }
+
+         var formGroup = company.closest('.form-group');
+    if (!formGroup) {
+      console.log("form-group não encontrado");
+      return;
     }
 
-    function setMessageCPFCNPJ(required){
-      var spanMes =  document.querySelector('#cpf-cnpj-message');
-      if (spanMes) {
-        spanMes.innerHTML  = "encontrou";  
+      var label = formGroup.querySelector('label');
+      if (label) {
+        // Log para verificar o texto que será aplicado
+        console.log('Alterando label para: ' + (required ? 'Empresa' : 'Empresa (opcional)'));
+        label.textContent = required ? 'Empresa' : 'Empresa (opcional)';
       } else {
-        console.log("nao encontrou o campo")
+        console.log("Label não encontrada");
       }
-    }
-
-
-    function attachCompanyListenerOnce(){
-      var company = getCompanyInput();
-      if (!company || company._companyListenerAttached) return;
-      company._companyListenerAttached = true;
-      var handler = function(){
-        var required = company.hasAttribute('required');
+  
         window.__checkout.company = !required || (company.value.trim().length > 0);
+      }
+
+      function setMessageCPFCNPJ(required){
+        var spanMes =  document.querySelector('#cpf-cnpj-message');
+        if (spanMes) {
+          spanMes.innerHTML  = "encontrou";  
+        } else {
+          console.log("nao encontrou o campo")
+        }
+      }
+
+
+      function attachCompanyListenerOnce(){
+        var company = getCompanyInput();
+        if (!company || company._companyListenerAttached) return;
+        company._companyListenerAttached = true;
+        var handler = function(){
+          var required = company.hasAttribute('required');
+          window.__checkout.company = !required || (company.value.trim().length > 0);
+          window.__recomputeCheckout && window.__recomputeCheckout();
+        };
+        ['input','change','blur'].forEach(ev => company.addEventListener(ev, handler));
+      }
+      window.__recomputeCompany = function(){
+        var anyCnpj = (window.__docState.reg === 14) || (window.__docState.other === 14); // Verifica se o CNPJ tem 14 caracteres
+        setCompanyRequired(anyCnpj);
+        setMessageCPFCNPJ(anyCnpj);
+        attachCompanyListenerOnce();
+        var docValid = [window.__docState.reg, window.__docState.other].some(l => l === 11 || l === 14);
+        window.__checkout.doc = docValid;
         window.__recomputeCheckout && window.__recomputeCheckout();
       };
-      ['input','change','blur'].forEach(ev => company.addEventListener(ev, handler));
-    }
-    window.__recomputeCompany = function(){
-      var anyCnpj = (window.__docState.reg === 14) || (window.__docState.other === 14);
-      setCompanyRequired(anyCnpj);
-      setMessageCPFCNPJ(anyCnpj);
-      attachCompanyListenerOnce();
-      var docValid = [window.__docState.reg, window.__docState.other].some(l => l === 11 || l === 14);
-      window.__checkout.doc = docValid;
-      window.__recomputeCheckout && window.__recomputeCheckout();
+      window.__setDocLen = function(source, len){
+        if (source === 'reg') window.__docState.reg = len;
+        else window.__docState.other = len;
+        window.__recomputeCompany();
+      };
+    })();
+
+    window.__recomputeCheckout = function() {
+      const g = window.__checkout;
+      const disabled = !(g.login) && !(g.cep && g.doc && g.company);
+      document.querySelectorAll('button#checkout, #place_order').forEach(b => b.disabled = disabled);
     };
-    window.__setDocLen = function(source, len){
-      if (source === 'reg') window.__docState.reg = len;
-      else window.__docState.other = len;
-      window.__recomputeCompany();
-    };
-  })();
 
-  window.__recomputeCheckout = function() {
-    const g = window.__checkout;
-    const disabled = !(g.login) && !(g.cep && g.doc && g.company);
-    document.querySelectorAll('button#checkout, #place_order').forEach(b => b.disabled = disabled);
-  };
+    (function(){
+      function digits(s){ return (s||'').replace(/\D/g,''); }
 
-  (function(){
-    function digits(s){ return (s||'').replace(/\D/g,''); }
+      function maskCpfCnpj($el){
+        var v = digits($el.val());
+        if (v.length > 14) v = v.slice(0,14);
 
-    function maskCpfCnpj($el){
-      var v = digits($el.val());
-      if (v.length > 14) v = v.slice(0,14);
+        if (v.length <= 11){
+          if (v.length > 9)      v = v.replace(/^(\d{3})(\d{3})(\d{3})(\d{0,2}).*$/, "$1.$2.$3-$4");
+          else if (v.length > 6) v = v.replace(/^(\d{3})(\d{3})(\d{0,3}).*$/, "$1.$2.$3");
+          else if (v.length > 3) v = v.replace(/^(\d{3})((\d{0,3})).*$/, "$1.$2");
+        } else {
+          if (v.length > 12)     v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2}).*$/, "$1.$2.$3/$4-$5");
+          else if (v.length > 8) v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4}).*$/, "$1.$2.$3/$4");
+          else if (v.length > 5) v = v.replace(/^(\d{2})(\d{3})(\d{0,3}).*$/, "$1.$2.$3");
+          else if (v.length > 2) v = v.replace(/^(\d{2})(\d{0,3}).*$/, "$1.$2");
+        }
 
-      if (v.length <= 11){
-        if (v.length > 9)      v = v.replace(/^(\d{3})(\d{3})(\d{3})(\d{0,2}).*$/, "$1.$2.$3-$4");
-        else if (v.length > 6) v = v.replace(/^(\d{3})(\d{3})(\d{0,3}).*$/, "$1.$2.$3");
-        else if (v.length > 3) v = v.replace(/^(\d{3})((\d{0,3})).*$/, "$1.$2");
-      } else {
-        if (v.length > 12)     v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2}).*$/, "$1.$2.$3/$4-$5");
-        else if (v.length > 8) v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4}).*$/, "$1.$2.$3/$4");
-        else if (v.length > 5) v = v.replace(/^(\d{2})(\d{3})(\d{0,3}).*$/, "$1.$2.$3");
-        else if (v.length > 2) v = v.replace(/^(\d{2})(\d{0,3}).*$/, "$1.$2");
+        $el.val(v);
+        var len = digits(v).length;
+        $el.prop('maxLength', (len >= 11 ? 18 : 14));
+
+        // >>> Atualiza o agregador como campo "other"
+        window.__setDocLen('other', len);
       }
 
-      $el.val(v);
-      var len = digits(v).length;
-      $el.prop('maxLength', (len >= 11 ? 18 : 14));
+      jQuery(function(){
+        var checkExist = setInterval(function() {
+          var $field = jQuery('#cl_custom_field_1');
+          if ($field.length) {
+            clearInterval(checkExist);
 
-      // >>> Atualiza o agregador como campo "other"
-      window.__setDocLen('other', len);
-    }
+            // Criação do elemento de erro logo após encontrar o campo
+            var messageElement = document.createElement('span');
+            messageElement.id = 'cpf-cnpj-message';
+            messageElement.style.fontSize = '12px';
+            messageElement.style.marginTop = '5px';
+            $field.parent().append(messageElement);  // Adiciona o elemento abaixo do campo
 
-    jQuery(function(){
-      var checkExist = setInterval(function() {
-        var $field = jQuery('#cl_custom_field_1');
-        if ($field.length) {
-          clearInterval(checkExist);
-
-          // Criação do elemento de erro logo após encontrar o campo
-          var messageElement = document.createElement('span');
-          messageElement.id = 'cpf-cnpj-message';
-          messageElement.style.fontSize = '12px';
-          messageElement.style.marginTop = '5px';
-          $field.parent().append(messageElement);  // Adiciona o elemento abaixo do campo
-
-          maskCpfCnpj($field);
-          $field.on('input change blur', function(){ maskCpfCnpj($field); });
-        }
-      }, 100);
-    });
-  })();
-</script>
-HTML;
+            maskCpfCnpj($field);
+            $field.on('input change blur', function(){ maskCpfCnpj($field); });
+          }
+        }, 100);
+      });
+    })();
+  </script>
+  HTML;
 }
 
 
 function cpfcnpj_script_cart() {
     return <<<'HTML'
-<script>
+  <script>
   window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
 
   (function ensureAggregator(){
@@ -138,22 +154,28 @@ function cpfcnpj_script_cart() {
     return document.querySelector('input[name="companyname"]');
   }
 
-  function setCompanyRequired(required){
-    var company = getCompanyInput();
-    if (!company) return;
+  function setCompanyRequired(required) {
+    var company = document.querySelector('input[name="companyname"]'); // Seleciona o input pelo name
+    if (!company) {
+      console.log("Campo 'companyname' não encontrado");
+      return;
+    }
 
     var formGroup = company.closest('.form-group');
-    var label = formGroup ? formGroup.querySelector('label.control-label') : null;
-
-    if (required) {
-      company.setAttribute('required','required');
-      company.setAttribute('aria-required','true');
-      if (label) label.textContent = 'Empresa';
-    } else {
-      company.removeAttribute('required');
-      company.removeAttribute('aria-required');
-      if (label) label.textContent = 'Empresa (opcional)';
+    if (!formGroup) {
+      console.log("form-group não encontrado");
+      return;
     }
+
+    var label = formGroup.querySelector('label');
+    if (label) {
+      // Log para verificar o texto que será aplicado
+      console.log('Alterando label para: ' + (required ? 'Empresa' : 'Empresa (opcional)'));
+      label.textContent = required ? 'Empresa' : 'Empresa (opcional)';
+    } else {
+      console.log("Label não encontrada");
+    }
+ 
 
     window.__checkout = window.__checkout || {};
     window.__checkout.company = !required || (company.value.trim().length > 0);
