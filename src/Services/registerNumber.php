@@ -1,14 +1,10 @@
 <?php
-
 function registerNumber() {
     return <<<HTML
-  <script>
-
+<script>
   // Estado global padrão
   window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
 
-  jQuery(function(){
-    console.log("teste")
   // Agregador global (define uma única vez)
   (function initAggregator(){
     if (window.__initCompanyAggregator) return; // evita redefinir
@@ -83,8 +79,8 @@ function registerNumber() {
     function trigger(el,t){ if(!el) return; try{ el.dispatchEvent(new Event(t,{bubbles:true})); }catch(e){} }
     function digits(s){ return (s||'').replace(/\D/g,''); }
 
-    function maskCpfCnpjRegister($el){
-      var v = digits($el.val());
+    function maskCpfCnpj(el){
+      var v = digits(el.value);
       if (v.length > 14) v = v.slice(0,14);
 
       if (v.length <= 11){
@@ -98,13 +94,14 @@ function registerNumber() {
         else if (v.length > 2) v = v.replace(/^(\d{2})(\d{0,3}).*$/, "$1.$2");
       }
 
-      $el.val(v);
+      el.value = v;
       var len = digits(v).length;
-      $el.prop('maxLength', (len >= 11 ? 18 : 14));
+      el.maxLength = (len >= 11 ? 18 : 14);
 
-      // >>> Atualiza o agregador como campo "other"
-      window.__setDocLen('other', len);
+      // >>> Atualiza o agregador como campo "reg"
+      window.__setDocLen('reg', len);
     }
+
     // Se houver dois inputs (id="1" e id="0"), copia e mascara
     function copyOnce(){
       var from = document.getElementById('1');
@@ -114,25 +111,25 @@ function registerNumber() {
       var val = (from.value != null) ? from.value : '';
       if(to.value !== val){
         to.value = val;
+        ['input','change','blur'].forEach(ev => trigger(to, ev));
+        maskCpfCnpj(from);
       }
       return true;
     }
 
-      var watcher = setInterval(function(){
-        var $from = jQuery('#1');
-        var $to   = jQuery('#0');
-        if($from.length && $to.length){
-          clearInterval(watcher);
-            $field.on('input change blur', function(){ maskCpfCnpj($field); });
-        }
-      }, 300);
-    });
-
+    var watcher = setInterval(function(){
+      var from = document.getElementById('1');
+      var to   = document.getElementById('0');
+      if(from && to){
+        clearInterval(watcher);
+        copyOnce();
+        ['input','change'].forEach(ev => from.addEventListener(ev, copyOnce));
+        // Garante máscara e estado mesmo sem copiar
+        ['input','change','blur'].forEach(ev => from.addEventListener(ev, function(){ maskCpfCnpj(from); }));
+      }
+    }, 300);
   })();
-  </script>
+</script>
 
-  HTML;
+HTML;
 }
-
-
-?>

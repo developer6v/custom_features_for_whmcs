@@ -5,6 +5,7 @@ require_once __DIR__ . '/src/Services/enderecos.php';
 require_once __DIR__ . '/src/Services/Domain/domain.php';
 require_once __DIR__ . '/src/Services/hideFieldsCheckout.php';
 require_once __DIR__ . '/src/Services/registerNumber.php';
+require_once __DIR__ . '/src/Services/registerNumberteste.php';
 require_once __DIR__ . '/src/Services/loginOrCreate.php';
 require_once __DIR__ . '/src/Config/assets.php';
 
@@ -98,13 +99,8 @@ add_hook('ClientAreaFooterOutput', 1, function($vars) {
 
 // RegisterNumber
 add_hook('ClientAreaFooterOutput', 1, function($vars) {
-    if (isCheckoutCartPage()) {
-        return registerNumber_cart();
-    }
-    if (isCheckoutOrderPage()) {
-        return registerNumber();
-    }
-    return registerNumber();
+
+    return registerNumberTeste();
 });
 
 
