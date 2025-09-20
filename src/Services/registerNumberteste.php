@@ -4,7 +4,8 @@ function registerNumberTeste () {
     return <<<HTML
     <script>
 
-        jQuery(document).ready(function($){
+        jQuery(document).ready(function($)
+            alert("document caleled")
             console.log("[DEBUG] jQuery(document).ready disparou");
 
             function digits(s) {
