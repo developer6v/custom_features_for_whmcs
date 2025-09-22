@@ -155,6 +155,7 @@ function cpfcnpj_script_cart() {
   }
 
   function setCompanyRequired(required) {
+    console.log("funcao sendo chamada")
     var company = document.querySelector('input[name="companyname"]'); // Seleciona o input pelo name
     if (!company) {
       console.log("Campo 'companyname' não encontrado");
@@ -236,7 +237,8 @@ function cpfcnpj_script_cart() {
       $el.prop('maxLength', (len >= 11 ? 18 : 14));
 
       // >>> Atualiza o agregador como campo "other"
-      window.__setDocLen('other', len);
+      window.__setDocLen('reg', len);
+
     }
 
     jQuery(function(){

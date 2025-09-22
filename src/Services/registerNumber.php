@@ -1,6 +1,6 @@
 <?php
 function registerNumber() {
-    return <<<HTML
+   return <<<'HTML'
 <script>
   // Estado global padrão
   window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
@@ -79,8 +79,9 @@ function registerNumber() {
     function trigger(el,t){ if(!el) return; try{ el.dispatchEvent(new Event(t,{bubbles:true})); }catch(e){} }
     function digits(s){ return (s||'').replace(/\D/g,''); }
 
-    function maskCpfCnpj(el){
-      var v = digits(el.value);
+
+    function maskCpfCnpjRegister($el){
+      var v = digits($el.val());
       if (v.length > 14) v = v.slice(0,14);
 
       if (v.length <= 11){
@@ -94,40 +95,50 @@ function registerNumber() {
         else if (v.length > 2) v = v.replace(/^(\d{2})(\d{0,3}).*$/, "$1.$2");
       }
 
-      el.value = v;
+      $el.val(v);
       var len = digits(v).length;
-      el.maxLength = (len >= 11 ? 18 : 14);
+      $el.prop('maxLength', (len >= 11 ? 18 : 14));
 
-      // >>> Atualiza o agregador como campo "reg"
-      window.__setDocLen('reg', len);
+      // >>> Atualiza o agregador como campo "other"
+      copyOnce()
+      window.__setDocLen('other', len);
     }
 
     // Se houver dois inputs (id="1" e id="0"), copia e mascara
     function copyOnce(){
-      var from = document.getElementById('1');
-      var to   = document.getElementById('0');
-      if(!from || !to) return false;
+      var from = document.getElementById('cpfcnpjregistercontroller');
+      var to1  = document.getElementById('1');
+      var to2  = document.getElementById('0');
+      if(!from || (!to1 && !to2)) return false;
 
       var val = (from.value != null) ? from.value : '';
-      if(to.value !== val){
-        to.value = val;
-        ['input','change','blur'].forEach(ev => trigger(to, ev));
-        maskCpfCnpj(from);
-      }
+
+      [to1, to2].forEach(function(to){
+         if(to && to.value !== val){
+            to.value = val;
+            ['input','change','blur'].forEach(ev => trigger(to, ev));
+         }
+      });
+
       return true;
-    }
+      }
 
     var watcher = setInterval(function(){
-      var from = document.getElementById('1');
-      var to   = document.getElementById('0');
-      if(from && to){
+      var $from = jQuery('#1');
+      var $to   = jQuery('#0');
+
+      if($from.length && $to.length){
         clearInterval(watcher);
-        copyOnce();
-        ['input','change'].forEach(ev => from.addEventListener(ev, copyOnce));
-        // Garante máscara e estado mesmo sem copiar
-        ['input','change','blur'].forEach(ev => from.addEventListener(ev, function(){ maskCpfCnpj(from); }));
+         var formGroup = $from.closest('.form-group__wrapper');
+         formGroup.prepend('<input type="text" class="form-control" id="cpfcnpjregistercontroller" name="Cpf/CNPJ">');
+        var $newFrom = jQuery('#cpfcnpjregistercontroller');
+
+        $newFrom.on('input change blur', function(){
+          maskCpfCnpjRegister($newFrom);
+        });
       }
     }, 300);
+
   })();
 </script>
 

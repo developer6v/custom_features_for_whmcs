@@ -6,4 +6,6 @@
     display: none!important;
 }
 
-
+.form-group.domain-field-1 input[id="1"] {
+  display: none !important;
+}

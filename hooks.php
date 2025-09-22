@@ -44,7 +44,7 @@ add_hook('AdminAreaFooterOutput', 1, function($vars) {
 add_hook('ClientAreaFooterOutput', 1, function($vars) {
     if (isCheckoutCartPage()) {
         return cpfcnpj_script_cart();
-    }elseif (isCheckoutOrderPage()) {
+    } elseif (isCheckoutOrderPage()) {
         return cpfcnpj_script();
     }
 });
@@ -71,12 +71,7 @@ add_hook('ClientAreaFooterOutput', 1, function($vars) {
 
 // Login ou Criar Conta
 add_hook('ClientAreaFooterOutput', 1, function($vars) {
-    if (isCheckoutCartPage()) {
-        return loginOrCreate_cart();
-    }
-    if (isCheckoutOrderPage()) {
-        return loginOrCreate();
-    }
+
     return loginOrCreate();
 });
 
@@ -100,7 +95,7 @@ add_hook('ClientAreaFooterOutput', 1, function($vars) {
 // RegisterNumber
 add_hook('ClientAreaFooterOutput', 1, function($vars) {
 
-    return registerNumberTeste();
+    return registerNumber();
 });
 
 

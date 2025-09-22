@@ -1,7 +1,7 @@
 <?php
 function loginOrCreate() {
     return <<<'HTML'
-<script>
+    <script>
   window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
 
   // Função para reavaliar o estado do checkout
@@ -23,6 +23,7 @@ function loginOrCreate() {
       
 
       if ($loginRadio.length || $accountID.length || $accountID2.length) {
+        console.log("algum dos accoutn id foram encontrados")
      // Para a verificação periódica quando o elemento for encontrado
 
         // Verifica se o radio button "Login de clientes atuais" está marcado
@@ -37,8 +38,8 @@ function loginOrCreate() {
     }, 100);  // Intervalo de 100ms para verificar se o radio button foi encontrado
 
   });
-</script>
-HTML;
+    </script>
+    HTML;
 }
 
 function loginOrCreate_cart() {
