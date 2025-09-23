@@ -18,27 +18,34 @@ window.__recomputeCheckout = function() {
     document.querySelectorAll('button#checkout, #place_order')
         .forEach(b => b.disabled = disabled);
 };
-
 jQuery(function() {
     // Verifica periodicamente se o campo de "Login de clientes atuais" foi selecionado
     var checkExist = setInterval(function() {
+        // Radio buttons existentes
         var $loginRadio = jQuery('#loginUser input[type="radio"][value="loginOption"]'); // Radio button "Login de clientes atuais"
         var $accountID = jQuery('#account_id'); // Radio button "Login de clientes atuais"
         var $accountID2 = jQuery('input[name="account_id"]'); // Radio button "Login de clientes atuais"
+        
+        // Novo radio button de Login de clientes atuais
+        var $existingAccountRadio = jQuery('input[type="radio"][name="custtype"][value="existing"]');
 
-        if ($loginRadio.length || $accountID.length || $accountID2.length) {
-            console.log("algum dos accoutn id foram encontrados");
-            // Verifica se o radio button "Login de clientes atuais" está marcado
-            if ($loginRadio.prop('checked') || $accountID.prop('checked') || $accountID2.prop('checked')) {
+        // Verifica se algum dos campos foi encontrado
+        if ($loginRadio.length || $accountID.length || $accountID2.length || $existingAccountRadio.length) {
+            console.log("Algum dos account ids foi encontrado");
+
+            // Verifica se o radio button "Login de clientes atuais" foi marcado de diferentes fontes
+            if ($loginRadio.prop('checked') || $accountID.prop('checked') || $accountID2.prop('checked') || $existingAccountRadio.prop('checked')) {
                 window.__checkout.login = true;  // Marca como login de cliente atual
-            } else if (!$loginRadio.prop('checked') && !$accountID.prop('checked') && !$accountID2.prop('checked')) {
+            } else {
                 window.__checkout.login = false;  // Caso contrário, marca como falso
             }
 
-            window.__recomputeCheckout();  // Atualiza o estado do checkout
+            // Recalcula o estado do checkout
+            window.__recomputeCheckout();
         }
     }, 100);  // Intervalo de 100ms para verificar se o radio button foi encontrado
 });
+
 </script>
 HTML;
 }
