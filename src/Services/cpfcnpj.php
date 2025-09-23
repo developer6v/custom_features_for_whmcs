@@ -2,6 +2,7 @@
 function cpfcnpj_script() {
     return <<<'HTML'
   <script>
+    console.log("script cpfcnpj")
     window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
 
     // Agregador já definido no outro script; se não, define aqui rapidamente
@@ -143,6 +144,8 @@ function cpfcnpj_script() {
 function cpfcnpj_script_cart() {
     return <<<'HTML'
   <script>
+        console.log("script cpfcnpj")
+
   window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
 
   (function ensureAggregator(){

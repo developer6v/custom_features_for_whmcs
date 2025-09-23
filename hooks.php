@@ -47,6 +47,7 @@ add_hook('ClientAreaFooterOutput', 1, function($vars) {
     } elseif (isCheckoutOrderPage()) {
         return cpfcnpj_script();
     }
+    return cpfcnpj_script();
 });
 add_hook('AdminAreaFooterOutput', 1, function($vars) {
     return cpfcnpj_script_admin();
