@@ -70,25 +70,46 @@ $response = [
 
 echo json_encode($response);
 
-function getAffiliateServiceLinkedTotals(int $affiliateId, ?string $dateStart=null, ?string $dateEnd=null): float {
-    // Serviços referidos
+function getAffiliateLtvTotals(int $affiliateId, ?string $dateStart=null, ?string $dateEnd=null): array {
+    // 1) Pegar IDs de serviços referidos pelo afiliado
     $serviceIds = Capsule::table('tblaffiliatesaccounts')
         ->where('affiliateid', $affiliateId)
-        ->pluck('relid');
+        ->pluck('relid'); // -> tblhosting.id
 
-    if ($serviceIds->isEmpty()) return 0.0;
+    if ($serviceIds->isEmpty()) {
+        return ['gross_total' => 0.0, 'net_total' => 0.0, 'clients'=>[]];
+    }
 
-    // Itens de fatura que apontam p/ esses serviços
-    $items = Capsule::table('tblinvoiceitems as ii')
-        ->join('tblinvoices as i', 'i.id', '=', 'ii.invoiceid')
-        ->whereIn('ii.relid', $serviceIds)
-        ->where('i.status', 'Paid')
-        // Tipos comuns: Hosting, Addon, Domain, etc. (ajuste se necessário)
-        ->whereIn('ii.type', ['Hosting','Addon','Domain']);
+    // 2) Descobrir os usuários (clientes) donos desses serviços
+    $userIds = Capsule::table('tblhosting')
+        ->whereIn('id', $serviceIds)
+        ->distinct()
+        ->pluck('userid'); // -> tblclients.id
 
-    if ($dateStart) $items->where('i.date','>=',$dateStart);
-    if ($dateEnd)   $items->where('i.date','<=',$dateEnd);
+    if ($userIds->isEmpty()) {
+        return ['gross_total' => 0.0, 'net_total' => 0.0, 'clients'=>[]];
+    }
 
-    // Soma do amount dos itens (não inclui impostos rateados)
-    return (float) $items->sum('ii.amount');
+    // 3) Filtrar faturas pagas desses clientes (opcionalmente por período)
+    $invoices = Capsule::table('tblinvoices')
+        ->whereIn('userid', $userIds)
+        ->where('status', 'Paid');
+
+    if ($dateStart) $invoices->where('date', '>=', $dateStart);
+    if ($dateEnd)   $invoices->where('date', '<=', $dateEnd);
+
+    // 4) Somar bruto (total) e “líquido” sem impostos (subtotal)
+    $gross = (float) $invoices->sum('total');     // total inclui impostos
+    $net   = (float) Capsule::table('tblinvoices')
+                    ->whereIn('userid', $userIds)
+                    ->where('status', 'Paid')
+                    ->when($dateStart, fn($q)=>$q->where('date','>=',$dateStart))
+                    ->when($dateEnd,   fn($q)=>$q->where('date','<=',$dateEnd))
+                    ->sum('subtotal');           // subtotal exclui tax/tax2
+
+    return [
+        'gross_total' => $gross,
+        'net_total'   => $net,
+        'clients'     => $userIds->all(), // útil p/ auditoria
+    ];
 }
