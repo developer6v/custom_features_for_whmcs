@@ -61,7 +61,8 @@ $response = [
         'withdrawn' => $affiliate->withdrawn,
         'total_commissions' => $totalCommissions,
         'active_subscriptions_count' => $activeSubscriptionsCount,
-        'total_generated_amount' => getAffiliateLtvTotals($affiliate->id),
+        'total_generated_amountLtvTotals' => getAffiliateLtvTotals($affiliate->id),
+        'total_generated_amountLinkedTotals' => getAffiliateServiceLinkedTotals($affiliate->id)
     ],
 ];
 
@@ -69,6 +70,29 @@ $response = [
 
 
 echo json_encode($response);
+
+function getAffiliateServiceLinkedTotals(int $affiliateId, ?string $dateStart=null, ?string $dateEnd=null): float {
+    // Serviços referidos
+    $serviceIds = Capsule::table('tblaffiliatesaccounts')
+        ->where('affiliateid', $affiliateId)
+        ->pluck('relid');
+
+    if ($serviceIds->isEmpty()) return 0.0;
+
+    // Itens de fatura que apontam p/ esses serviços
+    $items = Capsule::table('tblinvoiceitems as ii')
+        ->join('tblinvoices as i', 'i.id', '=', 'ii.invoiceid')
+        ->whereIn('ii.relid', $serviceIds)
+        ->where('i.status', 'Paid')
+        // Tipos comuns: Hosting, Addon, Domain, etc. (ajuste se necessário)
+        ->whereIn('ii.type', ['Hosting','Addon','Domain']);
+
+    if ($dateStart) $items->where('i.date','>=',$dateStart);
+    if ($dateEnd)   $items->where('i.date','<=',$dateEnd);
+
+    // Soma do amount dos itens (não inclui impostos rateados)
+    return (float) $items->sum('ii.amount');
+}
 
 function getAffiliateLtvTotals(int $affiliateId, ?string $dateStart=null, ?string $dateEnd=null): array {
     // 1) Pegar IDs de serviços referidos pelo afiliado
