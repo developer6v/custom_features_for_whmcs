@@ -16,6 +16,10 @@ function isCheckoutCartPage() {
     return (strpos($_SERVER['REQUEST_URI'], 'cart.php') !== false);
 }
 
+function isCheckoutCartPageConfig() {
+    return (strpos($_SERVER['REQUEST_URI'], 'cart.php?a=confdomains') !== false);
+}
+
 function isCheckoutOrderPage() {
     return (strpos($_SERVER['REQUEST_URI'], "/order/") !== false);
 }
@@ -42,7 +46,9 @@ add_hook('AdminAreaFooterOutput', 1, function($vars) {
 
 // CNPJ/CPF
 add_hook('ClientAreaFooterOutput', 1, function($vars) {
-    if (isCheckoutCartPage()) {
+    if (isCheckoutCartPageConfig()) {
+        return cpfcnpj_domain_script();
+    } elseif (isCheckoutCartPage()) {
         return cpfcnpj_script_cart();
     } elseif (isCheckoutOrderPage()) {
         return cpfcnpj_script();

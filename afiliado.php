@@ -61,8 +61,7 @@ $response = [
         'withdrawn' => $affiliate->withdrawn,
         'total_commissions' => $totalCommissions,
         'active_subscriptions_count' => $activeSubscriptionsCount,
-        'total_generated_amountLtvTotals' => getAffiliateLtvTotals($affiliate->id),
-        'total_generated_amountLinkedTotals' => getAffiliateServiceLinkedTotals($affiliate->id)
+        'total_generated_amount' => getAffiliateServiceLinkedTotals($affiliate->id),
     ],
 ];
 
