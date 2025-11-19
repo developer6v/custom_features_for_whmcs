@@ -59,19 +59,32 @@ function cpfcnpj_script() {
       function docType(d){ return d.length === 11 ? 'CPF' : (d.length === 14 ? 'CNPJ' : null); }
 
       // expõe globalmente
-      window.__doc = {
-        digits: onlyDigits,
-        isValidCPF,
-        isValidCNPJ,
-        isValid: function(v){
-          var d = onlyDigits(v);
-          if (d.length === 11) return isValidCPF(d);
-          if (d.length === 14) return isValidCNPJ(d);
-          return false;
-        },
-        type: docType
-      };
-    })();
+window.__doc = {
+  digits: onlyDigits,
+  isValidCPF,
+  isValidCNPJ,
+  isValid: function(v){
+    var d = onlyDigits(v);
+    alert('[__doc.isValid] v=' + v + ' | digits=' + d + ' | len=' + d.length);
+
+    if (d.length === 11) {
+      var rCpf = isValidCPF(d);
+      alert('[__doc.isValid] CPF detectado. Resultado: ' + rCpf);
+      return rCpf;
+    }
+
+    if (d.length === 14) {
+      var rCnpj = isValidCNPJ(d);
+      alert('[__doc.isValid] CNPJ detectado. Resultado: ' + rCnpj);
+      return rCnpj;
+    }
+
+    alert('[__doc.isValid] Tamanho inválido, retornando false');
+    return false;
+  },
+  type: docType
+};
+
 
     // Agregador já definido no outro script; se não, define aqui rapidamente
     (function ensureAggregator(){
@@ -245,6 +258,7 @@ function cpfcnpj_script() {
 
             // Observa mudanças
             $field.on('input change blur', function(){
+                alert('[cl_custom_field_1] handler disparou. Valor atual: ' + $field.val());
               maskCpfCnpj($field);
               __updDocLen_other($field.val());
               window.__recomputeCompany && window.__recomputeCompany(); // <— garante revalidação imediata
@@ -317,6 +331,7 @@ function cpfcnpj_script_cart() {
         ['input','change','blur'].forEach(ev => company.addEventListener(ev, handler));
       }
       window.__recomputeCompany = function(){
+          alert('[cart] __recomputeCompany da versão CART foi chamado');
         var anyCnpj = (window.__docState.reg > 11) || (window.__docState.other > 11);
         setCompanyRequired(anyCnpj);
         attachCompanyListenerOnce();
@@ -332,6 +347,7 @@ function cpfcnpj_script_cart() {
     })();
 
     window.__recomputeCheckout = function() {
+      
       const g = window.__checkout;
       const disabled = !(g.login) && !(g.cep && g.doc && g.company);
       document.querySelectorAll('button#checkout, #place_order').forEach(b => b.disabled = disabled);
