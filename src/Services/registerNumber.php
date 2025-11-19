@@ -49,13 +49,30 @@ function registerNumber() {
     }
 
     window.__recomputeCompany = function(){
-      // Empresa obrigatória se QUALQUER um dos campos estiver como CNPJ (len >= 12)
-      var anyCnpj = (window.__docState.reg > 11) || (window.__docState.other > 11);
+      function digits(s){ return String(s||'').replace(/\D/g,''); }
+      function isLenValid(len){ return len === 11 || len === 14; }
+
+      // lê valores reais se existirem, e concilia com o agregador
+      var elCtrl  = document.getElementById('cpfcnpjregistercontroller'); // controlador (reg)
+      var elOther = document.getElementById('cl_custom_field_1');         // outro campo (other)
+      var hasCtrl = !!elCtrl;
+
+      var regLenReal   = elCtrl  ? digits(elCtrl.value).length  : 0;
+      var otherLenReal = elOther ? digits(elOther.value).length : 0;
+
+      var regLen   = Math.max(regLenReal,   window.__docState.reg   || 0);
+      var otherLen = Math.max(otherLenReal, window.__docState.other || 0);
+
+      // Empresa obrigatória se QUALQUER estiver "máscara CNPJ"
+      var anyCnpj = (regLen > 11) || (otherLen > 11); // troque por === 14 se quiser estrito
       setCompanyRequired(anyCnpj);
       attachCompanyListenerOnce();
 
-      // Documento válido se ALGUM campo estiver completo: CPF(11) ou CNPJ(14)
-      var docValid = [window.__docState.reg, window.__docState.other].some(l => l === 11 || l === 14);
+      // Regra: se existe controller, os DOIS devem ser válidos; senão, apenas o outro (ou o que houver)
+      var docValid = hasCtrl
+        ? (isLenValid(regLen) && isLenValid(otherLen))
+        : (isLenValid(otherLen) || isLenValid(regLen));
+
       window.__checkout.doc = docValid;
 
       window.__recomputeCheckout && window.__recomputeCheckout();
@@ -69,16 +86,22 @@ function registerNumber() {
   })();
 
   // Habilitador de botões
-  window.__recomputeCheckout = function() {
-    const g = window.__checkout;
-    const disabled = !(g.login) && !(g.cep && g.doc && g.company);
-    document.querySelectorAll('button#checkout, #place_order').forEach(b => b.disabled = disabled);
-  };
+window.__recomputeCheckout = function () {
+  const g = window.__checkout || {};
+  const hasDocTargets = !!(document.getElementById('1') || document.getElementById('0'));
+  const disabled = (g.login && hasDocTargets) ? !g.doc : !(g.cep && g.doc && g.company);
+  document.querySelectorAll('button#checkout, #place_order').forEach(b => b.disabled = disabled);
+};
 
   (function(){
     function trigger(el,t){ if(!el) return; try{ el.dispatchEvent(new Event(t,{bubbles:true})); }catch(e){} }
     function digits(s){ return (s||'').replace(/\D/g,''); }
 
+    // helper local: atualiza o slot 'reg' a partir do controlador
+    function __updDocLen_reg(value){
+      var len = digits(String(value||'')).length;
+      window.__setDocLen && window.__setDocLen('reg', len);
+    }
 
     function maskCpfCnpjRegister($el){
       var v = digits($el.val());
@@ -99,9 +122,8 @@ function registerNumber() {
       var len = digits(v).length;
       $el.prop('maxLength', (len >= 11 ? 18 : 14));
 
-      // >>> Atualiza o agregador como campo "other"
-      copyOnce()
-      window.__setDocLen('other', len);
+      // >>> Atualiza o agregador como campo "reg" (controlador)
+      __updDocLen_reg(v);
     }
 
     // Se houver dois inputs (id="1" e id="0"), copia e mascara
@@ -121,7 +143,7 @@ function registerNumber() {
       });
 
       return true;
-      }
+    }
 
     var watcher = setInterval(function(){
       var $from = jQuery('#1');
@@ -129,18 +151,27 @@ function registerNumber() {
 
       if($from.length && $to.length){
         clearInterval(watcher);
-         var formGroup = $from.closest('.form-group__wrapper');
-         formGroup.prepend('<input type="text" class="form-control" id="cpfcnpjregistercontroller" name="Cpf/CNPJ">');
+        var formGroup = $from.closest('.form-group__wrapper');
+        if (formGroup && formGroup.prepend) {
+          formGroup.prepend('<input type="text" class="form-control" id="cpfcnpjregistercontroller" name="Cpf/CNPJ">');
+        } else {
+          // fallback: insere antes do #1
+          jQuery('#1').before('<input type="text" class="form-control" id="cpfcnpjregistercontroller" name="Cpf/CNPJ">');
+        }
         var $newFrom = jQuery('#cpfcnpjregistercontroller');
 
         $newFrom.on('input change blur', function(){
           maskCpfCnpjRegister($newFrom);
+          copyOnce();
         });
+
+        // Dispara uma vez para inicializar estado e cópia
+        maskCpfCnpjRegister($newFrom);
+        copyOnce();
       }
     }, 300);
 
   })();
 </script>
-
 HTML;
 }

@@ -17,7 +17,8 @@ function isCheckoutCartPage() {
 }
 
 function isCheckoutCartPageConfig() {
-    return (strpos($_SERVER['REQUEST_URI'], 'cart.php?a=confdomains') !== false);
+    return (isset($_GET['a']) && $_GET['a'] === 'confdomains') || 
+           (strpos($_SERVER['REQUEST_URI'], 'cart.php?a=confdomains') !== false);
 }
 
 function isCheckoutOrderPage() {
@@ -34,6 +35,8 @@ add_hook('ClientAreaFooterOutput', 1, function($vars) {
     }
     return cepvalidator_script();
 });
+
+
 add_hook('AdminAreaFooterOutput', 1, function($vars) {
     if (isCheckoutCartPage()) {
         return cepvalidator_script_cart();

@@ -160,8 +160,8 @@ HTML;
 
 function enderecos_cart() {
     return <<<HTML
-<script>
-(function(){
+  <script>
+  (function(){
   // Utilidades
   function trigger(el,type){ if(!el) return; try{ el.dispatchEvent(new Event(type,{bubbles:true})); }catch(e){} }
   function q(s,sel){ return s ? s.querySelector(sel) : null; }
@@ -169,7 +169,7 @@ function enderecos_cart() {
 
   // Escopos dos 2 blocos
   function getClientScope(){
-    // Formulário principal (cliente) — pelo seu HTML tem essa classe
+    // Formulário principal (cliente)
     return document.querySelector('.panel-body.social-wide') || document;
   }
   function getDomainScope(){
@@ -181,7 +181,7 @@ function enderecos_cart() {
   function getValue(scope, selector){
     var el = q(scope, selector);
     if (!el) return '';
-    return (el.tagName === 'SELECT') ? el.value : el.value;
+    return el.value || '';
   }
 
   // Seta valor com suporte a SELECT por value e por texto visível
@@ -216,10 +216,10 @@ function enderecos_cart() {
     ['#inputFirstName',    '#inputDCFirstName'],
     ['#inputLastName',     '#inputDCLastName'],
     ['#inputEmail',        '#inputDCEmail'],
-    ['#inputPhone',        '#inputDCPhone'], // mesmo id mostrado no HTML do domínio
+    ['#inputPhone',        '#inputDCPhone'],
     ['input[name="country-calling-code-phonenumber"]', 'input[name="country-calling-code-domaincontactphonenumber"]'],
     ['#inputCompanyName',  '#inputDCCompanyName'],
-    ['#inputAddress1',     '#inputDCAddress1'],
+    ['#inputAddress1',     '#inputDCAddress1'], // <- especial: também atualiza #inputDCAddress2
     ['#inputCity',         '#inputDCCity'],
     ['#stateselect',       '#inputDCState'],     // select → input text
     ['#inputPostcode',     '#inputDCPostcode'],
@@ -243,14 +243,40 @@ function enderecos_cart() {
 
       var val = '';
       if (fromEl.tagName === 'SELECT') {
-        // Para estado (UF) #stateselect, o value é o próprio texto (sem value explícito nas <option>)
         val = fromEl.value || (fromEl.options[fromEl.selectedIndex] ? fromEl.options[fromEl.selectedIndex].text : '');
       } else {
         val = fromEl.value || '';
       }
 
       setValue(D, toSel, val);
+
+      // 🔁 NOVO: se for o Address1 de domínio, espelha para Address2 de domínio também
+      if (toSel === '#inputDCAddress1') {
+        setValue(D, '#inputDCAddress2', val);
+      }
     }
+  }
+
+  // 🔁 NOVO: espelhamento dentro do bloco de domínio (digitar no DCAddress1 atualiza DCAddress2)
+  function mirrorDomainAddress2(){
+    var D = getDomainScope();
+    if (!D) return;
+
+    var a1 = q(D, '#inputDCAddress1');
+    var a2 = q(D, '#inputDCAddress2');
+    if (!a1 || !a2) return;
+
+    if (a1.__mirrorBound__) return;
+    a1.__mirrorBound__ = true;
+
+    ['input','change','blur'].forEach(function(evt){
+      a1.addEventListener(evt, function(){
+        if (a2.value !== a1.value){
+          a2.value = a1.value;
+          trigger(a2,'input'); trigger(a2,'change'); trigger(a2,'blur');
+        }
+      });
+    });
   }
 
   // Liga espelhamento ao vivo no form 1
@@ -271,26 +297,27 @@ function enderecos_cart() {
 
     // cópia inicial
     autofillDomainAddress();
+    // garante o espelho interno no bloco do domínio
+    mirrorDomainAddress2();
     return true;
   }
 
   // Reage quando o usuário troca o select "Usar contato padrão / Adicionar novo..."
   function onDomainContactChange(){
-    // Quando o usuário muda, garantimos a cópia
     autofillDomainAddress();
+    mirrorDomainAddress2();
   }
 
   // Inicialização: DOM pronto + elementos dinâmicos
   function init(){
     attachLiveMirrors();
-    // Observa o select de contato
     var sel = document.getElementById('inputDomainContact');
     if (sel && !sel.__boundChange){
       sel.addEventListener('change', onDomainContactChange);
       sel.__boundChange = true;
     }
-    // Faz uma primeira cópia
     autofillDomainAddress();
+    mirrorDomainAddress2();
   }
 
   if (document.readyState === 'complete' || document.readyState === 'interactive'){

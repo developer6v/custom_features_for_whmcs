@@ -9,3 +9,9 @@
 .form-group.domain-field-1 input[id="1"] {
   display: none !important;
 }
+
+
+label[for="inputDCAddress2"],
+#inputDCAddress2 {
+  display: none !important;
+}
