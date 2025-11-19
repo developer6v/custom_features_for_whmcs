@@ -15,6 +15,7 @@ function cpfcnpj_script() {
 
       // CPF: 11 dígitos
       function isValidCPF(v){
+        alert("ta chegando aqui")
         var d = onlyDigits(v);
         if (d.length !== 11 || isSequence(d)) return false;
         var sum = 0, rest;
