@@ -21,11 +21,9 @@ function isValidCPF(v){
     var d = digits(v);
 
     if (d.length !== 11) {
-        alert("CPF (" + d + ") inválido — tamanho errado");
         return false;
     }
     if (/^(\d)\1{10}$/.test(d)) {
-        alert("CPF (" + d + ") inválido — sequência repetida");
         return false;
     }
 
@@ -34,7 +32,6 @@ function isValidCPF(v){
     var dv1 = (sum * 10) % 11;
     if (dv1 >= 10) dv1 = 0;
     if (dv1 != d[9]) {
-        alert("CPF (" + d + ") inválido — DV1 incorreto");
         return false;
     }
 
@@ -43,11 +40,9 @@ function isValidCPF(v){
     var dv2 = (sum * 10) % 11;
     if (dv2 >= 10) dv2 = 0;
     if (dv2 != d[10]) {
-        alert("CPF (" + d + ") inválido — DV2 incorreto");
         return false;
     }
 
-    alert("CPF (" + d + ") VALIDADO com sucesso!");
     return true;
 }
 
