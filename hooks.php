@@ -3,10 +3,9 @@ require_once __DIR__ . '/src/Services/frontend-manipulation/index.php';
 require_once __DIR__ . '/src/Config/assets.php';
 
 if (!defined('WHMCS')) {
-    logActivity("whmcs n definido");
     die('Access denied');
 }
-    logActivity("whmcs definido");
+
 
 // Função auxiliar para checar se está no checkout
 function isCheckoutCartPage() {
@@ -27,6 +26,7 @@ function isCheckoutOrderPage() {
 add_hook('AdminAreaFooterOutput', 1, function($vars) {
     $out = cpfcnpj_script_admin();
     $out .=  cepvalidator_script();
+    return $out;
 });
 
 
