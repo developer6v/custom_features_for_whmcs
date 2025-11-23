@@ -19,3 +19,7 @@ require_once __DIR__ . '/order/address.php';
 require_once __DIR__ . '/order/cep.php';
 require_once __DIR__ . '/order/cpfcnpj.php';
 require_once __DIR__ . '/order/hide_fields.php';
+
+
+//DOMAIN
+require_once __DIR__ . '/domain/cpfcnpj.php';
