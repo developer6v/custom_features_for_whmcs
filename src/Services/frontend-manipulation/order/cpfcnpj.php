@@ -164,9 +164,20 @@ window.__checkout = window.__checkout || { cep:false, doc:false, company:true, l
             docValid = true; // TODO: adicionar validador real de CNPJ se quiser
 
         // Caso vazio ou tamanho incompleto → inválido
-        if (regLen < 11 && othLen < 11)
+        if (
+            (regLen > 0 && regLen < 11) ||
+            (othLen > 0 && othLen < 11) ||
+            (regLen > 11 && regLen < 14) ||
+            (othLen > 11 && othLen < 14)
+        ){
+            showDocMsg(elCtrl || elOther, "CPF/CNPJ inválido");
             docValid = false;
+        }
 
+        if (regLen === 0 && othLen === 0){
+            showDocMsg(elCtrl || elOther, "");
+            docValid = false;
+        }
         window.__checkout.doc = docValid;
         window.__recomputeCheckout();
     };
