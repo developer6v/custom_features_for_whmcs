@@ -186,5 +186,5 @@ function cpfcnpj_domain_script() {
     });
   })();
   </script>
-  HTML;
+HTML;
 }

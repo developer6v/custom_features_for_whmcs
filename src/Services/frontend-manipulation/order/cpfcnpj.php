@@ -271,6 +271,6 @@ function cpfcnpj_script() {
       });
     })();
   </script>
-  HTML;
+HTML;
 }
 

@@ -99,6 +99,8 @@ add_hook('ClientAreaFooterOutput', 1, function($vars) {
     }
 });
 
+//
+
 // RegisterNumber
 add_hook('ClientAreaFooterOutput', 1, function($vars) {
 

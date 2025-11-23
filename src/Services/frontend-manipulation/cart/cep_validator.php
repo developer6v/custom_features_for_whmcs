@@ -104,5 +104,5 @@ function cepvalidator_script_cart() {
 
   })();
   </script>
-  HTML;
+HTML;
 }

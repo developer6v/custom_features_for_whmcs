@@ -1,6 +1,6 @@
 <?php
 function loginOrCreate() {
-    return <<<'HTML'
+return <<<'HTML'
     <script>
     window.__checkout = window.__checkout || {
         cep:false,
@@ -47,5 +47,5 @@ function loginOrCreate() {
     });
 
     </script>
-    HTML;
+HTML;
 }

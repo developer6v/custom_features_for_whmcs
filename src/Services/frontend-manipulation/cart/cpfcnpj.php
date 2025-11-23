@@ -118,7 +118,7 @@ function cpfcnpj_script_cart() {
     })();
   </script>
 
-  HTML;
+HTML;
 }
 
 
