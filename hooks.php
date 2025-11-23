@@ -43,31 +43,8 @@ add_hook('AdminAreaFooterOutput', 1, function($vars) {
 // CNPJ/CPF
 add_hook('ClientAreaFooterOutput', 1, function($vars) {
 
-
-
-
-
-   return <<<'HTML'
-  <script>
-  alert("teeste")
-</script>
-HTML;
-}
-
-
-
-
-
-
-
-    if (isCheckoutCartPageConfig()) {
-        return cpfcnpj_domain_script();
-    } elseif (isCheckoutCartPage()) {
-        return cpfcnpj_script_cart();
-    } elseif (isCheckoutOrderPage()) {
-        return cpfcnpj_script();
-    }
-    return cpfcnpj_script();
+    $out = '<script>alert("teste");</script>';
+    return $out;
 });
 add_hook('AdminAreaFooterOutput', 1, function($vars) {
     return cpfcnpj_script_admin();
