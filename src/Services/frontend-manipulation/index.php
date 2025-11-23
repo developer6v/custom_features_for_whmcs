@@ -4,9 +4,9 @@
 require_once __DIR__ . '/admin/cpfcnpj.php';
 
 // Cart
-require_once __DIR__ . '/cart.php/address.php';
-require_once __DIR__ . '/cart.php/cep_validator.php';
-require_once __DIR__ . '/cart.php/cpfcnpj.php';
+require_once __DIR__ . '/cart/address.php';
+require_once __DIR__ . '/cart/cep_validator.php';
+require_once __DIR__ . '/cart/cpfcnpj.php';
 
 // Generic
 require_once __DIR__ . '/generic/login_or_create.php';
@@ -15,7 +15,7 @@ require_once __DIR__ . '/generic/login_or_create.php';
 require_once __DIR__ . '/generic/register_number.php';
 
 // Order
-require_once __DIR__ . '/order.php/address.php';
-require_once __DIR__ . '/order.php/cep.php';
-require_once __DIR__ . '/order.php/cpfcnpj.php';
-require_once __DIR__ . '/order.php/hide_fields.php';
+require_once __DIR__ . '/order/address.php';
+require_once __DIR__ . '/order/cep.php';
+require_once __DIR__ . '/order/cpfcnpj.php';
+require_once __DIR__ . '/order/hide_fields.php';
