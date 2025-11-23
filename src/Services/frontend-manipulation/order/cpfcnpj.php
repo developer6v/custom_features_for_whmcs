@@ -14,16 +14,44 @@ function cpfcnpj_script() {
 // =====================================================================
 //  FUNÇÕES GLOBAIS COMPARTILHADAS
 // =====================================================================
+
+// =====================================================================
+// EXIBIR MENSAGEM DE ERRO PARA CPF/CNPJ
+// =====================================================================
+function ensureDocMsg(afterEl) {
+    const id = "cpf-cnpj-msg";
+    let msg = document.getElementById(id);
+
+    if (!msg) {
+        msg = document.createElement("span");
+        msg.id = id;
+        msg.style.cssText = "color:red;font-size:12px;display:block;margin-top:4px;";
+        
+        if (afterEl && afterEl.parentNode) {
+            afterEl.parentNode.insertBefore(msg, afterEl.nextSibling);
+        } else {
+            document.body.appendChild(msg);
+        }
+    }
+    return msg;
+}
+
+function showDocMsg(input, text) {
+    ensureDocMsg(input).textContent = text || "";
+}
+
 function digits(s){ return String(s||'').replace(/\D/g,''); }
 
 // --- Validador REAL de CPF ---
-function isValidCPF(v){
+function isValidCPF(v, element){
     var d = digits(v);
 
     if (d.length !== 11) {
+        showDocMsg(element, "CPF com tamanho incorreto");
         return false;
     }
     if (/^(\d)\1{10}$/.test(d)) {
+        showDocMsg(element, "CPF inválido (sequência repetida)");
         return false;
     }
 
@@ -32,6 +60,7 @@ function isValidCPF(v){
     var dv1 = (sum * 10) % 11;
     if (dv1 >= 10) dv1 = 0;
     if (dv1 != d[9]) {
+        showDocMsg(element, "Dígito verificador incorreto");
         return false;
     }
 
@@ -40,11 +69,14 @@ function isValidCPF(v){
     var dv2 = (sum * 10) % 11;
     if (dv2 >= 10) dv2 = 0;
     if (dv2 != d[10]) {
+        showDocMsg(element, "Dígito verificador incorreto");
         return false;
     }
 
+    showDocMsg(element, ""); // LIMPA mensagem
     return true;
 }
+
 
 
 // =====================================================================
@@ -124,8 +156,8 @@ window.__checkout = window.__checkout || { cep:false, doc:false, company:true, l
         var docValid = false;
 
         // Caso CPF (11 dígitos)
-        if (regLen === 11) docValid = isValidCPF(reg);
-        else if (othLen === 11) docValid = isValidCPF(oth);
+        if (regLen === 11) docValid = isValidCPF(reg, elCtrl);
+        else if (othLen === 11) docValid = isValidCPF(oth, elOther);
 
         // Caso CNPJ (14 dígitos)
         if (regLen === 14 || othLen === 14)
