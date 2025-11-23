@@ -1,16 +1,14 @@
 <?php
 function registerNumber() {
    return <<<'HTML'
-<script>
-  // Estado global padrão
+  <script>
   window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
 
-  // Agregador global (define uma única vez)
   (function initAggregator(){
-    if (window.__initCompanyAggregator) return; // evita redefinir
+    if (window.__initCompanyAggregator) return; 
     window.__initCompanyAggregator = true;
 
-    window.__docState = { reg:0, other:0 }; // comprimentos "só dígitos" dos 2 campos
+    window.__docState = { reg:0, other:0 }; 
 
     function getCompanyInput(){
       return document.querySelector('input[name="companyname"]');
@@ -86,12 +84,12 @@ function registerNumber() {
   })();
 
   // Habilitador de botões
-window.__recomputeCheckout = function () {
-  const g = window.__checkout || {};
-  const hasDocTargets = !!(document.getElementById('1') || document.getElementById('0'));
-  const disabled = (g.login && hasDocTargets) ? !g.doc : !(g.cep && g.doc && g.company);
-  document.querySelectorAll('button#checkout, #place_order').forEach(b => b.disabled = disabled);
-};
+  window.__recomputeCheckout = function () {
+    const g = window.__checkout || {};
+    const hasDocTargets = !!(document.getElementById('1') || document.getElementById('0'));
+    const disabled = (g.login && hasDocTargets) ? !g.doc : !(g.cep && g.doc && g.company);
+    document.querySelectorAll('button#checkout, #place_order').forEach(b => b.disabled = disabled);
+  };
 
   (function(){
     function trigger(el,t){ if(!el) return; try{ el.dispatchEvent(new Event(t,{bubbles:true})); }catch(e){} }

@@ -1,4 +1,6 @@
 <?php
+
+<?php
 function hidefields() {
     return <<<HTML
         <script type="text/javascript">

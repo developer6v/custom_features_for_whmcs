@@ -1,12 +1,5 @@
 <?php
-require_once __DIR__ . '/src/Services/cepvalidator.php';
-require_once __DIR__ . '/src/Services/cpfcnpj.php';
-require_once __DIR__ . '/src/Services/enderecos.php';
-require_once __DIR__ . '/src/Services/Domain/domain.php';
-require_once __DIR__ . '/src/Services/hideFieldsCheckout.php';
-require_once __DIR__ . '/src/Services/registerNumber.php';
-require_once __DIR__ . '/src/Services/registerNumberteste.php';
-require_once __DIR__ . '/src/Services/loginOrCreate.php';
+require_once __DIR__ . '/src/Services/frontend-manipulation/index.php';
 require_once __DIR__ . '/src/Config/assets.php';
 
 if (!defined('WHMCS')) { die('Access denied'); }
