@@ -1,18 +1,17 @@
 <?php
-
 function cpfcnpj_script_cart() {
-    return <<<'HTML'
+return <<<'HTML'
 <script>
-console.log("cpfcnpj CART carregado");
+console.log("cpf/cnpj CART iniciado");
 
-/* ============================================================
-   Utils
-============================================================ */
+/* ==========================================
+   UTILIDADES
+========================================== */
 function digits(s){ return String(s||'').replace(/\D/g,''); }
 
-/* ============================================================
-   Mensagem de erro
-============================================================ */
+/* ==========================================
+   MENSAGEM DE ERRO
+========================================== */
 function ensureDocMsg(afterEl) {
     const id = "cpf-cnpj-msg-cart";
     let msg = document.getElementById(id);
@@ -23,157 +22,93 @@ function ensureDocMsg(afterEl) {
         msg.style.cssText = "color:red;font-size:12px;display:block;margin-top:4px;";
         afterEl.parentNode.insertBefore(msg, afterEl.nextSibling);
     }
+
     return msg;
 }
 
 function showDocMsg(input, text) {
-    ensureDocMsg(input).textContent = text || "";
+    const msg = ensureDocMsg(input);
+    msg.textContent = text || "";
 }
 
-/* ============================================================
-   Validador REAL de CPF
-============================================================ */
-function isValidCPF(v, element){
-    var d = digits(v);
+/* ==========================================
+   VALIDADOR REAL CPF
+========================================== */
+function isValidCPF(v){
+    let d = digits(v);
 
-    if (d.length !== 11) {
-        showDocMsg(element, "CPF com tamanho incorreto");
-        return false;
-    }
-    if (/^(\d)\1{10}$/.test(d)) {
-        showDocMsg(element, "CPF inválido");
-        return false;
-    }
+    if (d.length !== 11) return false;
+    if (/^(\d)\1{10}$/.test(d)) return false;
 
-    var sum = 0;
-    for (var i = 0; i < 9; i++) sum += parseInt(d.charAt(i)) * (10 - i);
-    var dv1 = (sum * 10) % 11;
+    let sum = 0;
+    for (let i = 0; i < 9; i++) sum += d[i] * (10 - i);
+    let dv1 = (sum * 10) % 11;
     if (dv1 >= 10) dv1 = 0;
-
-    if (dv1 != d[9]) {
-        showDocMsg(element, "Dígito verificador inválido");
-        return false;
-    }
+    if (dv1 != d[9]) return false;
 
     sum = 0;
-    for (var i = 0; i < 10; i++) sum += parseInt(d.charAt(i)) * (11 - i);
-    var dv2 = (sum * 10) % 11;
+    for (let i = 0; i < 10; i++) sum += d[i] * (11 - i);
+    let dv2 = (sum * 10) % 11;
     if (dv2 >= 10) dv2 = 0;
 
-    if (dv2 != d[10]) {
-        showDocMsg(element, "Dígito verificador inválido");
-        return false;
-    }
-
-    showDocMsg(element, "");
-    return true;
+    return dv2 == d[10];
 }
 
-/* ============================================================
-   Aggregator do CART
-============================================================ */
+/* ==========================================
+   CHECKOUT STATE
+========================================== */
 window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
 
-(function ensureAggregator(){
-    if (window.__initCompanyAggregatorCart) return;
-    window.__initCompanyAggregatorCart = true;
-
-    window.__docState = { reg:0 };
-
-    function getCompany(){
-        return document.querySelector('input[name="companyname"]');
-    }
-
-    function setCompanyRequired(required){
-        var company = getCompany();
-        if (!company) return;
-
-        var formGroup = company.closest('.form-group');
-        if (!formGroup) return;
-
-        var label = formGroup.querySelector("label");
-        if (label){
-            label.textContent = required ? "Empresa" : "Empresa (opcional)";
-        }
-
-        window.__checkout.company = !required || (company.value.trim().length > 0);
-    }
-
-    function attachCompanyListenerOnce(){
-        var company = getCompany();
-        if (!company || company._done) return;
-        company._done = true;
-        company.addEventListener("input", function(){
-            var required = company.hasAttribute("required");
-            window.__checkout.company = !required || (company.value.trim().length > 0);
-            window.__recomputeCheckout();
-        });
-    }
-
-    window.__recomputeCompany = function(){
-        var len = window.__docState.reg;
-
-        // Se for CNPJ → empresa obrigatória
-        var isCnpj = len === 14;
-        setCompanyRequired(isCnpj);
-        attachCompanyListenerOnce();
-
-        // =====================================================
-        // 🔥 Validação final do documento no CART
-        // =====================================================
-        var docValid = false;
-        var input = document.getElementById("customfield1");
-        if (!input) return;
-
-        var raw = digits(input.value);
-
-        if (raw.length === 11){
-            docValid = isValidCPF(raw, input);
-        }
-        else if (raw.length === 14){
-            // Aceita CNPJ sem verificação
-            showDocMsg(input, "");
-            docValid = true;
-        }
-        else if (raw.length > 0){
-            showDocMsg(input, "CPF/CNPJ inválido");
-            docValid = false;
-        }
-        else {
-            // vazio
-            showDocMsg(input, "");
-            docValid = false;
-        }
-
-        window.__checkout.doc = docValid;
-        window.__recomputeCheckout();
-    };
-
-    window.__setDocLen = function(source, len){
-        window.__docState.reg = len;
-        window.__recomputeCompany();
-    };
-
-})();
-
-/* ============================================================
-   Recompute do botão checkout (CART)
-============================================================ */
 window.__recomputeCheckout = function(){
     const g = window.__checkout;
-    const valid = (g.cep && g.doc && g.company) || g.login;
+    const ok = (g.cep && g.doc && g.company) || g.login;
+
     document.querySelectorAll("button#checkout, #place_order")
-        .forEach(b => b.disabled = !valid);
+        .forEach(b => b.disabled = !ok);
 };
 
-/* ============================================================
-   Máscara + binding
-============================================================ */
-(function(){
-    function digits(s){ return (s||'').replace(/\D/g,''); }
+/* ==========================================
+   VALIDAÇÃO DO DOC
+========================================== */
+window.__validateCartDocument = function(input){
 
-    function maskCpfCnpj($el){
-        var v = digits($el.val());
+    const raw = digits(input.value);
+    const len = raw.length;
+
+    let valid = false;
+
+    // CPF
+    if (len === 11){
+        valid = isValidCPF(raw);
+        showDocMsg(input, valid ? "" : "CPF inválido");
+    }
+    // CNPJ
+    else if (len === 14){
+        valid = true;
+        showDocMsg(input, "");
+    }
+    // Incompleto
+    else if (len > 0){
+        valid = false;
+        showDocMsg(input, "CPF/CNPJ inválido");
+    }
+    // Vazio
+    else {
+        valid = false;
+        showDocMsg(input, "");
+    }
+
+    window.__checkout.doc = valid;
+    window.__recomputeCheckout();
+};
+
+/* ==========================================
+   MÁSCARA + BINDING
+========================================== */
+(function(){
+
+    function mask($el){
+        let v = digits($el.val());
         if (v.length > 14) v = v.slice(0,14);
 
         if (v.length <= 11){
@@ -188,24 +123,35 @@ window.__recomputeCheckout = function(){
         }
 
         $el.val(v);
-        window.__setDocLen("reg", digits(v).length);
     }
 
     jQuery(function(){
         var watch = setInterval(function(){
-            var $field = jQuery("#customfield1");
+
+            // campo real do cart
+            const $field = jQuery("#customfield1");
+
             if ($field.length){
                 clearInterval(watch);
 
-                maskCpfCnpj($field);
-                window.__recomputeCompany();
+                console.log("Campo #customfield1 encontrado");
 
+                // inicia máscara
+                mask($field);
+
+                // inicia validação
+                window.__validateCartDocument($field[0]);
+
+                // bindings
                 $field.on("input change blur", function(){
-                    maskCpfCnpj($field);
+                    mask($field);
+                    window.__validateCartDocument($field[0]);
                 });
             }
+
         }, 200);
     });
+
 })();
 </script>
 HTML;
