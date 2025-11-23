@@ -174,10 +174,17 @@ window.__checkout = window.__checkout || { cep:false, doc:false, company:true, l
             docValid = false;
         }
 
-        if (regLen === 0 && othLen === 0){
-            showDocMsg(elCtrl || elOther, "");
-            docValid = false;
-        }
+// Se ambos vazios → limpa mensagem e bloqueia
+if (regLen === 0 && othLen === 0){
+    showDocMsg(elCtrl || elOther, "");
+    docValid = false;
+}
+
+// Se é CNPJ válido (14 dígitos) → limpa msg
+else if (regLen === 14 || othLen === 14){
+    showDocMsg(elCtrl || elOther, "");
+}
+
         window.__checkout.doc = docValid;
         window.__recomputeCheckout();
     };
