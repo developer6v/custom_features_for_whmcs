@@ -2,7 +2,11 @@
 require_once __DIR__ . '/src/Services/frontend-manipulation/index.php';
 require_once __DIR__ . '/src/Config/assets.php';
 
-if (!defined('WHMCS')) { die('Access denied'); }
+if (!defined('WHMCS')) {
+    logActivity("whmcs n definido");
+    die('Access denied');
+}
+    logActivity("whmcs definido");
 
 // Função auxiliar para checar se está no checkout
 function isCheckoutCartPage() {
@@ -42,9 +46,14 @@ add_hook('AdminAreaFooterOutput', 1, function($vars) {
 
 // CNPJ/CPF
 add_hook('ClientAreaFooterOutput', 1, function($vars) {
-
-    $out = '<script>alert("teste");</script>';
-    return $out;
+    if (isCheckoutCartPageConfig()) {
+        return cpfcnpj_domain_script();
+    } elseif (isCheckoutCartPage()) {
+        return cpfcnpj_script_cart();
+    } elseif (isCheckoutOrderPage()) {
+        return cpfcnpj_script();
+    }
+    return cpfcnpj_script();
 });
 add_hook('AdminAreaFooterOutput', 1, function($vars) {
     return cpfcnpj_script_admin();
