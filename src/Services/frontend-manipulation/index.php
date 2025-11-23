@@ -1,27 +1,21 @@
 <?php
 
-$dirIterator = new RecursiveDirectoryIterator(
-    __DIR__,
-    FilesystemIterator::SKIP_DOTS
-);
+// Admin
+require_once __DIR__ . '/admin/cpfcnpj.php';
 
-$iterator = new RecursiveIteratorIterator($dirIterator);
+// Cart
+require_once __DIR__ . '/cart.php/address.php';
+require_once __DIR__ . '/cart.php/cep_validator.php';
+require_once __DIR__ . '/cart.php/cpfcnpj.php';
 
-foreach ($iterator as $fileInfo) {
-    /** @var SplFileInfo $fileInfo */
-    if (!$fileInfo->isFile()) {
-        continue;
-    }
+// Generic
+require_once __DIR__ . '/generic/login_or_create.php';
 
-    if ($fileInfo->getExtension() !== 'php') {
-        continue; 
-    }
+// Register
+require_once __DIR__ . '/generic/register_number.php';
 
-    if ($fileInfo->getFilename() === 'index.php' && $fileInfo->getPath() === __DIR__) {
-        continue;
-    }
-
-    $relativePath = str_replace(__DIR__, '', $fileInfo->getPathname());
-
-    require_once __DIR__ . $relativePath;
-}
+// Order
+require_once __DIR__ . '/order.php/address.php';
+require_once __DIR__ . '/order.php/cep.php';
+require_once __DIR__ . '/order.php/cpfcnpj.php';
+require_once __DIR__ . '/order.php/hide_fields.php';
