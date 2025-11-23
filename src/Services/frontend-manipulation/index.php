@@ -15,3 +15,6 @@ require_once __DIR__ . '/generic/login_or_create.php';
 require_once __DIR__ . '/generic/register_number.php';
 
 // Order
+require_once __DIR__ . '/order/address.php';
+require_once __DIR__ . '/order/cep.php';
+require_once __DIR__ . '/order/cpfcnpj.php';
