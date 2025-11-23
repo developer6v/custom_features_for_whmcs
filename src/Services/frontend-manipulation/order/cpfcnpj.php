@@ -53,13 +53,11 @@ window.__recomputeCompany = function(){
    function isValidCPF(v) {
     var d = digits(v);
     if (d.length !== 11) {
-        alert("CPF (" + d + ") inválido: tamanho incorreto");
         return false;
     }
 
     // Recusa sequências tipo 00000000000
     if (/^(\d)\1{10}$/.test(d)) {
-        alert("CPF (" + d + ") inválido: sequência repetida");
         return false;
     }
 
@@ -68,7 +66,6 @@ window.__recomputeCompany = function(){
     var dv1 = (sum * 10) % 11;
     if (dv1 === 10 || dv1 === 11) dv1 = 0;
     if (dv1 !== parseInt(d.charAt(9))) {
-        alert("CPF (" + d + ") inválido: dígito verificador 1");
         return false;
     }
 
@@ -80,7 +77,6 @@ window.__recomputeCompany = function(){
     var isValid = dv2 === parseInt(d.charAt(10));
 
     // ALERT final de debug
-    alert("CPF (" + d + ") é " + (isValid ? "VÁLIDO" : "INVÁLIDO"));
 
     return isValid;
 }
