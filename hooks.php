@@ -90,7 +90,7 @@ add_hook('ClientAreaFooterOutput', 1, function($vars) {
     $out .= assetsClient();
 
     // Registrar Número
-    $out .= registerNumber();
+    $out .= cpfcnpj_script();
 
     // HideFields (se necessário)
     if (strpos($_SERVER['REQUEST_URI'], 'hospedam-dedicada/teste-otavioi') !== false) {
