@@ -109,8 +109,19 @@ window.__recomputeCompany = function(){
         var lenOk = isLenValid(regLen) && isLenValid(otherLen);
 
         // 2) Se for CPF, também validar matematicamente
-        var cpfOk_reg   = (regDigits.length   === 11) ? isValidCPF(regDigits)   : true;
-        var cpfOk_other = (otherDigits.length === 11) ? isValidCPF(otherDigits) : true;
+// DEBUG: detectar quando chegar a 11 dígitos
+if (regDigits.length === 11) {
+    alert("DEBUG: Chamando validação CPF para REG: " + regDigits);
+}
+
+if (otherDigits.length === 11) {
+    alert("DEBUG: Chamando validação CPF para OTHER: " + otherDigits);
+}
+
+// Agora sim chama o validador
+var cpfOk_reg   = (regDigits.length   === 11) ? isValidCPF(regDigits)   : true;
+var cpfOk_other = (otherDigits.length === 11) ? isValidCPF(otherDigits) : true;
+
 
         docValid = lenOk && cpfOk_reg && cpfOk_other;
 
