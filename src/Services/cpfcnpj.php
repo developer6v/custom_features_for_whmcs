@@ -153,8 +153,7 @@ window.__doc = {
         setCompanyRequired(anyCnpj);
         setMessageCPFCNPJ(anyCnpj);
 
-        // ---- Validação real
-        var regOk   = regVal   ? window.__doc.isValid(regVal)   : false;
+         var regOk   = regVal   ? window.__doc.isValid(regVal)   : false;
         var otherOk = otherVal ? window.__doc.isValid(otherVal) : false;
 
         // Se existir campo controlador, exigimos AMBOS válidos.
