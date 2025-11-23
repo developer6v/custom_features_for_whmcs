@@ -2,7 +2,6 @@
 function cpfcnpj_script() {
     return <<<'HTML'
   <script>
-    alert('foi chamado');
     window.__checkout = window.__checkout || { cep:false, doc:false, company:true, login:false };
 
     // Agregador já definido no outro script; se não, define aqui rapidamente
