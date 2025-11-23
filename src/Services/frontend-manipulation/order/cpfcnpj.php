@@ -43,6 +43,8 @@ function cpfcnpj_script() {
       }
 
 window.__recomputeCompany = function(){
+  alert("recomputeCompany rodou!\nregDigits: " + regDigits + "\notherDigits: " + otherDigits);
+
     function digits(s){ return String(s||'').replace(/\D/g,''); }
     function isLenValid(len){ return len === 11 || len === 14; }
 
