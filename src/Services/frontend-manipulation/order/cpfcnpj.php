@@ -42,31 +42,74 @@ function cpfcnpj_script() {
         }
       }
 
-      window.__recomputeCompany = function(){
-        function digits(s){ return String(s||'').replace(/\D/g,''); }
-        function isLenValid(len){ return len === 11 || len === 14; }
+window.__recomputeCompany = function(){
+    function digits(s){ return String(s||'').replace(/\D/g,''); }
+    function isLenValid(len){ return len === 11 || len === 14; }
 
-        var elCtrl  = document.getElementById('cpfcnpjregistercontroller');
-        var elOther = document.getElementById('cl_custom_field_1');
-        var hasCtrl = !!elCtrl;
+    // -----------------------------
+    //  VALIDADOR REAL DE CPF
+    // -----------------------------
+    function isValidCPF(v) {
+        var d = digits(v);
+        if (d.length !== 11) return false;
 
-        var regLenReal   = elCtrl  ? digits(elCtrl.value).length  : 0;
-        var otherLenReal = elOther ? digits(elOther.value).length : 0;
+        // Recusa sequências tipo 00000000000
+        if (/^(\d)\1{10}$/.test(d)) return false;
 
-        var regLen   = Math.max(regLenReal,   window.__docState.reg   || 0);
-        var otherLen = Math.max(otherLenReal, window.__docState.other || 0);
+        var sum = 0;
+        for (var i = 0; i < 9; i++) sum += parseInt(d.charAt(i)) * (10 - i);
+        var dv1 = (sum * 10) % 11;
+        if (dv1 === 10 || dv1 === 11) dv1 = 0;
+        if (dv1 !== parseInt(d.charAt(9))) return false;
 
-        var anyCnpj = (regLen > 11) || (otherLen > 11); // troque por === 14 se quiser estrito
-        setCompanyRequired(anyCnpj);
-        setMessageCPFCNPJ(anyCnpj);
+        sum = 0;
+        for (var i = 0; i < 10; i++) sum += parseInt(d.charAt(i)) * (11 - i);
+        var dv2 = (sum * 10) % 11;
+        if (dv2 === 10 || dv2 === 11) dv2 = 0;
 
-        var docValid = hasCtrl
-          ? (isLenValid(regLen) && isLenValid(otherLen))
-          : (isLenValid(otherLen) || isLenValid(regLen));
+        return dv2 === parseInt(d.charAt(10));
+    }
 
-        window.__checkout.doc = docValid;
-        window.__recomputeCheckout && window.__recomputeCheckout();
-      };
+    var elCtrl  = document.getElementById('cpfcnpjregistercontroller');
+    var elOther = document.getElementById('cl_custom_field_1');
+    var hasCtrl = !!elCtrl;
+
+    var regDigits   = elCtrl  ? digits(elCtrl.value)  : "";
+    var otherDigits = elOther ? digits(elOther.value) : "";
+
+    var regLen   = Math.max(regDigits.length,   window.__docState.reg   || 0);
+    var otherLen = Math.max(otherDigits.length, window.__docState.other || 0);
+
+    var anyCnpj = (regLen > 11) || (otherLen > 11);
+    setCompanyRequired(anyCnpj);
+    setMessageCPFCNPJ(anyCnpj);
+
+    // -----------------------------
+    //  VALIDAÇÃO FINAL DO DOCUMENTO
+    // -----------------------------
+    var docValid = false;
+
+    if (hasCtrl) {
+        // 1) Precisa ter tamanho valido
+        var lenOk = isLenValid(regLen) && isLenValid(otherLen);
+
+        // 2) Se for CPF, também validar matematicamente
+        var cpfOk_reg   = (regDigits.length   === 11) ? isValidCPF(regDigits)   : true;
+        var cpfOk_other = (otherDigits.length === 11) ? isValidCPF(otherDigits) : true;
+
+        docValid = lenOk && cpfOk_reg && cpfOk_other;
+
+    } else {
+        // Sem o controller principal
+        if (regDigits.length === 11) docValid = isValidCPF(regDigits);
+        else if (otherDigits.length === 11) docValid = isValidCPF(otherDigits);
+        else docValid = isLenValid(regLen) || isLenValid(otherLen);
+    }
+
+    window.__checkout.doc = docValid;
+    window.__recomputeCheckout && window.__recomputeCheckout();
+};
+
 
       window.__setDocLen = function(source, len){
         if (source === 'reg') window.__docState.reg = len;
