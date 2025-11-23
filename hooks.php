@@ -25,19 +25,11 @@ function isCheckoutOrderPage() {
 
 
 add_hook('AdminAreaFooterOutput', 1, function($vars) {
-    if (isCheckoutCartPage()) {
-        return cepvalidator_script_cart();
-    }
-    if (isCheckoutOrderPage()) {
-        return cepvalidator_script();
-    }
-    return cepvalidator_script();
+    $out = cpfcnpj_script_admin();
+    $out .=  cepvalidator_script();
 });
 
 
-add_hook('AdminAreaFooterOutput', 1, function($vars) {
-    return cpfcnpj_script_admin();
-});
 
 
 // Erro 129
